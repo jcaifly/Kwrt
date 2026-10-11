@@ -1,0 +1,12 @@
+#!/bin/sh
+# Run after luci-openclash. No downloads, subscriptions or network changes.
+uci -q batch <<'EOF'
+set openclash.config.enable='0'
+set openclash.config.auto_update='0'
+set openclash.config.small_flash_memory='0'
+set luci.main.lang='zh_cn'
+commit openclash
+commit luci
+EOF
+/etc/init.d/openclash disable
+exit 0
