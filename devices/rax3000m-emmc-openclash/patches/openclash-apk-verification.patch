@@ -1,0 +1,14 @@
+--- a/luci-app-openclash/root/usr/share/openclash/openclash_update.sh
++++ b/luci-app-openclash/root/usr/share/openclash/openclash_update.sh
+@@ -248 +248 @@
+-               apk_test_err=$(apk add -s -q --force-overwrite --clean-protected --allow-untrusted /tmp/openclash.apk 2>&1)
++               apk_test_err=$(apk add -s -q --clean-protected /tmp/openclash.apk 2>&1)
+@@ -269 +269 @@
+-                  LOG_ERROR "【OpenClash - v$LAST_VER】Pre update test failed after 3 attempts, the file is saved in /tmp/openclash.apk, please try to update manually with【apk add -q --force-overwrite --clean-protected --allow-untrusted /tmp/openclash.apk】"
++                  LOG_ERROR "【OpenClash - v$LAST_VER】Pre update test failed after 3 attempts, the file is saved in /tmp/openclash.apk, please try to update manually with【apk add -q --clean-protected /tmp/openclash.apk】"
+@@ -418 +418 @@
+-      apk add -q --force-overwrite --clean-protected --allow-untrusted /tmp/openclash.apk >/tmp/openclash_install.log 2>&1
++      apk add -q --clean-protected /tmp/openclash.apk >/tmp/openclash_install.log 2>&1
+@@ -446 +446 @@
+-      LOG_ERROR "OpenClash update failed after 3 attempts, the file is saved in /tmp/openclash.apk, please try to update manually with【apk add -q --force-overwrite --clean-protected --allow-untrusted /tmp/openclash.apk】【$(echo "$install_err" | tr '\n' ' ' | head -c 500)】"
++      LOG_ERROR "OpenClash update failed after 3 attempts, the file is saved in /tmp/openclash.apk, please try to update manually with【apk add -q --clean-protected /tmp/openclash.apk】【$(echo "$install_err" | tr '\n' ' ' | head -c 500)】"

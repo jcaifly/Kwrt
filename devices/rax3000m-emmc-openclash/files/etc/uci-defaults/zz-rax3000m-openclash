@@ -1,0 +1,23 @@
+#!/bin/sh
+# No core download, GPT/bootloader operation, subscription or preset password.
+uci -q batch <<'EOF'
+set openclash.config.enable='0'
+set openclash.config.auto_update='0'
+set openclash.config.small_flash_memory='0'
+set luci.main.lang='zh_cn'
+set firewall.@defaults[0].flow_offloading='0'
+set firewall.@defaults[0].flow_offloading_hw='0'
+set uhttpd.main.redirect_https='1'
+commit openclash
+commit luci
+commit firewall
+commit uhttpd
+EOF
+
+# First setup stays wired even when U-Boot happens to contain Wi-Fi presets.
+for radio in $(uci -q show wireless | sed -n 's/^wireless\.\([^.=]*\)=wifi-device$/\1/p'); do
+    uci -q set "wireless.$radio.disabled=1"
+done
+uci -q commit wireless
+/etc/init.d/openclash disable
+exit 0

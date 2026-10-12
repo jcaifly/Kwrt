@@ -1,0 +1,8 @@
+--- a/luci-app-openclash/Makefile
++++ b/luci-app-openclash/Makefile
+@@ -8,3 +8,4 @@
+ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+-
++PKG_BUILD_DEPENDS:=luci-base/host
++
+ include $(INCLUDE_DIR)/package.mk

@@ -1,0 +1,110 @@
+# Preserve the upstream unified NAND/eMMC FIT profile and both official overlays.
+CONFIG_TARGET_mediatek=y
+CONFIG_TARGET_mediatek_filogic=y
+CONFIG_TARGET_mediatek_filogic_DEVICE_cmcc_rax3000m=y
+# CONFIG_TARGET_MULTI_PROFILE is not set
+# CONFIG_TARGET_ALL_PROFILES is not set
+# CONFIG_TARGET_PER_DEVICE_ROOTFS is not set
+# CONFIG_ALL is not set
+# CONFIG_ALL_NONSHARED is not set
+# CONFIG_ALL_KMODS is not set
+# CONFIG_BUILDBOT is not set
+# CONFIG_IB is not set
+# CONFIG_IB_STANDALONE is not set
+# CONFIG_SDK is not set
+# CONFIG_MAKE_TOOLCHAIN is not set
+
+CONFIG_TARGET_ROOTFS_SQUASHFS=y
+# CONFIG_TARGET_ROOTFS_INITRAMFS is not set
+# CONFIG_TARGET_ROOTFS_CPIOGZ is not set
+# CONFIG_TARGET_ROOTFS_TARGZ is not set
+# CONFIG_TARGET_ROOTFS_EXT4FS is not set
+# CONFIG_TARGET_ROOTFS_JFFS2 is not set
+# CONFIG_TARGET_ROOTFS_JFFS2_NAND is not set
+# CONFIG_TARGET_ROOTFS_UBIFS is not set
+# CONFIG_TARGET_ROOTFS_EROFS is not set
+# Keep the upstream build setting; this does not resize the router's GPT.
+CONFIG_TARGET_ROOTFS_PARTSIZE=448
+CONFIG_JSON_OVERVIEW_IMAGE_INFO=y
+CONFIG_BUILD_LOG=y
+CONFIG_DOWNLOAD_CHECK_CERTIFICATE=y
+CONFIG_SIGNED_PACKAGES=y
+CONFIG_SIGNATURE_CHECK=y
+CONFIG_USE_APK=y
+# This source-link feed is built locally; OpenWrt publishes no 'openclash' feed.
+# CONFIG_FEED_openclash is not set
+
+# Base router services, official dual-band Wi-Fi/eMMC/USB and filesystem support.
+CONFIG_IPV6=y
+CONFIG_PACKAGE_wpad-basic-mbedtls=y
+CONFIG_PACKAGE_kmod-mt7915e=y
+CONFIG_PACKAGE_kmod-mt7981-firmware=y
+CONFIG_PACKAGE_mt7981-wo-firmware=y
+CONFIG_PACKAGE_kmod-usb3=y
+CONFIG_PACKAGE_fitblk=y
+CONFIG_PACKAGE_uboot-envtools=y
+CONFIG_PACKAGE_e2fsprogs=y
+CONFIG_PACKAGE_f2fsck=y
+CONFIG_PACKAGE_mkf2fs=y
+CONFIG_PACKAGE_ppp=y
+CONFIG_PACKAGE_ppp-mod-pppoe=y
+CONFIG_PACKAGE_odhcp6c=y
+CONFIG_PACKAGE_odhcpd-ipv6only=y
+CONFIG_PACKAGE_ca-bundle=y
+CONFIG_PACKAGE_ca-certificates=y
+
+# Native firewall4/nftables dependency path; one DNS and firewall variant.
+# CONFIG_PACKAGE_dnsmasq is not set
+# CONFIG_PACKAGE_dnsmasq-dhcpv6 is not set
+CONFIG_PACKAGE_dnsmasq-full=y
+CONFIG_PACKAGE_dnsmasq_full_dhcp=y
+CONFIG_PACKAGE_dnsmasq_full_dhcpv6=y
+CONFIG_PACKAGE_dnsmasq_full_dnssec=y
+# CONFIG_PACKAGE_dnsmasq_full_ipset is not set
+CONFIG_PACKAGE_dnsmasq_full_nftset=y
+# CONFIG_PACKAGE_firewall is not set
+CONFIG_PACKAGE_firewall4=y
+# CONFIG_PACKAGE_nftables-nojson is not set
+CONFIG_PACKAGE_nftables-json=y
+CONFIG_PACKAGE_kmod-nft-tproxy=y
+CONFIG_PACKAGE_kmod-nft-socket=y
+CONFIG_PACKAGE_kmod-inet-diag=y
+
+# Chinese LuCI, HTTPS and package administration are base system functions.
+CONFIG_PACKAGE_luci-light=y
+CONFIG_PACKAGE_luci-ssl=y
+CONFIG_PACKAGE_luci-compat=y
+CONFIG_PACKAGE_luci-lib-ipkg=y
+CONFIG_PACKAGE_luci-app-firewall=y
+CONFIG_PACKAGE_luci-app-package-manager=y
+CONFIG_LUCI_LANG_zh_Hans=y
+CONFIG_PACKAGE_luci-i18n-base-zh-cn=y
+CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y
+CONFIG_PACKAGE_luci-i18n-package-manager-zh-cn=y
+
+# The only additional application, with its complete declared dependencies.
+CONFIG_PACKAGE_luci-app-openclash=y
+CONFIG_PACKAGE_bash=y
+CONFIG_PACKAGE_curl=y
+CONFIG_PACKAGE_ip-full=y
+CONFIG_PACKAGE_ruby=y
+CONFIG_PACKAGE_ruby-yaml=y
+CONFIG_PACKAGE_kmod-tun=y
+CONFIG_PACKAGE_unzip=y
+# CONFIG_PACKAGE_nlbwmon is not set
+# CONFIG_PACKAGE_luci-app-nlbwmon is not set
+# CONFIG_PACKAGE_ttyd is not set
+# CONFIG_PACKAGE_btop is not set
+# CONFIG_PACKAGE_luci-app-turboacc is not set
+# CONFIG_PACKAGE_dockerd is not set
+# CONFIG_PACKAGE_smartdns is not set
+# CONFIG_PACKAGE_mosdns is not set
+# CONFIG_PACKAGE_adguardhome is not set
+
+CONFIG_IMAGEOPT=y
+CONFIG_VERSIONOPT=y
+CONFIG_VERSION_DIST="Kwrt"
+CONFIG_VERSION_NUMBER="25.12.5"
+# Truthful source revision; do not rely on a shallow clone's revision count.
+CONFIG_VERSION_CODE="f0a60eee2fe0"
+CONFIG_VERSION_REPO="https://downloads.openwrt.org/releases/25.12.5"

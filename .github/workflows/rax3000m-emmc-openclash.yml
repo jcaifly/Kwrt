@@ -1,0 +1,140 @@
+name: RAX3000M eMMC OpenClash candidate (no core)
+
+on:
+  workflow_dispatch:
+  # Validate the review branch without changing or merging the default branch.
+  push:
+    branches:
+      - codex/rax3000m-emmc-openclash
+    paths:
+      - .github/workflows/rax3000m-emmc-openclash.yml
+      - devices/rax3000m-emmc-openclash/config
+      - devices/rax3000m-emmc-openclash/sources.env
+      - devices/rax3000m-emmc-openclash/patches/**
+      - devices/rax3000m-emmc-openclash/files/**
+      - scripts/check-rax3000m.py
+      - scripts/rax3000m-emmc-openclash.sh
+      - scripts/tests/test_check_rax3000m.py
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rax3000m-emmc-openclash-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    # Standard public-repository runners; do not consume private paid minutes.
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    env:
+      TZ: Asia/Shanghai
+      BUILD_JOBS: '2'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Initialize build paths
+        run: |
+          echo "BUILD_ROOT=$RUNNER_TEMP/rax3000m-build" >> "$GITHUB_ENV"
+          echo "ARTIFACT_ROOT=$RUNNER_TEMP/rax3000m-artifacts" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/rax3000m-artifacts/diagnostics"
+
+      - name: Checkout Kwrt review commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install build prerequisites
+        run: |
+          exec > >(tee "$ARTIFACT_ROOT/diagnostics/prerequisites.log") 2>&1
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential clang flex bison gawk gcc-multilib g++-multilib \
+            gettext git libncurses-dev libssl-dev python3 python3-setuptools \
+            python3-pyelftools rsync swig unzip zlib1g-dev file wget curl \
+            cmake ninja-build pkgconf libelf-dev libgmp-dev libmpc-dev \
+            libmpfr-dev device-tree-compiler patch xz-utils zstd ripgrep
+          df -h
+
+      - name: Check validation regressions
+        run: |
+          set -euo pipefail
+          python3 -B -m unittest discover -s scripts/tests -p test_check_rax3000m.py -v \
+            2>&1 | tee "$ARTIFACT_ROOT/diagnostics/regression-tests.log"
+
+      - name: Prepare fixed sources and check the final single-device config
+        run: bash scripts/rax3000m-emmc-openclash.sh prepare "$BUILD_ROOT" "$ARTIFACT_ROOT"
+
+      - name: Build and verify the RAX3000M candidate
+        timeout-minutes: 300
+        run: bash scripts/rax3000m-emmc-openclash.sh build "$BUILD_ROOT" "$ARTIFACT_ROOT"
+
+      - name: Upload candidate sysupgrade image and verification records
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: rax3000m-emmc-openclash-candidate-${{ github.run_id }}
+          path: ${{ env.ARTIFACT_ROOT }}/firmware/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish candidate summary
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          firmware = Path(os.environ['ARTIFACT_ROOT']) / 'firmware'
+          report = json.loads((firmware / 'artifact-check.json').read_text())
+          sources = json.loads((firmware / 'sources.json').read_text())
+          lines = [
+              '## 候选固件构建及镜像检查通过；尚未确认可刷写',
+              '',
+              f"镜像：`{report['image']}`",
+              '',
+              f"SHA256：`{report['sha256']}`",
+              '',
+              '| 项目 | 结果 |',
+              '| --- | --- |',
+              '| 设备 / profile | CMCC RAX3000M eMMC / cmcc_rax3000m（官方统一定义） |',
+              f"| 最终镜像大小 | {report['image_size_bytes']:,} 字节 |",
+              f"| profile 构建上限 | {report['build_image_limit_bytes']:,} 字节（不是实机容量） |",
+              '| 当前 GPT / 分区可用空间 | 待用户只读信息，不按 eMMC 总容量推算 |',
+              f"| 实际安装包数 / OpenClash | {report['package_count']} / {report['openclash_version']} |",
+              f"| 实际 Linux 内核包及 ABI | `{report['kernel_package_version']}` |",
+              '| Mihomo / 默认代理 / 小闪存模式 | 未预装 / 停用 / 关闭 |',
+              '| 当前系统预检查 / U-Boot兼容性 / 真机测试 | 待验证 |',
+              '',
+              '普通升级对象仅为 sysupgrade.itb；GPT、BL2、FIP/U-Boot 附带文件不是本次刷写对象。',
+              '',
+              '| 来源 | 实际提交 |',
+              '| --- | --- |',
+          ]
+          for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash'):
+              lines.append(f"| {name} | `{sources[name]['commit']}` |")
+          lines.extend(['', '<details><summary>最终软件包清单</summary>', '', '```text',
+                        (firmware / 'packages.manifest').read_text().rstrip(), '```', '', '</details>', ''])
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as stream:
+              stream.write('\n'.join(lines))
+          # Also expose the non-secret result in the public job annotations.
+          record = {key: report[key] for key in (
+              'image', 'sha256', 'image_size_bytes', 'build_image_limit_bytes', 'package_count',
+              'openclash_version', 'kernel_package_version', 'candidate_firmware', 'safe_to_flash_confirmed')}
+          record['commits'] = {name: sources[name]['commit'] for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash')}
+          notice = json.dumps(record, ensure_ascii=False).replace('%', '%25').replace('\n', '%0A').replace('\r', '%0D')
+          print('::notice title=Verified candidate record::' + notice, flush=True)
+          PY
+
+      - name: Preserve diagnostic logs on success or failure
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: rax3000m-emmc-openclash-diagnostics-${{ github.run_id }}
+          path: ${{ env.ARTIFACT_ROOT }}/diagnostics/
+          if-no-files-found: warn
+          retention-days: 30
