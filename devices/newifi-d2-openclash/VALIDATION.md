@@ -69,4 +69,32 @@
 - [固件及最终配置/包清单/来源/验收报告 ZIP](https://github.com/jcaifly/Kwrt/actions/runs/38194072912/artifacts/11723838795)：`newifi-d2-openclash-firmware-38194072912`。
 - [构建与诊断日志 ZIP](https://github.com/jcaifly/Kwrt/actions/runs/38194072912/artifacts/11724122926)：`newifi-d2-openclash-diagnostics-38194072912`。
 
-公共页面显示固件下载 ZIP 为 17.7 MB；该值及 Artifact digest 属于压缩下载包，不能当作 BIN 的精确大小或 SHA256。精确 BIN 大小与上限见固件包中的 `artifact-check.json`，BIN 校验值见 `SHA256SUMS`；`final.config`、`packages.manifest` 和 `sources.json` 保存对应实际构建数据。当前云环境不能读取需登录的附件，尚未在云端独立下载并复核 BIN。剩余 overlay 空间仍需真机测量。
+公共页面显示固件下载 ZIP 为 17.7 MB；该值及 Artifact digest 属于压缩下载包，不能当作 BIN 的精确大小或 SHA256。精确 BIN 大小与上限见固件包中的 `artifact-check.json`，BIN 校验值见 `SHA256SUMS`；`final.config`、`packages.manifest` 和 `sources.json` 保存对应实际构建数据。当时云环境不能读取需登录的附件，后续通过用户上传的原始 ZIP 完成了下述独立复核。剩余 overlay 空间仍需真机测量。
+
+## 原始固件附件的独立复核（2026-10-12）
+
+用户上传的 `newifi-d2-openclash-firmware-38194072912.zip` 为 18,575,686 字节，SHA256 `e2e7fa94f891bd93e3bb36284125ee5fd8d1dbfa674d016a3b3db72ab47390f0` 与 GitHub 官方 Artifact digest 完全一致，ZIP CRC 检查通过。只读提取后的原始 BIN 为：
+
+`kwrt-25.12.0-ramips-mt7621-d-team_newifi-d2-squashfs-sysupgrade.bin`
+
+| 项目 | 独立复核结果 |
+| --- | --- |
+| BIN 大小 | **18,547,242 字节（17.6880 MiB）** |
+| 允许上限 | **33,226,752 字节（31.6875 MiB）** |
+| 镜像余量 | 14,679,510 字节（13.9995 MiB），不等同于 overlay 可写空间 |
+| 固件 / 内核 | Kwrt 25.12.0 / Linux 6.12.71 |
+| 实际安装包数 | 200，APK 数据库与最终 manifest 的所有包名和版本完全一致 |
+| 架构 / 模块 | 235 个 ELF 为小端 MIPS32，动态加载器为 mipsel-sf；65 条模块内核依赖与实际内核包版本一致 |
+| 默认状态 | OpenClash 0.47.156-r8 停用，小闪存模式未开启，Mihomo 与个人代理配置缺席 |
+
+BIN SHA256：
+
+```text
+11f76dd94758bff29e97698d0bfc9d712bade0b7d877f1528b8eb6660e938ba9
+```
+
+重新计算的 BIN 大小及 SHA256 与 `SHA256SUMS`、`profiles.json` 和 `artifact-check.json` 全部一致。uImage 头和内核数据 CRC 通过；fwtool 直接提取的型号、目标和版本与报告相同。最终配置只选 Newifi D2，批量选择、SDK、ImageBuilder 和单独编译包均关闭。199 个配置选中包通过实际 APK Provides 映射对应到安装包，另一个 `kernel` 包由上游安装流程固定加入；ABI 库名称变化不构成缺包。
+
+直接解包 BIN 的 SquashFS 并核对 APK 数据库、中文翻译资源、MT7603/MT76x2、TUN、nft tproxy/socket 模块、OpenClash 默认配置及晚执行的停用脚本。未找到预装内核载荷、个人代理配置或新增首次开机下载脚本；初始 root 密码为空。普通文件检查通过，云端非管理员用户仅无法重建 `/dev/console` 字符设备，解包器因此返回 2；原始 BIN 未修改，也未运行其中的程序。
+
+镜像元数据的 `compat_version=1.1` 明确指出旧 swconfig 配置不能迁移到 DSA。刷机前须备份并核对当前系统与升级路径，首次迁移应重新配置网络；型号/兼容版本检查拒绝时应停止核实原因，不直接用 `-F` 跳过。真机无线、网口、联网和稳定性仍待验证，剩余可写空间仍需真机测量。
