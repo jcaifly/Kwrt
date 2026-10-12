@@ -55,3 +55,18 @@
 实际执行 `python3 -B -m unittest discover -s scripts/tests -v`，7 项回归检查通过。测试构造有效最终 rootfs 及无数据库的暂存目录；旧提交的检查器复现相同报错，修复后通过。负向检查仍拒绝用暂存数据库替代缺失的最终数据库、包版本不一致、最终 rootfs 中的内核文件、默认启用代理、自动下载脚本及多个最终 rootfs。原有 14 项负向检查再次通过；新增工作流通过 actionlint/ShellCheck，Python 及 Summary 语法检查通过，Summary 渲染使用合成数据检查通过。测试使用合成输入和模拟的 fwtool 解码，不代表真实镜像验收，没有获取或执行 Mihomo。
 
 工作流增加回归检查和成功后的 Summary，保留 `workflow_dispatch`；仅独立验证分支 `codex/newifi-d2-openclash-verify` 可通过本任务文件的 push 触发一次单设备验证。标准公开仓库 runner、设备配置、源码锁定提交和闪存分区保持原设置。修复后的真实构建及最终体积/SHA256 仍需对应新运行完成后确认；真机功能仍待验证。
+
+## 修复后的真实构建结果（2026-10-12）
+
+验证运行 [38194072912](https://github.com/jcaifly/Kwrt/actions/runs/38194072912) 已成功，于北京时间 2026-10-12 11:13 结束，耗时约 1 小时 13 分钟。回归测试、源码/配置准备、完整编译及产物验收、固件上传、Summary 发布和诊断上传全部成功。前一次 APK 数据库路径误判已修复。
+
+实际构建的 Kwrt 提交为 `082f7c331aeea8849d6a16f4a6d3a761e89a9f77`；修复实现位于 `0c9857083fc8840b4d66f75cf21b90706c5a1fea`，验证提交仅额外增加工作流触发范围的说明注释。来源检查确认 OpenWrt `4da53efc2fe744601e6189492dbd06b8930d72b8`、packages `506c37591d7cd9b3cfd812e69e708349268f9865`、LuCI `27a9c0c94264063894d40420956696d19b175744` 和 OpenClash feed `5ce75c9f2b084c7e3767c630985bb43819f16fbc`。OpenClash 最终 APK 版本为 `0.47.156-r8`。
+
+工作流验收确认唯一 Newifi D2 squashfs sysupgrade 镜像、型号/目标及校验元数据匹配、大小不超过 **33,226,752 字节**、必要包齐全且最终 manifest 与实际 APK 数据库的包名/版本完全一致、没有预装 Mihomo 内核及其他代理应用、默认代理停用及没有首次开机自动下载脚本。真机双频 Wi-Fi、全部网口、联网和负载稳定性仍未验证。
+
+已上传并保留 30 天：
+
+- [固件及最终配置/包清单/来源/验收报告 ZIP](https://github.com/jcaifly/Kwrt/actions/runs/38194072912/artifacts/11723838795)：`newifi-d2-openclash-firmware-38194072912`。
+- [构建与诊断日志 ZIP](https://github.com/jcaifly/Kwrt/actions/runs/38194072912/artifacts/11724122926)：`newifi-d2-openclash-diagnostics-38194072912`。
+
+公共页面显示固件下载 ZIP 为 17.7 MB；该值及 Artifact digest 属于压缩下载包，不能当作 BIN 的精确大小或 SHA256。精确 BIN 大小与上限见固件包中的 `artifact-check.json`，BIN 校验值见 `SHA256SUMS`；`final.config`、`packages.manifest` 和 `sources.json` 保存对应实际构建数据。当前云环境不能读取需登录的附件，尚未在云端独立下载并复核 BIN。剩余 overlay 空间仍需真机测量。
