@@ -26,7 +26,7 @@
 
 1. 把本次新增文件提交到你有写权限的**公开** Kwrt fork；工作流文件也需要存在于默认分支，才能在 Actions 中看到手动运行入口。
 2. 打开 **Actions → Newifi D2 OpenClash (no core) → Run workflow**，选择包含本次配置的分支并运行。无需配置个人 Token、SSH 密钥、通知服务或作者服务器。
-3. 使用普通 `ubuntu-24.04` GitHub 托管 runner；本工作流不使用付费的大型 runner，并对私有仓库跳过构建。没有 push、定时或批量设备触发。
+3. 使用普通 `ubuntu-24.04` GitHub 托管 runner；本工作流不使用付费的大型 runner，并对私有仓库跳过构建。`25.12` 等普通分支只手动触发；独立验证分支 `codex/newifi-d2-openclash-verify` 对本工作流、设备配置及检查脚本的变更自动构建一个设备，没有定时或批量设备触发。
 4. 成功后在该运行页面底部下载 `newifi-d2-openclash-firmware-<run_id>` 和 `newifi-d2-openclash-diagnostics-<run_id>`。Artifacts 保留 30 天；不自动创建 Release、不发布到第三方服务器。
 
 CLI 等效命令（`OWNER/REPO` 和 `BRANCH` 替换成你的 fork/分支）：
@@ -38,6 +38,10 @@ gh run download RUN_ID --repo OWNER/REPO
 ```
 
 `workflow_dispatch` 只有一个固定设备作业。完整编译失败会保留并行日志，再以 `-j1 V=s` 重试并保留详细日志；再次失败仍会失败退出。不会忽略依赖、修改内核 vermagic、强制接受架构或关闭 TLS/源码校验。
+
+每次运行先执行产物检查器的回归测试。成功上传固件后，运行页面的 Summary 显示镜像大小、允许上限、SHA256、源码提交、OpenClash 版本及最终包清单。检查器读取 `build_dir/target-*/root-ramips` 中实际安装的 APK 数据库和 overlay 文件；`staging_dir` 中的软件包暂存文件不用于验收。
+
+修复提交后需要从 **Run workflow** 创建包含修复的新运行；旧运行的 **Re-run jobs** 会继续使用旧提交。
 
 固件 Artifact 包含：
 

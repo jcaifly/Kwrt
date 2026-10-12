@@ -1,6 +1,6 @@
 # 云端前置检查记录（2026-10-11）
 
-本记录是此次云端修改时的检查快照。**配置检查通过；完整固件编译尚未执行；真机验证尚未执行。** 后续 Actions 构建的实际结果以该次运行的日志、`artifact-check.json` 和固件 Artifact 为准。
+以下前置检查是首次推送之前的历史快照。**当时配置检查通过；完整固件编译尚未执行；真机验证尚未执行。** 首次 Actions 构建及后续修复见文末；实际构建结果以对应运行的日志、`artifact-check.json` 和固件 Artifact 为准。
 
 ## 仓库和修改范围
 
@@ -43,3 +43,15 @@
 设备物理闪存为标准 32 MiB，固件分区及设备镜像上限为 **33,226,752 字节（32448 KiB）**。没有真实 BIN 时不能报告实际大小或剩余空间。构建后的检查器核对文件实际大小、profiles.json、固件内嵌型号/目标信息、最终包名称/版本、组装 rootfs 包数据库以及内核文件缺席情况；任何一项失败都不发布固件 Artifact。
 
 剩余可写空间只能在真机上测量；报告中的镜像余量不等于 overlay 可用容量。该固件保留必要驱动和网络功能，若超过限制，应保留日志说明体积来源并另行讨论方案，不扩大分区或擅自删除基础功能。
+
+## 首次 Actions 构建失败与修复（2026-10-12）
+
+运行 [38152175493](https://github.com/jcaifly/Kwrt/actions/runs/38152175493) 使用 Kwrt 提交 `6ed5918033faaa5183202a7d0cc08d01c8c79833`。来源准备和最终配置检查通过；用户提供的完整末尾日志显示 `make` 已完成工具链、内核、包编译、镜像安装、包索引和校验步骤，随后配置及来源检查再次通过。产物检查失败于 `Missing final APK package database`，固件上传被跳过，诊断 ZIP 保存成功。
+
+根因是检查器把 `STAGING_DIR_ROOT`（`staging_dir/target-*/root-ramips`，软件包暂存目录）当成已安装的最终根文件系统。锁定的上游 `rules.mk` 定义 `TARGET_DIR=$(BUILD_DIR)/root-$(BOARD)`；`package/Makefile` 在该目录执行 APK 安装及根文件系统 overlay 合并。实际数据库位于 `build_dir/target-*/root-ramips/lib/apk/db/installed`。APK 3.0.2 的数据库文件名和文本格式正确，错的是根目录。
+
+已修正为检查最终 `build_dir` 根文件系统，并在成功报告中记录 rootfs 和数据库的相对路径。数据库必须存在且包名/版本与最终 manifest 完全一致；原有镜像大小、型号、依赖、Mihomo 缺席及默认停用检查继续执行。
+
+实际执行 `python3 -B -m unittest discover -s scripts/tests -v`，7 项回归检查通过。测试构造有效最终 rootfs 及无数据库的暂存目录；旧提交的检查器复现相同报错，修复后通过。负向检查仍拒绝用暂存数据库替代缺失的最终数据库、包版本不一致、最终 rootfs 中的内核文件、默认启用代理、自动下载脚本及多个最终 rootfs。原有 14 项负向检查再次通过；新增工作流通过 actionlint/ShellCheck，Python 及 Summary 语法检查通过，Summary 渲染使用合成数据检查通过。测试使用合成输入和模拟的 fwtool 解码，不代表真实镜像验收，没有获取或执行 Mihomo。
+
+工作流增加回归检查和成功后的 Summary，保留 `workflow_dispatch`；仅独立验证分支 `codex/newifi-d2-openclash-verify` 可通过本任务文件的 push 触发一次单设备验证。标准公开仓库 runner、设备配置、源码锁定提交和闪存分区保持原设置。修复后的真实构建及最终体积/SHA256 仍需对应新运行完成后确认；真机功能仍待验证。

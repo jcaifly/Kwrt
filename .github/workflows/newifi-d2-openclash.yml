@@ -2,6 +2,15 @@ name: Newifi D2 OpenClash (no core)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - codex/newifi-d2-openclash-verify
+    paths:
+      - .github/workflows/newifi-d2-openclash.yml
+      - devices/newifi-d2-openclash/**
+      - scripts/check-newifi-d2.py
+      - scripts/newifi-d2-openclash.sh
+      - scripts/tests/test_check_newifi_d2.py
 
 permissions:
   contents: read
@@ -45,6 +54,9 @@ jobs:
             libmpfr-dev device-tree-compiler patch xz-utils zstd ripgrep
           df -h
 
+      - name: Check artifact validation regressions
+        run: python3 -B -m unittest discover -s scripts/tests -v
+
       - name: Prepare pinned sources and check the final single-device config
         run: bash scripts/newifi-d2-openclash.sh prepare "$BUILD_ROOT" "$ARTIFACT_ROOT"
 
@@ -60,6 +72,59 @@ jobs:
           path: ${{ env.ARTIFACT_ROOT }}/firmware/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish verified firmware summary
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          firmware = Path(os.environ['ARTIFACT_ROOT']) / 'firmware'
+          report = json.loads((firmware / 'artifact-check.json').read_text())
+          sources = json.loads((firmware / 'sources.json').read_text())
+          lines = [
+              '## Newifi D2 固件检查通过',
+              '',
+              f"镜像：`{report['image']}`",
+              '',
+              f"SHA256：`{report['sha256']}`",
+              '',
+              '| 项目 | 结果 |',
+              '| --- | --- |',
+              '| 设备 / 目标 | D-Team Newifi D2 / ramips/mt7621 |',
+              f"| 最终镜像大小 | {report['image_size_bytes']:,} 字节 |",
+              f"| 允许上限 | {report['image_limit_bytes']:,} 字节 |",
+              f"| 镜像余量 | {report['image_headroom_bytes']:,} 字节（非 overlay 可写空间） |",
+              f"| 已安装包数 | {report['package_count']} |",
+              f"| OpenClash | {report['openclash_version']} |",
+              '| Mihomo 内核 / 默认代理 | 未预装 / 停用 |',
+              f"| 最终 rootfs | `{report['rootfs_path']}` |",
+              f"| APK 数据库 | `{report['installed_database']}` |",
+              '| 真机 Wi-Fi、网口、联网及稳定性 | 尚未验证 |',
+              '',
+              '固件、最终配置、包清单和日志见本次运行的 Artifacts。',
+              '',
+              '| 来源 | 实际提交 |',
+              '| --- | --- |',
+          ]
+          for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash'):
+              lines.append(f"| {name} | `{sources[name]['commit']}` |")
+          lines.extend([
+              '',
+              '<details><summary>最终软件包清单</summary>',
+              '',
+              '```text',
+              (firmware / 'packages.manifest').read_text().rstrip(),
+              '```',
+              '',
+              '</details>',
+              '',
+          ])
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as stream:
+              stream.write('\n'.join(lines))
+          PY
 
       - name: Preserve diagnostics on success or failure
         if: always()

@@ -318,12 +318,14 @@ def check_artifact(tree):
     check_packages(names)
     expected_version = package_records(tree / "tmp/.packageinfo")["luci-app-openclash"]["Version"]
     require(versions["luci-app-openclash"] == expected_version, "Wrong OpenClash version in final manifest")
-    roots = list(tree.glob("staging_dir/target-*/root-ramips"))
+    # rules.mk TARGET_DIR contains the installed rootfs and APK database.
+    # STAGING_DIR_ROOT only holds package payloads before APK installation.
+    roots = list(tree.glob("build_dir/target-*/root-ramips"))
     require(len(roots) == 1, f"Expected one assembled rootfs, got {roots}")
     root = roots[0]
     check_core_files(root)
     installed_db = root / "lib/apk/db/installed"
-    require(installed_db.is_file(), "Missing final APK package database")
+    require(installed_db.is_file(), f"Missing final APK package database: {installed_db}")
     installed = {}
     for paragraph in installed_db.read_text().split("\n\n"):
         fields = dict(line.split(":", 1) for line in paragraph.splitlines() if ":" in line)
@@ -342,6 +344,8 @@ def check_artifact(tree):
         "image_headroom_bytes": LIMIT - size, "writable_overlay_estimate_bytes": None,
         "overlay_note": "Image headroom is not measured writable JFFS2 space; eraseblock alignment, filesystem overhead and first-boot writes require measurement on the router.",
         "embedded_metadata": metadata, "package_count": len(names),
+        "rootfs_path": str(root.relative_to(tree)),
+        "installed_database": str(installed_db.relative_to(tree)),
         "openclash_version": versions["luci-app-openclash"], "core_packages": [],
         "core_files": [], "default_service_enabled": False, "hardware_validation": "not performed",
     }
