@@ -114,6 +114,8 @@ OPENWRT_MAKE=kwrt-make bash scripts/rax3000m-emmc-openclash.sh prepare \
 自编译内核模块与官方预编译 kmod 的 ABI 不能仅凭相同发行版/内核版本认定相同。
 实际内核包完整版本和每个 kmod 的依赖会核对；官方远端 kmod 的匹配状态单独标为未确认。
 需要新增内核模块时优先在这个固定来源的工作流一起构建，不能强装、忽略依赖或关闭签名。
+系统版本升级采用经过相同兼容性检查的匹配 sysupgrade 镜像，不把全量 `apk upgrade`
+当成系统升级或内核 ABI 兼容性证明。
 第三方插件自更新的包签名可信性不由本次构建证明；优先通过本工作流更新管理插件。
 所选 OpenClash 原始管理插件更新脚本使用 `--allow-untrusted` 和 `--force-overwrite`。
 本设备的 `openclash-apk-verification.patch` 去掉这两个参数及日志中的绕过建议，

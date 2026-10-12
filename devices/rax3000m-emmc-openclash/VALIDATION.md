@@ -1,7 +1,7 @@
 # 验证记录
 
-当前阶段：独立配置、工作流及最终前置检查通过，准备提交审核分支并执行验证构建。
-此源码记录写入时完整固件尚未构建。构建附件中的 VALIDATION.md 会由实际镜像检查结果生成，
+当前阶段：独立配置、工作流及最终前置检查通过，审核分支已提交并开始验证构建。
+此源码记录写入时完整固件仍在编译。构建附件中的 VALIDATION.md 会由实际镜像检查结果生成，
 不把源码里的前置状态当作最终产物结论。任何合成测试均不代表真机运行结果。
 
 ## 已取得的证据
@@ -10,6 +10,7 @@
   `67653046240b4c29faab12e8814102992d88c6d1`，工作区干净。
 - 本次独立审核分支为 `codex/rax3000m-emmc-openclash`，不推送/合并默认分支。
 - 官方可见最新 25.12 稳定标签为 v25.12.5，提交 `f0a60eee2fe051741c643ea6118718aae1ef17fb`。
+  官方 GitHub `releases/latest` 实际重定向到此版本，25.12 维护分支也仍存在。
 - 设备定义为统一 `cmcc_rax3000m`，包含正式 NAND/eMMC DT overlay。
 - eMMC overlay 引用 `production` 和 `factory`；升级使用 FIT/rootdisk 路径。
 - 当前设备资料仅有用户转述：Kwrt、yuzhuii U-Boot、卖家调整约 2GB 软件分区。
@@ -48,6 +49,7 @@ OPENWRT_MAKE=kwrt-make bash scripts/rax3000m-emmc-openclash.sh prepare \
 两项本地补丁均零 fuzz 应用，来源/局部对象审计通过，未取其他 feed 软件包 blob 或核心。
 
 11 项 FIT 格式/校验/越界/架构、核心排除和包依赖回归测试通过。
+包含原 Newifi 测试的整个 scripts/tests 共 18 项也通过，未修改原测试或工作流。
 11 个真实配置负例（额外设备、批量、SDK、DNS 冲突、缺无线/IPv6、额外应用/核心、
 关闭签名、错误 feed 和错误架构）均被拒绝；原配置恢复后再次通过。
 actionlint 1.7.11、ShellCheck 0.10.0（`-x`）、bash/sh 语法及 Python/内嵌脚本语法通过。
@@ -66,13 +68,24 @@ APK 自更新的签名/覆盖绕过已通过本设备补丁去除，核心上传
 | 源码设备/升级分析 | 已完成，固定版本源码 |
 | 配置检查 | 最终配置通过，真实 make defconfig/prereq、592 条依赖及 11 负例 |
 | 工作流及回归检查 | 语法/静态检查通过，11 回归测试通过 |
-| 完整固件编译 | 尚未执行 |
+| 完整固件编译 | 已开始 GitHub Actions 验证构建，尚未完成 |
 | 最终镜像完整性/大小 | 待实际产物检查，当前无镜像或 SHA256 |
 | 当前系统预检查 | 待用户提供只读资料；未执行 sysupgrade -T |
 | 引导/GPT/升级写入兼容 | 待验证，不按卖家 2GB 描述认定 |
 | 真机启动、双频、网口、上网、USB、重启、24～48h | 待验证 |
 | 手动核心安装后的 OpenClash/停用恢复 | 待验证，未安装 Mihomo |
 
+## 已触发的验证构建
+
+- 代码提交：`99800302065d4b0beb400badce23ac7f24d2f76e`，13 个本任务专用新文件。
+- 推送目标仅为 `codex/rax3000m-emmc-openclash`，默认分支没有推送/合并。
+- 运行：[38260284023](https://github.com/jcaifly/Kwrt/actions/runs/38260284023)。
+- Job：[114848725238](https://github.com/jcaifly/Kwrt/actions/runs/38260284023/job/114848725238)。
+- GitHub 显示开始于北京时间 2026-10-12 22:04；依赖安装、11 回归测试、prepare 步骤通过，
+  目前执行完整编译。此时没有最终镜像大小、固件 SHA256 或已安装包数可报告。
+- 本地诊断和独立检查保存在 `/workspace/scratch/rax3000m-artifacts-final/diagnostics/`
+  与 `/workspace/scratch/rax3000m-analysis/`；构建日志随后由同次 Actions 附件交付。
+
 GitHub API 在本云环境返回 `Forbidden`，不因此请求用户把 Token 发到聊天。
-HTTPS Git 已证明可读取默认分支；分支推送/工作流触发及公开运行页面的可读性另行记录。
+HTTPS Git 分支推送及公开运行页面已验证可用；仅通过公开页面读状态，未假称可以读取登录附件。
 如无手动入口，由用户审核后决定是否让工作流进入默认分支，本任务不代为合入。
