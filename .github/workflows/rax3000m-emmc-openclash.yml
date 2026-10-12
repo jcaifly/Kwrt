@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: rax3000m-emmc-openclash-${{ github.ref }}
+  group: rax3000m-emmc-tar-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -101,16 +101,17 @@ jobs:
               '',
               '| 项目 | 结果 |',
               '| --- | --- |',
-              '| 设备 / profile | CMCC RAX3000M eMMC / cmcc_rax3000m（官方统一定义） |',
+              '| 设备 / profile | CMCC RAX3000M eMMC / cmcc_rax3000m-emmc（Kwrt kernel/rootfs 布局） |',
               f"| 最终镜像大小 | {report['image_size_bytes']:,} 字节 |",
-              f"| profile 构建上限 | {report['build_image_limit_bytes']:,} 字节（不是实机容量） |",
+              '| 允许上限 | profile 无固定 IMAGE_SIZE；实际 kernel/rootfs 分区容量待采集 |',
+              f"| kernel / root 最低所需空间 | {report['tar']['kernel_bytes']} / {report['tar']['minimum_root_partition_bytes']} 字节；不代表足够可写空间 |",
               '| 当前 GPT / 分区可用空间 | 待用户只读信息，不按 eMMC 总容量推算 |',
               f"| 实际安装包数 / OpenClash | {report['package_count']} / {report['openclash_version']} |",
               f"| 实际 Linux 内核包及 ABI | `{report['kernel_package_version']}` |",
               '| Mihomo / 默认代理 / 小闪存模式 | 未预装 / 停用 / 关闭 |',
               '| 当前系统预检查 / U-Boot兼容性 / 真机测试 | 待验证 |',
               '',
-              '普通升级对象仅为 sysupgrade.itb；GPT、BL2、FIP/U-Boot 附带文件不是本次刷写对象。',
+              '普通升级对象仅为 cmcc_rax3000m-emmc 的 sysupgrade.bin；不使用统一 profile 的 .itb，不刷 GPT、BL2、FIP/U-Boot。',
               '',
               '| 来源 | 实际提交 |',
               '| --- | --- |',

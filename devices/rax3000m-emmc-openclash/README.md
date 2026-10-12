@@ -1,12 +1,15 @@
 # CMCC RAX3000M eMMC / OpenClash 候选固件
 
 本目录是独立构建入口，目标为家庭 100M 宽带、双频 Wi-Fi 和 OpenClash。
-设备使用 OpenWrt 官方统一的 `mediatek/filogic` / `cmcc_rax3000m` profile，
-保留官方 NAND/eMMC overlay，不伪造 `cmcc,rax3000m-emmc` 标识。
+设备使用 `mediatek/filogic` / `cmcc_rax3000m-emmc` profile，
+匹配用户上传商家固件的真实设备身份及独立 kernel/rootfs 升级路径。
+最小设备补丁保留官方共用 DTS、统一 profile 和正式 NAND/eMMC overlays，不伪造设备身份。
 **构建通过的产物仍是候选固件；在当前系统、GPT 和第三方 U-Boot 核对前，尚未确认可刷写。**
 
 用户目前提供的信息：当前系统为 Kwrt，U-Boot 据卖家称来自 yuzhuii，软件分区已调整为约 2GB。
-尚未取得具体固件版本、U-Boot 版本、分区名称/边界及启动方式。
+上传的商家镜像已确认 Kwrt 25.12-SNAPSHOT / Linux 6.12.112 / `cmcc,rax3000m-emmc` /
+`root=PARTLABEL=rootfs rootwait`，详见 [VENDOR-FIRMWARE.md](VENDOR-FIRMWARE.md)。
+路由器尚未到手；实际当前版本、U-Boot 版本、GPT 分区边界及引导配置仍待读取。
 本流程保留现有布局，不因 2GB 容量要求重新分区，也不执行路由器操作。
 
 ## 来源与选择
@@ -19,7 +22,7 @@
 | LuCI | 该发行版 feeds / `128a7812f4be233c5dd7f7466f534fd888785caf` |
 | OpenClash 软件包 | 0.48.002-r9 / kiddin9/op-packages `426eda7eae561e63b6dc78f4c6bcaa4105ca4b16` |
 | OpenClash 上游版本标记 | v0.48.002 / `e553e82e01c697aefbe1555261a503f425e00ccd` |
-| 必要本地补丁 | 增加 LuCI host 依赖；移除插件 APK 自更新的签名/覆盖绕过，补丁哈希写入 `sources.json` |
+| 必要本地补丁 | 保留 Kwrt eMMC kernel/rootfs 路径；增加 LuCI host 依赖；移除插件 APK 自更新绕过；补丁哈希写入 `sources.json` |
 
 25.12.5 是准备时官方仓库可见的最新 25.12 稳定标签，使用发行版自带的 feeds 固定值。
 Linux 内核及 ABI 使用真实构建结果；不把内核兼容值改成常量，不强装架构或版本不匹配的包。
@@ -27,7 +30,8 @@ Linux 内核及 ABI 使用真实构建结果；不把内核兼容值改成常量
 完整实际来源、补丁 SHA256、最终配置及清单均随产物交付。
 
 原仓库通用流程中存在 `CONFIG_SIGNATURE_CHECK=n`、下载失败/校验处理修改、
-固定 `.vermagic` 为 `1`、opkg 强制依赖/校验/覆盖补丁、额外应用及无线功率/DFS 修改。
+固定 `.vermagic` 为 `1`、opkg 强制依赖/校验/覆盖补丁、忽略 postinst 失败、
+额外应用及无线功率/DFS 修改。
 这些设置不能证明兼容性，本设备入口不执行 `devices/common/diy.sh`、
 `devices/mediatek_filogic/diy.sh` 或其通用补丁，使用干净上游系统源码。
 原有配置和工作流保持原样。
@@ -73,15 +77,15 @@ GitHub 的 `workflow_dispatch` 入口通常要求工作流已存在于默认分�
 Run workflow → 选择包含本配置的分支 → Run workflow。
 完成后打开同次运行的 Artifacts：
 
-- `rax3000m-emmc-openclash-candidate-<run_id>`：候选 `sysupgrade.itb`、SHA256SUMS、
+- `rax3000m-emmc-openclash-candidate-<run_id>`：候选 `sysupgrade.bin`、SHA256SUMS、
   final.config、kernel.config、diff.config、packages.manifest、profiles.json、实际 sources.json、检查 JSON 和说明。
 - `rax3000m-emmc-openclash-diagnostics-<run_id>`：prepare/download/编译日志、串行失败诊断（如有）、
   OpenWrt 子任务日志、检查结果、实际上游升级脚本和阶段退出码。失败也保留，默认 30 天。
 - Actions Summary 显示实际镜像大小、整包 SHA256、安装包数、内核 ABI 和来源提交。
 
-交付只复制 `*cmcc_rax3000m-squashfs-sysupgrade.itb`，不强制改为 `.bin`。
-官方 profile 可能同时生成 GPT、BL2/preloader 和 FIP/U-Boot 文件；
-这些附带文件不进入候选升级包，**不能作为本次普通升级的刷写对象**。
+交付只复制原生 `*cmcc_rax3000m-emmc-squashfs-sysupgrade.bin`。
+本独立 profile 不生成 GPT、BL2/preloader 或 FIP/U-Boot；
+其他统一 profile 的附带文件**不能作为本次普通升级的刷写对象**。
 关闭全设备、全软件包、SDK 和 ImageBuilder；必要工具链及依赖仍照常编译。
 
 云端前置检查可使用已准备的开发工具：
@@ -98,12 +102,18 @@ OPENWRT_MAKE=kwrt-make bash scripts/rax3000m-emmc-openclash.sh prepare \
 
 ## 镜像大小与软件源
 
-上游 profile 的构建设置 `TARGET_ROOTFS_PARTSIZE=448` 对应 `IMAGE_SIZE=512m`，
-即 536,870,912 字节的 **profile 构建上限**。它不是本机 eMMC 总容量、实测分区容量，
-也不代表将在路由器上建立 448/512MB 分区。本流程不改 GPT。
-实际镜像需同时装入现有目标分区，并为可写文件系统留下合理空间；
-取得 GPT 后按真实目标分区核对。不能根据卖家“2GB”或整块 eMMC 容量推算可写空间。
-报告中的实机分区上限/overlay 空间在资料缺失时保留为空，刷机后仍需 `df -h /overlay` 实测。
+Kwrt 的独立 eMMC profile 没有固定 `IMAGE_SIZE`，因为 kernel 和 root 写入不同分区，
+实际允许上限必须分别取自现有 GPT，不能用整包大小与“2GB”比较。
+`TARGET_ROOTFS_PARTSIZE=448` 保留上游配置值，在这个 TAR profile 中不创建或扩展分区。
+构建会报告实际 kernel/root payload 长度及 64 KiB 对齐后的 overlay 偏移；
+root 最低所需空间包含 4 KiB 初始化标记，仅证明最低写入范围，不代表可写空间足够。
+取得 GPT 后核对真实两个分区容量，并为配置备份、文件系统和日常更新保留合理空间。
+新增容量检查按唯一 PARTNAME 找 kernel/rootfs，确认同一 eMMC 并读 sysfs 的 512 字节扇区数，
+拒绝 payload/初始化标记/实际配置备份超出分区；升级前和原生 stage2 写入前均执行。
+它不写 GPT、引导或 factory，不增加分区尺寸，不忽略现有检查。
+旧系统第一次升级仍使用旧系统的脚本，不能据新固件中的保护认定旧系统同样受保护。
+报告中的实机容量及 overlay 空间在资料缺失时为空，刷机后仍需 `df -h /overlay` 实测。
+不能根据卖家描述或整块 eMMC 总容量推算可写空间。
 
 实际 APK 软件源从最终 rootfs 读取并交付，预期为官方 25.12.5 的
 `targets/mediatek/filogic/packages` 及 `packages/aarch64_cortex-a53/{base,packages,luci}`。

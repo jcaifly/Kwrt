@@ -1,0 +1,210 @@
+diff --git a/target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-emmc-kwrt.dts b/target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-emmc-kwrt.dts
+new file mode 100644
+index 0000000..3f2c755
+--- /dev/null
++++ b/target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-emmc-kwrt.dts
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++/dts-v1/;
++#include "mt7981b-cmcc-rax3000m.dts"
++
++/ {
++	model = "CMCC RAX3000M (eMMC version)";
++	compatible = "cmcc,rax3000m-emmc", "mediatek,mt7981";
++
++	chosen {
++		/delete-property/ bootargs-override;
++		bootargs = "root=PARTLABEL=rootfs rootwait";
++	};
++};
++
++&gmac0 {
++	nvmem-cells = <&macaddr_factory_2a 0>;
++	nvmem-cell-names = "mac-address";
++};
++
++&gmac1 {
++	nvmem-cells = <&macaddr_factory_24 0>;
++	nvmem-cell-names = "mac-address";
++};
++
++&mmc0 {
++	bus-width = <8>;
++	max-frequency = <26000000>;
++	no-sd;
++	no-sdio;
++	non-removable;
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_pins_default>;
++	pinctrl-1 = <&mmc0_pins_uhs>;
++	vmmc-supply = <&reg_3p3v>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	card@0 {
++		compatible = "mmc-card";
++		reg = <0>;
++
++		block {
++			compatible = "block-device";
++
++			partitions {
++				block-partition-factory {
++					partname = "factory";
++
++					nvmem-layout {
++						compatible = "fixed-layout";
++						#address-cells = <1>;
++						#size-cells = <1>;
++
++						eeprom_factory_0: eeprom@0 {
++							reg = <0x0 0x1000>;
++						};
++
++						macaddr_factory_24: macaddr@24 {
++							compatible = "mac-base";
++							#nvmem-cell-cells = <1>;
++							reg = <0x24 0x6>;
++						};
++
++						macaddr_factory_2a: macaddr@2a {
++							compatible = "mac-base";
++							#nvmem-cell-cells = <1>;
++							reg = <0x2a 0x6>;
++						};
++					};
++				};
++			};
++		};
++	};
++};
++
++&pio {
++	mmc0_pins_default: mmc0-pins {
++		mux {
++			function = "flash";
++			groups = "emmc_45";
++		};
++	};
++
++	mmc0_pins_uhs: mmc0-uhs-pins {
++		mux {
++			function = "flash";
++			groups = "emmc_45";
++		};
++	};
++};
++
++&wifi {
++	nvmem-cells = <&eeprom_factory_0>;
++	nvmem-cell-names = "eeprom";
++};
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 16f45f4..4805b1f 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -13,0 +14 @@ mediatek_setup_interfaces()
++	cmcc,rax3000m-emmc|\
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 9293b36..d17e46e 100644
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -101,0 +102,7 @@ platform_do_upgrade() {
++	cmcc,rax3000m-emmc)
++		# Recheck the actual named partitions in stage2 before any native eMMC write.
++		rax3000m_emmc_check_image "$1" || return 1
++		CI_KERNPART="kernel"
++		CI_ROOTPART="rootfs"
++		emmc_do_upgrade "$1"
++		;;
+@@ -307,0 +315,5 @@ platform_check_image() {
++	cmcc,rax3000m-emmc)
++		nand_do_platform_check "$board" "$1" || return 1
++		rax3000m_emmc_check_image "$1"
++		return $?
++		;;
+@@ -378,0 +391,3 @@ platform_copy_config() {
++	cmcc,rax3000m-emmc)
++		emmc_copy_config
++		;;
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/rax3000m-emmc.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/rax3000m-emmc.sh
+new file mode 100644
+index 0000000..cb18bf4
+--- /dev/null
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/rax3000m-emmc.sh
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Read-only capacity checks for the existing Kwrt eMMC kernel/rootfs layout.
++# Called by sysupgrade validation and again before the native stage2 writes.
++
++rax3000m_emmc_partition() {
++	local label="$1" entry found=""
++	for entry in /sys/class/block/mmcblk*p*; do
++		[ -r "$entry/uevent" ] || continue
++		grep -qx "PARTNAME=$label" "$entry/uevent" || continue
++		[ -z "$found" ] || return 1
++		found="${entry##*/}"
++	done
++	[ -n "$found" ] || return 1
++	printf '%s\n' "$found"
++}
++
++rax3000m_emmc_check_image() {
++	local image="$1" folder="sysupgrade-cmcc_rax3000m-emmc"
++	local members kern root kern_sectors root_sectors kern_bytes root_bytes root_end backup_bytes=4096
++	members="$(tar tf "$image" 2>/dev/null)" || return 1
++	[ "$members" = "$folder/
++$folder/CONTROL
++$folder/kernel
++$folder/root" ] || {
++		echo "Expected the Kwrt RAX3000M eMMC kernel/rootfs sysupgrade TAR." >&2
++		return 1
++	}
++	if ! kern="$(rax3000m_emmc_partition kernel)" || ! root="$(rax3000m_emmc_partition rootfs)"; then
++		echo "Missing or ambiguous existing eMMC kernel/rootfs partitions." >&2
++		return 1
++	fi
++	[ "${kern%%p[0-9]*}" = "${root%%p[0-9]*}" ] || return 1
++	kern_sectors="$(cat "/sys/class/block/$kern/size")" || return 1
++	root_sectors="$(cat "/sys/class/block/$root/size")" || return 1
++	case "$kern_sectors:$root_sectors" in
++		*[!0-9:]*|:*|*:) return 1 ;;
++	esac
++	[ -b "/dev/$kern" ] && [ -b "/dev/$root" ] || return 1
++	kern_bytes="$(tar xOf "$image" "$folder/kernel" | wc -c)"
++	root_bytes="$(tar xOf "$image" "$folder/root" | wc -c)"
++	[ "$kern_bytes" -gt 0 ] && [ "$root_bytes" -gt 0 ] || return 1
++	[ -z "$UPGRADE_BACKUP" ] || {
++		backup_bytes="$(wc -c < "$UPGRADE_BACKUP")" || return 1
++		[ "$backup_bytes" -ge 4096 ] || backup_bytes=4096
++	}
++	# libfstools/rootdisk and emmc_upgrade_tar align the overlay at 64 KiB.
++	root_end=$(( (root_bytes + 65535) / 65536 * 65536 ))
++	if [ "$kern_bytes" -gt "$((kern_sectors * 512))" ] ||
++		[ "$((root_end + backup_bytes))" -gt "$((root_sectors * 512))" ]; then
++		echo "Image/backup does not fit the existing eMMC partitions; layout remains unchanged." >&2
++		return 1
++	fi
++	export EMMC_KERN_DEV="/dev/$kern" EMMC_ROOT_DEV="/dev/$root"
++	unset EMMC_DATA_DEV EMMC_DTB_DEV CI_DATAPART CI_DTBPART
++}
+diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
+index 5ae0305..01e35bf 100644
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -937,0 +938,13 @@ TARGET_DEVICES += cmcc_rax3000m
++# Kwrt's existing kernel/rootfs eMMC layout; leave the official unified profile intact.
++define Device/cmcc_rax3000m-emmc
++  DEVICE_VENDOR := CMCC
++  DEVICE_MODEL := RAX3000M eMMC
++  DEVICE_DTS := mt7981b-cmcc-rax3000m-emmc-kwrt
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
++	e2fsprogs f2fsck mkf2fs losetup kmod-fs-f2fs kmod-mmc
++  IMAGES := sysupgrade.bin
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += cmcc_rax3000m-emmc
++

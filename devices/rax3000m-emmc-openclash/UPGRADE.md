@@ -30,34 +30,47 @@ sh /tmp/collect-device-info.sh > /tmp/rax3000m-readonly.txt
 U-Boot 版本若只能从串口日志/恢复页面获知，由用户提供已遮盖私密内容的版本信息，
 不据作者名称臆测页面地址、按键时序或恢复协议。
 
-## 官方候选的写入路径
+## 本次候选的写入路径
 
-以下为固定 OpenWrt v25.12.5 的源码证据；当前已运行系统的行为需另行核对。
+用户上传商家镜像已确认独立 kernel/rootfs eMMC 路径，见
+[VENDOR-FIRMWARE.md](VENDOR-FIRMWARE.md)。这是静态文件证据，不能替代实机 GPT。
+下面为固定 v25.12.5 加本设备最小补丁的源码逻辑。
 
 | 源码 | 作用及范围 |
 | --- | --- |
-| `target/linux/mediatek/image/filogic.mk` 的 `Device/cmcc_rax3000m` | 统一 FIT `sysupgrade.itb`，含正式 NAND/eMMC overlay |
-| `.../dts/mt7981b-cmcc-rax3000m.dts` | 设备为 `cmcc,rax3000m`，根文件系统为 `/dev/fit0` |
-| `.../dts/mt7981b-cmcc-rax3000m-emmc.dtso` | 按名称引用现有 `production` 系统分区和 `factory` 校准分区，不定义/重写 GPT 边界 |
-| `.../filogic/base-files/lib/upgrade/platform.sh` | 该 board 使用 `fit_check_image` / `fit_do_upgrade`，eMMC 分支支持配置保存 |
-| `package/utils/fitblk/files/fit.sh` | 从当前 DT `chosen/rootdisk` phandle 找到实际块设备，设置 `EMMC_KERN_DEV`；资料不匹配时不能猜分区号 |
-| `package/base-files/files/lib/upgrade/emmc.sh` | `emmc_upgrade_fit` 去除 fwtool 尾部信息后，以 dd 更新已识别的系统分区内容 |
-| fstools 固定源码 `16718b6e3c0fc7db7be6ae5848db0eae88ac8a8b` 的 `libfstools/fit.c/common.c` | 识别 FIT 根及 `/dev/fitrw`，需要时在该系统分区内初始化可写 ext4/F2FS |
+| `filogic.mk` 的 `Device/cmcc_rax3000m-emmc` | 原生 `sysupgrade-tar` + 元数据，生成 `.bin`；不生成 GPT/引导文件 |
+| `mt7981b-cmcc-rax3000m-emmc-kwrt.dts` | 包含完整共用 DTS，真实身份 `cmcc,rax3000m-emmc`；根为 `PARTLABEL=rootfs` |
+| 叶 DTS 的 eMMC/factory/wifi 绑定 | 复用官方 eMMC 及本机校准绑定；不定义 GPT 起止或改变现有分区 |
+| `filogic/base-files/lib/upgrade/platform.sh` 的该 board 分支 | 原生 TAR 检查、容量检查、`CI_KERNPART=kernel`、`CI_ROOTPART=rootfs`、`emmc_do_upgrade` / 配置保存 |
+| `lib/upgrade/rax3000m-emmc.sh` | 只读检查 TAR 成员、实际唯一分区标签、同一 eMMC 及容量；验证和 stage2 写入前再次检查 |
+| `package/base-files/files/lib/upgrade/emmc.sh` | 保持上游原生逻辑，分别写入 kernel/rootfs 已有分区 |
+| fstools `16718b6e3c0fc7db7be6ae5848db0eae88ac8a8b` 的 `libfstools/rootdisk.c/common.c` | 在 rootfs 分区内、SquashFS bytes_used 的 64 KiB 对齐末尾，建立 loop overlay 并按需初始化 ext4/F2FS |
 
-在官方路径下，内核、根 squashfs 及 DT/overlay 同处一个 FIT；升级修改 `EMMC_KERN_DEV`
-对应的现有系统分区内容，不向整个 `/dev/mmcblk0` 写 GPT，不更新 BL2、FIP/U-Boot 或 factory。
-不保留配置时，会在去除尾部元数据后的镜像末尾之后、系统分区以内写入约 4KiB 的 overlay 初始化标记；
-保留配置时，把配置备份写入系统分区内用于下一次启动恢复的区域。
-首次启动可能格式化 `/dev/fitrw` 所覆盖的可写区域，**旧 overlay 的应用、配置及存放数据可能被清除**。
-这属于系统分区内部文件系统更新，允许范围与 GPT 调整不同；本任务不执行。
-可写区域大小和偏移需用实际镜像、目标 GPT 及当前升级脚本核对。
+原官方统一 `cmcc_rax3000m`、共用 DTS 及 NAND/eMMC overlays 保持完整。
+它使用 `production` + `/dev/fit0` + external FIT `.itb`，与商家文件的路径不同；
+**该统一 `.itb` 验证构建不作为这台设备的升级交付，也不能改名为 `.bin` 来刷。**
+本设备补丁仅新增正式 Kwrt 设备路径及对应网口/升级分支，不裁剪共享设备树或伪造标识。
 
-U-Boot 必须支持该 external FIT，正确选择/叠加 `mt7981b-cmcc-rax3000m-emmc` overlay，
-并从现有系统分区启动。只会启动传统分开的 kernel/rootfs、不能应用 overlay，
-或当前标识为 `cmcc,rax3000m-emmc` 而校验不接受统一 profile 时，不能直接套用候选。
-不改扩展名、不伪造 board、不给 `sysupgrade -F` 或忽略兼容版本的建议。
-若继续必须改变 GPT、引导或校准数据，停止直接刷写建议并先说明、征求用户决定。
-保留已经调整的 2GB 布局仍是本任务边界。
+本次 TAR 只有 CONTROL、kernel 和 root。
+原生升级先暂时清零 kernel 前 4 KiB，写 root payload 后再写 kernel payload。
+不保留配置时，在 root payload 的 64 KiB 对齐末尾清零 4 KiB 作为 overlay 初始化标记；
+保留配置时，在该偏移写配置备份，需另计实际备份长度。
+首次启动可能格式化 rootfs 分区剩余区域的 loop 文件系统，
+**旧 overlay 的配置、应用和存放数据可能被清除**。
+这属于现有系统分区内部的文件系统初始化，不改变 GPT 起止、名称和容量。
+此 board 分支不写整盘 GPT、BL2、FIP/U-Boot、factory 或 eMMC boot0/boot1。
+本任务没有执行这些写入。
+
+容量检查只能确保 payload 及 marker/备份不越界，不能保证剩余空间足够日常运行。
+当前旧系统第一次写新镜像仍执行旧升级脚本；新增 guard 不保护那一次旧系统写入。
+所以需要先手工核对当前脚本的实际写入对象、两个分区容量、可写空间和恢复入口。
+U-Boot 必须能从当前 kernel 分区加载相同结构的 ARM64/LZMA FIT 并使用该 DTB，
+实际 DDR、内存及交换机版本也应确认。
+目前只知道作者名和卖家描述，不据此猜分区号、恢复 IP 或接受格式。
+
+不改扩展名、不伪造 board，不使用 `sysupgrade -F` 或忽略兼容版本。
+如继续必须改变 GPT、引导或校准数据，停止直接刷写建议并先征求用户决定。
+保留已经调整的约 2GB 布局仍是本任务边界。
 
 ## 当前系统上的预检查
 
@@ -66,12 +79,12 @@ U-Boot 必须支持该 external FIT，正确选择/叠加 `mt7981b-cmcc-rax3000m
 不要仅依据新固件里有该参数推断旧系统支持；二进制验证器来源不明时先补齐源码/版本。
 
 确认后由用户手动把候选复制到 `/tmp`，核对 SHA256SUMS，
-再运行当前系统支持的 `sysupgrade -T /tmp/实际文件名-sysupgrade.itb`。
+再运行当前系统支持的 `sysupgrade -T /tmp/实际文件名-sysupgrade.bin`。
 这会产生 `/tmp` 校验临时文件，但不应写系统分区；任何实际兼容错误都必须保留并调查。
 没有通过时停止，不使用 `-F`、`--ignore-minor-compat-version`、强装依赖或关闭校验。
 
 SHA256 相同只证明文件一致；`sysupgrade -T` 通过只证明当时脚本的检查通过。
-还需交叉验证写入目标、分区容量、U-Boot/overlay 支持和恢复方案，
+还需交叉验证写入目标、分区容量、U-Boot/内核 FIT 支持和恢复方案，
 模拟器启动也不能替代这些实机证据或长期稳定测试。
 
 ## 待审核的备份清单（尚未执行）

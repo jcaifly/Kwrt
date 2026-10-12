@@ -27,6 +27,7 @@ preserve_diagnostics() {
     set +e
     printf '%s\n' "$result" > "$diagnostics/$mode.exit-code"
     cp "$profile_dir/sources.env" "$diagnostics/source-pins.env"
+    cp "$profile_dir/patches/kwrt-emmc-layout.patch" "$diagnostics/"
     [[ ! -f "$tree/.config" ]] || cp "$tree/.config" "$diagnostics/final.config"
     [[ ! -d "$tree/logs" ]] || tar -czf "$diagnostics/openwrt-logs.tar.gz" -C "$tree" logs
     if [[ -d "$tree/target/linux/mediatek" ]]; then
@@ -36,6 +37,9 @@ preserve_diagnostics() {
             "$tree/package/utils/fitblk/files/fit.sh" \
             "$tree/package/base-files/files/lib/upgrade/fwtool.sh" \
             "$tree/package/base-files/files/sbin/sysupgrade" "$diagnostics/upstream-upgrade/"
+        [[ ! -f "$tree/target/linux/mediatek/filogic/base-files/lib/upgrade/rax3000m-emmc.sh" ]] || \
+            cp "$tree/target/linux/mediatek/filogic/base-files/lib/upgrade/rax3000m-emmc.sh" \
+                "$diagnostics/upstream-upgrade/"
     fi
     df -h > "$diagnostics/disk-usage.txt"
     if [[ "$result" != 0 && "${GITHUB_ACTIONS:-false}" == true ]]; then
@@ -91,8 +95,8 @@ collect() {
     }
     mkdir -p "$artifact_root/firmware"
     local target_dir="$tree/bin/targets/mediatek/filogic"
-    # The profile also produces boot/GPT artifacts. They are not upgrade objects.
-    cp "$target_dir/"*cmcc_rax3000m-squashfs-sysupgrade.itb "$artifact_root/firmware/"
+    # Only the native kernel/rootfs TAR image; no GPT or bootloader artifacts.
+    cp "$target_dir/"*cmcc_rax3000m-emmc-squashfs-sysupgrade.bin "$artifact_root/firmware/"
     cp "$target_dir/"*.manifest "$artifact_root/firmware/packages.manifest"
     cp "$target_dir/profiles.json" "$artifact_root/firmware/"
     cp "$diagnostics/final.config" "$diagnostics/diff.config" \
@@ -101,6 +105,7 @@ collect() {
     cp "$tree"/build_dir/target-*/linux-mediatek_filogic/linux-*/.config \
         "$artifact_root/firmware/kernel.config"
     cp "$profile_dir/README.md" "$profile_dir/UPGRADE.md" "$profile_dir/VALIDATION.md" \
+        "$profile_dir/VENDOR-FIRMWARE.md" \
         "$profile_dir/collect-device-info.sh" "$artifact_root/firmware/"
     python3 - "$artifact_root/firmware" "$mode" <<'PY'
 import json
@@ -119,7 +124,8 @@ lines = [
     f"| 镜像 | `{report['image']}` |",
     f"| SHA256 | `{report['sha256']}` |",
     f"| 镜像大小 | {report['image_size_bytes']} 字节 |",
-    f"| profile 构建上限 | {report['build_image_limit_bytes']} 字节；不是实机分区容量 |",
+    '| 允许上限 | 该独立 eMMC profile 无固定 IMAGE_SIZE；实际 kernel/rootfs 分区容量待采集 |',
+    f"| kernel / root 最低所需空间 | {report['tar']['kernel_bytes']} / {report['tar']['minimum_root_partition_bytes']} 字节；后者仅含初始化标记，不代表足够可写空间 |",
     '| 实机 GPT / U-Boot / sysupgrade -T / 硬件和长期运行 | 待验证 |',
     f"| 最终安装包数 / OpenClash | {report['package_count']} / {report['openclash_version']} |",
     f"| Linux 内核包 / ABI | `{report['kernel_package_version']}` |",
@@ -129,17 +135,19 @@ lines = [
 for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash'):
     lines.append(f"| {name} | `{sources[name]['commit']}` |")
 lines.extend(['', '包清单、源码及详细检查见同包 JSON/config/manifest。',
-              '升级前读取 UPGRADE.md。仅 sysupgrade.itb 是候选普通升级对象；不刷 GPT、BL2、FIP。',
+              '升级前读取 UPGRADE.md。仅 cmcc_rax3000m-emmc 的 sysupgrade.bin 是候选普通升级对象；不刷 GPT、BL2、FIP。',
               '同次运行的 diagnostics 附件保存编译及失败诊断日志。', ''])
 (folder / 'VALIDATION.md').write_text('\n'.join(lines))
 PY
-    (cd "$artifact_root/firmware" && sha256sum ./*.itb > SHA256SUMS)
+    (cd "$artifact_root/firmware" && sha256sum ./*.bin > SHA256SUMS)
     cat "$artifact_root/firmware/SHA256SUMS"
 }
 
 case "$mode" in
     prepare)
         clone_exact "$OPENWRT_URL" "$OPENWRT_COMMIT" "$tree"
+        git -C "$tree" apply --check --index --unidiff-zero "$profile_dir/patches/kwrt-emmc-layout.patch"
+        git -C "$tree" apply --index --unidiff-zero "$profile_dir/patches/kwrt-emmc-layout.patch"
         [[ ! -e "$openclash_feed" ]]
         git init -q "$openclash_feed"
         git -C "$openclash_feed" remote add origin "$OPENCLASH_URL"

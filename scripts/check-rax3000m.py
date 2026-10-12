@@ -4,26 +4,30 @@
 import argparse
 import gzip
 import hashlib
+import io
 import json
+import lzma
 import os
 from pathlib import Path
 import re
 import struct
 import subprocess
+import tarfile
 import zlib
 
 
-DEVICE = "cmcc_rax3000m"
-BOARD = "cmcc,rax3000m"
+DEVICE = "cmcc_rax3000m-emmc"
+BOARD = "cmcc,rax3000m-emmc"
+UNIFIED_BOARD = "cmcc,rax3000m"
 PROFILE = f"TARGET_mediatek_filogic_DEVICE_{DEVICE}"
 ARCH = "aarch64_cortex-a53"
 ROOT_PARTSIZE = 448
-BUILD_LIMIT = (64 + ROOT_PARTSIZE) * 1024 * 1024
+BUILD_LIMIT = None  # The existing Kwrt profile specifies no fixed IMAGE_SIZE.
 PROFILE_DIR = "devices/rax3000m-emmc-openclash"
 DEFAULTS = "etc/uci-defaults/zz-rax3000m-openclash"
 REQUIRED = {
     "apk-mbedtls", "base-files", "busybox", "dropbear", "netifd", "uci", "ubus", "logd",
-    "fstools", "fitblk", "uboot-envtools", "e2fsprogs", "f2fsck", "mkf2fs",
+    "fstools", "uboot-envtools", "e2fsprogs", "f2fsck", "mkf2fs", "losetup", "kmod-mmc", "kmod-fs-f2fs",
     "firewall4", "nftables-json", "dnsmasq-full", "ppp", "ppp-mod-pppoe",
     "odhcp6c", "odhcpd-ipv6only", "wpad-basic-mbedtls", "wifi-scripts",
     "kmod-mt7915e", "kmod-mt7981-firmware", "mt7981-wo-firmware", "kmod-usb3",
@@ -45,7 +49,7 @@ DISABLED = {
     "PACKAGE_dnsmasq_full_ipset", "FEED_openclash",
 }
 BUILTIN_DRIVERS = {
-    "MMC", "MMC_BLOCK", "MMC_MTK", "EXT4_FS", "F2FS_FS",
+    "MMC", "MMC_BLOCK", "MMC_MTK", "EXT4_FS", "F2FS_FS", "BLK_DEV_LOOP",
     "NET_DSA", "NET_DSA_MT7530", "NET_DSA_AN8855", "MEDIATEK_WATCHDOG",
 }
 
@@ -214,11 +218,18 @@ def check_config(tree):
         require(value in overlay, f"Official eMMC/calibration support lost {value}")
     for label in ("lan1", "lan2", "lan3"):
         require(f'label = "{label}";' in dts, f"Missing LAN port {label}")
+    legacy = re.search(r"^define Device/cmcc_rax3000m-emmc\n(.*?)^endef", device_mk, re.M | re.S)
+    require(legacy is not None and "sysupgrade-tar | append-metadata" in legacy[1] and
+            "IMAGE_SIZE" not in legacy[1] and "ARTIFACTS" not in legacy[1], "Wrong Kwrt eMMC image recipe")
+    leaf = (tree / "target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-emmc-kwrt.dts").read_text()
+    for value in ('#include "mt7981b-cmcc-rax3000m.dts"', 'compatible = "cmcc,rax3000m-emmc"',
+                  '/delete-property/ bootargs-override;', 'root=PARTLABEL=rootfs rootwait',
+                  'partname = "factory";', 'nvmem-cell-names = "eeprom";'):
+        require(value in leaf, f"Missing native Kwrt eMMC support: {value}")
     kernel_config = read_config(tree / "target/linux/mediatek/filogic/config-6.12")
     for symbol in BUILTIN_DRIVERS:
         require(kernel_config.get(symbol) == "y", f"Missing built-in CONFIG_{symbol}")
-    require(not command("git", "-C", str(tree), "diff", "--", "target", "include", "package"),
-            "Upstream target, upgrade, driver or compatibility code was modified")
+    check_device_patch(tree)
     return {
         "status": "passed", "target": "mediatek/filogic", "selected_profiles": profiles,
         "architecture": ARCH, "build_image_limit_bytes": BUILD_LIMIT,
@@ -229,6 +240,12 @@ def check_config(tree):
         "builtin_drivers": sorted(BUILTIN_DRIVERS), "core_packages": [],
         "config_sha256": digest(tree / ".config"), "hardware_validation": "not performed",
     }
+
+
+def check_device_patch(tree):
+    patch = Path(__file__).resolve().parents[1] / PROFILE_DIR / "patches/kwrt-emmc-layout.patch"
+    require(command("git", "-C", str(tree), "diff", "HEAD", "--no-ext-diff", "--binary", "--unified=0") ==
+            patch.read_text().strip(), "OpenWrt changes differ from the reviewed device-only patch")
 
 
 def check_core_files(root):
@@ -268,7 +285,9 @@ def provenance(repo, build):
         commit = command("git", "-C", str(location), "rev-parse", "HEAD")
         require(commit == lock[f"{prefix}_COMMIT"], f"{name} differs from pinned commit")
         result[name] = {"url": lock[f"{prefix}_URL"], "commit": commit}
-        if name != "openclash":
+        if name == "openwrt":
+            check_device_patch(location)
+        elif name != "openclash":
             require(not command("git", "-C", str(location), "status", "--porcelain", "--untracked-files=no"),
                     f"Unexpected tracked source changes: {name}")
     release_feeds = (build / "openwrt/feeds.conf.default").read_text()
@@ -306,7 +325,8 @@ def provenance(repo, build):
             "option small_flash_memory '0'" in (root / "etc/config/openclash").read_text(),
             "Plugin service or small-flash defaults changed")
     require(not list((root / "etc/openclash/config").glob("*")), "Preconfigured proxy nodes/subscription")
-    result["openwrt"].update({"tag": lock["OPENWRT_TAG"], "version": lock["OPENWRT_VERSION"]})
+    result["openwrt"].update({"tag": lock["OPENWRT_TAG"], "version": lock["OPENWRT_VERSION"],
+                            "device_patch_sha256": digest(repo / PROFILE_DIR / "patches/kwrt-emmc-layout.patch")})
     result["openclash"].update({
         "version": f"{lock['OPENCLASH_VERSION']}-{lock['OPENCLASH_RELEASE']}",
         "apk_version": package_records(build / "openwrt/tmp/.packageinfo")["luci-app-openclash"]["Version"],
@@ -404,7 +424,7 @@ def check_fit(data):
         require(fdt_strings(nodes[f"/configurations/{name}"]["fdt"]) == [f"fdt-{name}"],
                 f"Missing {storage} overlay configuration")
         overlay_nodes, _ = parse_fdt(payloads[overlay])
-        require(BOARD in fdt_strings(overlay_nodes["/"]["compatible"]), "Overlay identity differs")
+        require(UNIFIED_BOARD in fdt_strings(overlay_nodes["/"]["compatible"]), "Overlay identity differs")
         if storage == "emmc":
             require(any(p.get("partname") == b"production\0" for p in overlay_nodes.values()),
                     "eMMC overlay lacks the production root partition")
@@ -418,7 +438,7 @@ def check_fit(data):
     require(len(decoded_kernel) >= 64 and decoded_kernel[56:60] == b"ARM\x64",
             "FIT kernel lacks the ARM64 Linux Image header")
     base, _ = parse_fdt(payloads["/images/" + fdt_strings(config["fdt"])[0]])
-    require(BOARD in fdt_strings(base["/"]["compatible"]), "FIT device tree is for another model")
+    require(UNIFIED_BOARD in fdt_strings(base["/"]["compatible"]), "FIT device tree is for another model")
     require(base["/chosen"].get("bootargs-override") == b"root=/dev/fit0 rootwait\0", "FIT root changed")
     root = payloads["/images/" + next(v for v in fdt_strings(config["loadables"]) if v.startswith("rootfs"))]
     require(root[:4] == b"hsqs" and len(root) >= 96, "Missing squashfs rootfs")
@@ -442,6 +462,71 @@ def installed_records(root):
             records[fields["P"]] = fields
     require(records, "Empty installed APK database")
     return records
+
+
+def check_tar(data):
+    """Inspect a real native Kwrt sysupgrade TAR without executing its contents."""
+    folder = "sysupgrade-" + DEVICE
+    with tarfile.open(fileobj=io.BytesIO(data), mode="r:") as archive:
+        members = archive.getmembers()
+        expected = [folder, folder + "/CONTROL", folder + "/kernel", folder + "/root"]
+        require([m.name.rstrip("/") for m in members] == expected, "Unexpected sysupgrade TAR members")
+        require(members[0].isdir() and all(m.isfile() for m in members[1:]),
+                "Links or special files in sysupgrade TAR")
+        require(all(0 < m.size <= 128 * 1024 * 1024 for m in members[1:]), "Invalid TAR payload size")
+        require(archive.extractfile(members[1]).read() == f"BOARD={DEVICE}\n".encode(), "Wrong TAR board")
+        kernel = archive.extractfile(members[2]).read()
+        root = archive.extractfile(members[3]).read()
+    nodes, total = parse_fdt(kernel)
+    require(total == len(kernel), "Unexpected trailing bytes in kernel FIT")
+    images = {p: props for p, props in nodes.items() if re.fullmatch(r"/images/[^/]+", p)}
+    require(len(images) == 2, "Expected an embedded kernel and device tree in FIT")
+    payloads, hashes = {}, []
+    for path, props in images.items():
+        require(fdt_strings(props["arch"]) == ["arm64"], "Wrong eMMC FIT architecture")
+        require("data" in props and "data-position" not in props and "data-offset" not in props,
+                "Expected an embedded eMMC FIT payload")
+        payload = props["data"]
+        algorithms = []
+        for hp, fields in nodes.items():
+            if not re.fullmatch(re.escape(path) + r"/hash[^/]*", hp):
+                continue
+            algorithm = fdt_strings(fields["algo"])[0]
+            require(algorithm in {"crc32", "sha1", "sha256"}, "Unsupported FIT checksum")
+            expected = struct.pack(">I", zlib.crc32(payload)) if algorithm == "crc32" else hashlib.new(algorithm, payload).digest()
+            require(fields["value"] == expected, f"eMMC FIT {algorithm} checksum mismatch: {path}")
+            algorithms.append(algorithm)
+        require("crc32" in algorithms and any(a in algorithms for a in ("sha1", "sha256")), "Missing FIT hashes")
+        payloads[path] = payload
+        hashes.append({"node": path, "payload_bytes": len(payload), "hashes": algorithms})
+    default = fdt_strings(nodes["/configurations"]["default"])[0]
+    cfg = nodes["/configurations/" + default]
+    kernel_path = "/images/" + fdt_strings(cfg["kernel"])[0]
+    require(fdt_strings(images[kernel_path]["compression"]) == ["lzma"], "Wrong eMMC kernel compression")
+    decoder = lzma.LZMADecompressor(memlimit=64 * 1024 * 1024)
+    decoded = decoder.decompress(payloads[kernel_path], max_length=128 * 1024 * 1024)
+    require(decoder.eof and len(decoded) >= 64 and decoded[56:60] == b"ARM\x64", "Invalid ARM64 kernel")
+    base, _ = parse_fdt(payloads["/images/" + fdt_strings(cfg["fdt"])[0]])
+    require(fdt_strings(base["/"]["compatible"])[0] == BOARD, "Wrong eMMC device tree identity")
+    require(base["/chosen"].get("bootargs") == b"root=PARTLABEL=rootfs rootwait\0" and
+            "bootargs-override" not in base["/chosen"] and "rootdisk" not in base["/chosen"],
+            "Wrong eMMC root/boot arguments")
+    require(any(p.get("partname") == b"factory\0" for p in base.values()), "Missing local factory support")
+    require(any("mmc@" in p and props.get("status") == b"okay\0" for p, props in base.items()),
+            "Missing active eMMC controller")
+    require(not any(p.get("partname") == b"production\0" for p in base.values()), "Unexpected production layout")
+    require(root[:4] == b"hsqs" and len(root) >= 96, "Missing TAR squashfs root")
+    require(struct.unpack_from("<H", root, 28)[0] == 4, "Wrong squashfs version")
+    used = struct.unpack_from("<Q", root, 40)[0]
+    require(96 <= used <= len(root), "Squashfs exceeds TAR root payload")
+    end = (len(root) + 65535) // 65536 * 65536
+    require(end == (used + 65535) // 65536 * 65536, "Rootdisk and upgrade overlay offsets differ")
+    return {"status": "passed", "kernel_bytes": len(kernel), "root_payload_bytes": len(root),
+            "squashfs_bytes_used": used, "overlay_offset_bytes": end,
+            "minimum_root_partition_bytes": end + 4096,
+            "minimum_note": "Only allows the native 4 KiB reset marker; writable space and backup capacity still require actual GPT evidence.",
+            "fit_payloads": hashes, "uncompressed_linux_image_bytes": len(decoded),
+            "board": BOARD, "root": "PARTLABEL=rootfs", "partition_layout": "unchanged; not embedded"}
 
 
 def check_rootfs(root, versions):
@@ -497,20 +582,20 @@ def check_artifact(tree):
     target = tree / "bin/targets/mediatek/filogic"
     images = [p for p in tree.glob("bin/targets/**/*sysupgrade*") if p.is_file() and not p.name.endswith(".json")]
     require(len(images) == 1 and images[0].parent == target and
-            images[0].name.endswith(f"{DEVICE}-squashfs-sysupgrade.itb"), f"Unexpected upgrade images: {images}")
+            images[0].name.endswith(f"{DEVICE}-squashfs-sysupgrade.bin"), f"Unexpected upgrade images: {images}")
     image = images[0]
     size, sha256 = image.stat().st_size, digest(image)
-    require(0 < size <= BUILD_LIMIT, f"Image exceeds profile build limit: {size}")
+    require(size > 0, "Empty image")
     profiles = json.loads((target / "profiles.json").read_text())
     require(profiles["target"] == "mediatek/filogic" and set(profiles["profiles"]) == {DEVICE}, "Wrong profiles")
     profile = profiles["profiles"][DEVICE]
     require(BOARD in profile["supported_devices"], "Wrong device identity")
-    require(profile["file_size_limits"]["image"] == BUILD_LIMIT, "Unexpected profile image limit")
+    require(profile.get("file_size_limits", {}).get("image") in (None, 0), "Unexpected fixed partition assumption")
     entries = [i for i in profile["images"] if i["type"] == "sysupgrade"]
     require(len(entries) == 1 and entries[0]["name"] == image.name and
             entries[0]["filesystem"] == "squashfs", "Wrong upgrade image format")
     require(entries[0]["sha256"] == sha256 and entries[0]["size"] == size, "Image metadata checksum/size differs")
-    fit = check_fit(image.read_bytes())
+    tar = check_tar(image.read_bytes())
     metadata_path = target / "rax3000m-fwtool.json"
     subprocess.run([str(tree / "staging_dir/host/bin/fwtool"), "-i", str(metadata_path), str(image)], check=True)
     metadata = json.loads(metadata_path.read_text())
@@ -534,8 +619,8 @@ def check_artifact(tree):
         "status": "passed", "device": DEVICE, "image": image.name, "sha256": sha256,
         "image_size_bytes": size, "build_image_limit_bytes": BUILD_LIMIT,
         "actual_router_partition_limit_bytes": None, "writable_overlay_bytes": None,
-        "size_note": "512 MiB is the profile's build setting, not measured router capacity. Actual GPT/production size is pending.",
-        "fit": fit, "embedded_metadata": metadata, "package_count": len(versions), **root_report,
+        "size_note": "The existing eMMC profile has no fixed IMAGE_SIZE. Actual kernel/rootfs GPT capacities and usable overlay are pending; the image is not cleared for flashing.",
+        "tar": tar, "embedded_metadata": metadata, "package_count": len(versions), **root_report,
         "rootfs_path": str(roots[0].relative_to(tree)), "kernel_config_path": str(kernels[0].relative_to(tree)),
         "openclash_version": versions["luci-app-openclash"], "core_files": [],
         "default_service_enabled": False, "small_flash_memory": False,
@@ -562,7 +647,8 @@ def main():
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
         print(f"{args.mode}: passed; report: {output}")
-    except (ValueError, OSError, KeyError, IndexError, UnicodeError, struct.error, zlib.error, subprocess.CalledProcessError) as error:
+    except (ValueError, OSError, KeyError, IndexError, UnicodeError, struct.error, zlib.error,
+            lzma.LZMAError, tarfile.TarError, subprocess.CalledProcessError) as error:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps({"status": "failed", "error": str(error)}, ensure_ascii=False, indent=2) + "\n")
         if os.getenv("GITHUB_ACTIONS") == "true":
