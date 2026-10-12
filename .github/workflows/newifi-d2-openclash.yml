@@ -2,6 +2,7 @@ name: Newifi D2 OpenClash (no core)
 
 on:
   workflow_dispatch:
+  # Push verification is confined to this branch; normal branches run manually.
   push:
     branches:
       - codex/newifi-d2-openclash-verify
