@@ -163,6 +163,54 @@ class PackageAndCoreChecks(unittest.TestCase):
         self.assertEqual(list(check.dependency_names(value, config)), ["nftables-json", "kmod-nft-tproxy"])
 
 
+class ApkRepositoryChecks(unittest.TestCase):
+    def check_files(self, custom, dist=None):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            feeds = root / "etc/apk/repositories.d"
+            feeds.mkdir(parents=True)
+            (feeds / "customfeeds.list").write_text(custom)
+            if dist is not None:
+                (feeds / "distfeeds.list").write_text(dist)
+            return check.check_apk_sources(root)
+
+    def test_official_commented_example_is_not_an_active_feed(self):
+        custom = "# add your custom package feeds here\n#\n# http://www.example.com/path/to/files/packages.adb\n"
+        official = "https://downloads.openwrt.org/releases/25.12.5/targets/mediatek/filogic/packages/packages.adb\n"
+        report = self.check_files(custom, official)
+        self.assertEqual(report["active_software_repositories"], [official.strip()])
+        self.assertIn("www.example.com", report["software_repositories"]["etc/apk/repositories.d/customfeeds.list"])
+
+    def test_whitespace_before_disabled_feed_is_ignored(self):
+        official = "https://downloads.openwrt.org/releases/25.12.5/packages/aarch64_cortex-a53/base/packages.adb\n"
+        self.assertEqual(len(self.check_files("\n  # https://example.com/packages.adb\n", official)
+                             ["active_software_repositories"]), 1)
+
+    def test_same_example_url_enabled_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Unexpected active APK feed"):
+            self.check_files("http://www.example.com/path/to/files/packages.adb\n")
+
+    def test_wrong_release_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Unexpected active APK feed"):
+            self.check_files("https://downloads.openwrt.org/releases/24.10.5/packages/aarch64_cortex-a53/base/packages.adb\n")
+
+    def test_wrong_architecture_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "target/architecture"):
+            self.check_files("https://downloads.openwrt.org/releases/25.12.5/packages/mipsel_24kc/base/packages.adb\n")
+
+    def test_nonexistent_openclash_feed_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Nonexistent OpenClash"):
+            self.check_files("https://downloads.openwrt.org/releases/25.12.5/packages/aarch64_cortex-a53/openclash/packages.adb\n")
+
+    def test_comment_only_repositories_cannot_pass(self):
+        with self.assertRaisesRegex(ValueError, "Missing active software repositories"):
+            self.check_files("# https://downloads.openwrt.org/releases/25.12.5/packages/aarch64_cortex-a53/base/packages.adb\n")
+
+    def test_unrecognized_active_repository_line_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Invalid active APK feed"):
+            self.check_files("file:///tmp/packages\n")
+
+
 def tar_fixture(board=check.BOARD, bootargs="root=PARTLABEL=rootfs rootwait", symlink=False):
     dt = fdt([
         ("chosen", {"bootargs": string(bootargs)}, []),

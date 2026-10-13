@@ -529,6 +529,33 @@ def check_tar(data):
             "board": BOARD, "root": "PARTLABEL=rootfs", "partition_layout": "unchanged; not embedded"}
 
 
+def check_apk_sources(root):
+    sources, active = {}, []
+    for path in sorted((root / "etc/apk").glob("repositories*")):
+        candidates = sorted(path.glob("*")) if path.is_dir() else [path]
+        for file in candidates:
+            if not file.is_file():
+                continue
+            text = file.read_text()
+            relative = str(file.relative_to(root))
+            sources[relative] = text
+            for number, line in enumerate(text.splitlines(), 1):
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                urls = re.findall(r"https?://\S+", line)
+                require(len(urls) == 1, f"Invalid active APK feed in {relative}:{number}")
+                url = urls[0]
+                require(url.startswith("https://downloads.openwrt.org/releases/25.12.5/"),
+                        f"Unexpected active APK feed in {relative}:{number}; expected official release 25.12.5")
+                require("mediatek/filogic" in url or ARCH in url,
+                        f"Wrong APK feed target/architecture in {relative}:{number}")
+                require("/openclash/" not in url, f"Nonexistent OpenClash APK repository in {relative}:{number}")
+                active.append(url)
+    require(active, "Missing active software repositories")
+    return {"software_repositories": sources, "active_software_repositories": active}
+
+
 def check_rootfs(root, versions):
     records = installed_records(root)
     require({p: v["V"] for p, v in records.items()} == versions, "APK database and final manifest differ")
@@ -556,23 +583,11 @@ def check_rootfs(root, versions):
                 require(dependency == f"kernel={kernel}", f"Kernel ABI mismatch: {name}: {dependency}")
                 edges += 1
     require(edges > 0, "No kernel ABI dependencies checked")
-    repo_files = list((root / "etc/apk").glob("repositories*"))
-    sources = {}
-    for path in repo_files:
-        candidates = path.glob("*") if path.is_dir() else [path]
-        for file in candidates:
-            if file.is_file():
-                text = file.read_text()
-                sources[str(file.relative_to(root))] = text
-                for url in re.findall(r"https?://\S+", text):
-                    require(url.startswith("https://downloads.openwrt.org/releases/25.12.5/"), "Unexpected APK feed")
-                    require("mediatek/filogic" in url or ARCH in url, "Wrong feed target/architecture")
-                    require("/openclash/" not in url, "Nonexistent OpenWrt-hosted OpenClash repository")
-    require(any("https://" in text for text in sources.values()), "Missing software repositories")
+    repository_report = check_apk_sources(root)
     public_keys = [p for p in (root / "etc/apk/keys").glob("*") if p.is_file()]
     require(public_keys, "No trusted APK public keys installed")
     return {"elf_files_checked": elf_count, "kernel_package_version": kernel,
-            "kernel_abi_dependencies_checked": edges, "software_repositories": sources,
+            "kernel_abi_dependencies_checked": edges, **repository_report,
             "apk_trusted_public_keys_count": len(public_keys),
             "official_remote_kmod_abi": "not established; use packages built for this exact kernel ABI"}
 
