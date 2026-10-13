@@ -4,6 +4,8 @@
 设备使用 `mediatek/filogic` / `cmcc_rax3000m-emmc` profile，
 匹配用户上传商家固件的真实设备身份及独立 kernel/rootfs 升级路径。
 最小设备补丁保留官方共用 DTS、统一 profile 和正式 NAND/eMMC overlays，不伪造设备身份。
+本次重制补齐 USB 存储/VFAT 与基础 block-mount 支持，并交付同次构建的签名 APK 仓库。
+自动挂载和自动交换区默认关闭；不增加磁盘管理应用或常驻 blockd。
 **构建通过的产物仍是候选固件；在当前系统、GPT 和第三方 U-Boot 核对前，尚未确认可刷写。**
 本次运行 38336069750 已编译及镜像检查通过，上传 BIN 的 SHA256 与构建记录一致。
 实际大小、SHA256、包清单、来源及与商家参考的比较见 [FINAL-IMAGE.md](FINAL-IMAGE.md)。
@@ -11,7 +13,7 @@
 需确认的是该恢复页接受格式与写入对象，详见 UPGRADE.md。
 
 用户目前提供的信息：当前系统为 Kwrt，U-Boot 据卖家称来自 yuzhuii，软件分区已调整为约 2GB。
-上传的商家镜像已确认 Kwrt 25.12-SNAPSHOT / Linux 6.12.112 / `cmcc,rax3000m-emmc` /
+用户更正后的 7 月 15 日商家镜像已确认 Kwrt 25.12-SNAPSHOT / Linux 6.12.94 / `cmcc,rax3000m-emmc` /
 `root=PARTLABEL=rootfs rootwait`，详见 [VENDOR-FIRMWARE.md](VENDOR-FIRMWARE.md)。
 实际当前版本、U-Boot 版本、GPT 分区边界及引导配置仍待读取；用户暂时无法查看恢复页。
 本流程保留现有布局，不因 2GB 容量要求重新分区，也不执行路由器操作。
@@ -26,7 +28,7 @@
 | LuCI | 该发行版 feeds / `128a7812f4be233c5dd7f7466f534fd888785caf` |
 | OpenClash 软件包 | 0.48.002-r9 / kiddin9/op-packages `426eda7eae561e63b6dc78f4c6bcaa4105ca4b16` |
 | OpenClash 上游版本标记 | v0.48.002 / `e553e82e01c697aefbe1555261a503f425e00ccd` |
-| 必要本地补丁 | 保留 Kwrt eMMC kernel/rootfs 路径；增加 LuCI host 依赖；移除插件 APK 自更新绕过；补丁哈希写入 `sources.json` |
+| 必要本地补丁 | 保留 Kwrt eMMC kernel/rootfs 路径；为 APK 单包签名；增加 LuCI host 依赖；移除插件 APK 自更新绕过；补丁哈希写入 `sources.json` |
 
 25.12.5 是准备时官方仓库可见的最新 25.12 稳定标签，使用发行版自带的 feeds 固定值。
 Linux 内核及 ABI 使用真实构建结果；不把内核兼容值改成常量，不强装架构或版本不匹配的包。
@@ -41,12 +43,15 @@ Linux 内核及 ABI 使用真实构建结果；不把内核兼容值改成常量
 这些设置不能证明兼容性，本设备入口不执行 `devices/common/diy.sh`、
 `devices/mediatek_filogic/diy.sh` 或其通用补丁，使用干净上游系统源码。
 原有配置和工作流保持原样。
+新版仅在本独立构建树增加 APK 单包签名；不会修改仓库其他设备的打包逻辑。
 
 ## 包与默认行为
 
 保留基础 Linux 内核、eMMC/MMC、DSA 网口、MT7915/MT7981 双频无线、USB3、
 官方校准数据读取及所需 ext4/F2FS 工具，保留原生 DHCP/DNS、IPv4/IPv6、
 PPPoE、BusyBox 校时服务、证书、中文 LuCI、HTTPS、SSH 和 APK 包管理。
+USB 存储支持常规 USB Mass Storage、VFAT 和内核已有的 ext4，提供基础 block 工具。
+不默认挂载外接盘、启用交换区或更改任何 eMMC 分区；用户按需配置外接盘挂载。
 LuCI 防火墙及软件包管理页面属于基础管理功能。
 
 额外应用只有 `luci-app-openclash`。其完整声明依赖 `dnsmasq-full`、bash、curl、
@@ -87,6 +92,8 @@ Run workflow → 选择包含本配置的分支 → Run workflow。
   final.config、kernel.config、diff.config、packages.manifest、profiles.json、实际 sources.json、检查 JSON 和说明。
 - `rax3000m-emmc-openclash-diagnostics-<run_id>`：prepare/download/编译日志、串行失败诊断（如有）、
   OpenWrt 子任务日志、检查结果、实际上游升级脚本和阶段退出码。失败也保留，默认 30 天。
+- `rax3000m-emmc-matching-packages-<run_id>`：同次镜像的签名 APK、签名本地索引、
+  公开验证密钥、SHA256SUMS 和验收记录，使用方式见 [PACKAGES.md](PACKAGES.md)。
 - Actions Summary 显示实际镜像大小、整包 SHA256、安装包数、内核 ABI 和来源提交。
 
 交付只复制原生 `*cmcc_rax3000m-emmc-squashfs-sysupgrade.bin`。
@@ -129,6 +136,8 @@ root 最低所需空间包含 4 KiB 初始化标记，仅证明最低写入范�
 
 自编译内核模块与官方预编译 kmod 的 ABI 不能仅凭相同发行版/内核版本认定相同。
 实际内核包完整版本和每个 kmod 的依赖会核对；官方远端 kmod 的匹配状态单独标为未确认。
+新版附带经过真实签名验证、包身份比对和离线依赖求解的同次软件包仓库。
+它与本次镜像的内核 ABI 和信任密钥匹配，构建私钥不公开，详见 PACKAGES.md。
 需要新增内核模块时优先在这个固定来源的工作流一起构建，不能强装、忽略依赖或关闭签名。
 系统版本升级采用经过相同兼容性检查的匹配 sysupgrade 镜像，不把全量 `apk upgrade`
 当成系统升级或内核 ABI 兼容性证明。

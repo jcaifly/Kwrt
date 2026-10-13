@@ -1,4 +1,42 @@
-# 验证记录
+# 新版验证记录
+
+本次重制增加基础 USB 存储/VFAT/block-mount 支持及同次签名 APK 仓库。
+用户更正的 7 月 15 日商家镜像已实际下载核对；型号、TAR/FIT、root 启动参数、
+加载地址、eMMC 参数及原生升级脚本相符，见 VENDOR-FIRMWARE.md。
+
+| 新版检查 | 实际结果 |
+| --- | --- |
+| 新目录 prepare | 退出码 0，实际 defconfig/prereq、配置和精确补丁检查通过 |
+| 设备选择 | 唯一 cmcc_rax3000m-emmc / mediatek/filogic / aarch64_cortex-a53 |
+| 构建包 / 运行依赖 | 239 个 / 603 条；无独立 m 包、额外应用、核心、SDK/ImageBuilder |
+| 回归测试 | 39 项通过，含 5 项原生签名仓库端到端测试 |
+| 工作流 / shell / Python | actionlint、ShellCheck、Python AST、git diff --check 通过 |
+| 新版完整编译 / 镜像 / 最终包数 / ABI | 待新的实际 Actions 运行结果 |
+| 当前恢复页面 / 实际 GPT / 真机 / 代理 | 待验证；候选固件、尚未确认可刷写 |
+
+前置配置 SHA256：`3258743932aaab75926cf889d9054ec03097a9e123fb9f6160232ca141b1b7fa`。
+这是配置哈希；239 是构建选择数，不能当作最终安装包数或固件哈希。
+新目录为 `/workspace/scratch/rax3000m-build-revision2` 和
+`/workspace/scratch/rax3000m-artifacts-revision2`，诊断保留真实 prepare 日志和 JSON。
+
+```sh
+OPENWRT_MAKE=kwrt-make bash scripts/rax3000m-emmc-openclash.sh prepare \
+  /workspace/scratch/rax3000m-build-revision2 /workspace/scratch/rax3000m-artifacts-revision2
+OPENWRT_APK=PATH_TO_NATIVE_APK OPENWRT_OPENSSL=PATH_TO_NATIVE_OPENSSL \
+  python3 -B -m unittest discover -s scripts/tests -p 'test_*rax3000m*.py' -v
+```
+
+原生测试使用已核对的 SDK host APK/OpenSSL、临时密钥及无可执行程序的测试数据。
+禁用软件包脚本，从原生临时数据库读取包身份；验证签名、包身份和离线依赖闭包。
+负例覆盖不同签名密钥、损坏归档、同名同版本载荷替换、未验证镜像、
+错误架构、内核 ABI 和依赖改变。不使用强装、覆盖或关闭校验。
+构建后使用该次原生 host 工具再次执行新包仓库的 10 项检查。
+已核对固定 fstools 的 block detect 会生成 global 节，late defaults 关闭自动挂载和交换区。
+新版本的最终大小、SHA256 和包数必须来自新的镜像检查。
+
+## 上一版历史记录
+
+以下运行、配置计数和旧诊断属于上一版，不作为新版已编译的证据。
 
 当前阶段：运行 38336069750 完整编译和自动镜像验收通过，固件及诊断已交付。
 用户上传的 BIN 与该运行 SHA256 完全一致，独立文件检查也通过。

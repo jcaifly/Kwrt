@@ -27,10 +27,11 @@ PROFILE_DIR = "devices/rax3000m-emmc-openclash"
 DEFAULTS = "etc/uci-defaults/zz-rax3000m-openclash"
 REQUIRED = {
     "apk-mbedtls", "base-files", "busybox", "dropbear", "netifd", "uci", "ubus", "logd",
-    "fstools", "uboot-envtools", "e2fsprogs", "f2fsck", "mkf2fs", "losetup", "kmod-mmc", "kmod-fs-f2fs",
+    "fstools", "block-mount", "uboot-envtools", "e2fsprogs", "f2fsck", "mkf2fs", "losetup", "kmod-mmc", "kmod-fs-f2fs",
     "firewall4", "nftables-json", "dnsmasq-full", "ppp", "ppp-mod-pppoe",
     "odhcp6c", "odhcpd-ipv6only", "wpad-basic-mbedtls", "wifi-scripts",
     "kmod-mt7915e", "kmod-mt7981-firmware", "mt7981-wo-firmware", "kmod-usb3",
+    "kmod-usb-storage", "kmod-fs-vfat",
     "luci-light", "luci-ssl", "luci-base", "luci-compat", "luci-lib-ipkg",
     "luci-app-firewall", "luci-app-package-manager", "luci-i18n-base-zh-cn",
     "luci-i18n-firewall-zh-cn", "luci-i18n-package-manager-zh-cn",
@@ -46,7 +47,7 @@ DISABLED = {
     "SDK", "MAKE_TOOLCHAIN", "TARGET_ROOTFS_INITRAMFS", "TARGET_ROOTFS_CPIOGZ",
     "TARGET_ROOTFS_TARGZ", "TARGET_ROOTFS_EXT4FS", "TARGET_ROOTFS_JFFS2",
     "TARGET_ROOTFS_JFFS2_NAND", "TARGET_ROOTFS_UBIFS", "TARGET_ROOTFS_EROFS",
-    "PACKAGE_dnsmasq_full_ipset", "FEED_openclash",
+    "PACKAGE_dnsmasq_full_ipset", "PACKAGE_blockd", "FEED_openclash",
 }
 BUILTIN_DRIVERS = {
     "MMC", "MMC_BLOCK", "MMC_MTK", "EXT4_FS", "F2FS_FS", "BLK_DEV_LOOP",
@@ -243,9 +244,11 @@ def check_config(tree):
 
 
 def check_device_patch(tree):
-    patch = Path(__file__).resolve().parents[1] / PROFILE_DIR / "patches/kwrt-emmc-layout.patch"
+    folder = Path(__file__).resolve().parents[1] / PROFILE_DIR / "patches"
+    reviewed = "\n".join((folder / name).read_text().strip() for name in (
+        "apk-package-signing.patch", "kwrt-emmc-layout.patch"))
     require(command("git", "-C", str(tree), "diff", "HEAD", "--no-ext-diff", "--binary", "--unified=0") ==
-            patch.read_text().strip(), "OpenWrt changes differ from the reviewed device-only patch")
+            reviewed, "OpenWrt changes differ from the reviewed device and APK-signing patches")
 
 
 def check_core_files(root):
@@ -326,7 +329,8 @@ def provenance(repo, build):
             "Plugin service or small-flash defaults changed")
     require(not list((root / "etc/openclash/config").glob("*")), "Preconfigured proxy nodes/subscription")
     result["openwrt"].update({"tag": lock["OPENWRT_TAG"], "version": lock["OPENWRT_VERSION"],
-                            "device_patch_sha256": digest(repo / PROFILE_DIR / "patches/kwrt-emmc-layout.patch")})
+                            "device_patch_sha256": digest(repo / PROFILE_DIR / "patches/kwrt-emmc-layout.patch"),
+                            "apk_signing_patch_sha256": digest(repo / PROFILE_DIR / "patches/apk-package-signing.patch")})
     result["openclash"].update({
         "version": f"{lock['OPENCLASH_VERSION']}-{lock['OPENCLASH_RELEASE']}",
         "apk_version": package_records(build / "openwrt/tmp/.packageinfo")["luci-app-openclash"]["Version"],
@@ -566,15 +570,17 @@ def check_rootfs(root, versions):
     require(not list((root / "etc/openclash/config").glob("*")), "Bundled subscription/proxy configuration")
     startup = (root / DEFAULTS).read_text()
     for value in ("/etc/init.d/openclash disable", "set openclash.config.enable='0'",
-                  "set openclash.config.small_flash_memory='0'", "flow_offloading='0'", "flow_offloading_hw='0'"):
+                  "set openclash.config.small_flash_memory='0'", "flow_offloading='0'", "flow_offloading_hw='0'",
+                  "anon_mount='0'", "anon_swap='0'", "auto_mount='0'", "auto_swap='0'"):
         require(value in startup, f"Missing safe default: {value}")
     require(not re.search(r"\b(wget|curl|sgdisk|sfdisk|parted|fw_setenv)\b|openclash_core\.sh", startup),
             "Unexpected downloader, partition or bootloader operation in defaults")
     require(os.access(root / DEFAULTS, os.X_OK), "Defaults script is not executable")
     for name in ("base.zh-cn.lmo", "firewall.zh-cn.lmo", "package-manager.zh-cn.lmo", "openclash.zh-cn.lmo"):
         require((root / "usr/lib/lua/luci/i18n" / name).stat().st_size > 0, f"Missing Chinese translation: {name}")
-    for module in ("mt7915e.ko", "tun.ko", "nft_tproxy.ko", "nft_socket.ko"):
+    for module in ("mt7915e.ko", "tun.ko", "nft_tproxy.ko", "nft_socket.ko", "usb-storage.ko", "vfat.ko"):
         require(any((root / "lib/modules").rglob(module)), f"Missing kernel module: {module}")
+    require((root / "sbin/block").is_file(), "Missing basic USB/block-device management tool")
     kernel = records["kernel"]["V"]
     edges = 0
     for name, fields in records.items():

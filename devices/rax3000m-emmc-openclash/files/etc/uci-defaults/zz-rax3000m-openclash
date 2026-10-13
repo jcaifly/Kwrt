@@ -8,10 +8,15 @@ set luci.main.lang='zh_cn'
 set firewall.@defaults[0].flow_offloading='0'
 set firewall.@defaults[0].flow_offloading_hw='0'
 set uhttpd.main.redirect_https='1'
+set fstab.@global[0].anon_mount='0'
+set fstab.@global[0].anon_swap='0'
+set fstab.@global[0].auto_mount='0'
+set fstab.@global[0].auto_swap='0'
 commit openclash
 commit luci
 commit firewall
 commit uhttpd
+commit fstab
 EOF
 
 # First setup stays wired even when U-Boot happens to contain Wi-Fi presets.

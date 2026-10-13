@@ -1,0 +1,6 @@
+diff --git a/include/package-pack.mk b/include/package-pack.mk
+index 9cb64d3..02ad7d0 100644
+--- a/include/package-pack.mk
++++ b/include/package-pack.mk
+@@ -592,0 +593 @@ else
++	  $(if $(CONFIG_SIGNED_PACKAGES),--sign-key $(BUILD_KEY_APK_SEC),) \

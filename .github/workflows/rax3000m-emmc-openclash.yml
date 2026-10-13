@@ -13,8 +13,10 @@ on:
       - devices/rax3000m-emmc-openclash/patches/**
       - devices/rax3000m-emmc-openclash/files/**
       - scripts/check-rax3000m.py
+      - scripts/collect-rax3000m-packages.py
       - scripts/rax3000m-emmc-openclash.sh
       - scripts/tests/test_check_rax3000m.py
+      - scripts/tests/test_collect_rax3000m_packages.py
 
 permissions:
   contents: read
@@ -62,7 +64,7 @@ jobs:
       - name: Check validation regressions
         run: |
           set -euo pipefail
-          python3 -B -m unittest discover -s scripts/tests -p test_check_rax3000m.py -v \
+          python3 -B -m unittest discover -s scripts/tests -p 'test_*rax3000m*.py' -v \
             2>&1 | tee "$ARTIFACT_ROOT/diagnostics/regression-tests.log"
 
       - name: Prepare fixed sources and check the final single-device config
@@ -81,6 +83,15 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Upload signed packages matching this exact image
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: rax3000m-emmc-matching-packages-${{ github.run_id }}
+          path: ${{ env.ARTIFACT_ROOT }}/matching-packages/
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Publish candidate summary
         if: success()
         run: |
@@ -92,6 +103,7 @@ jobs:
           firmware = Path(os.environ['ARTIFACT_ROOT']) / 'firmware'
           report = json.loads((firmware / 'artifact-check.json').read_text())
           sources = json.loads((firmware / 'sources.json').read_text())
+          packages = json.loads((firmware / 'package-repository-check.json').read_text())
           lines = [
               '## 候选固件构建及镜像检查通过；尚未确认可刷写',
               '',
@@ -108,6 +120,7 @@ jobs:
               '| 当前 GPT / 分区可用空间 | 待用户只读信息，不按 eMMC 总容量推算 |',
               f"| 实际安装包数 / OpenClash | {report['package_count']} / {report['openclash_version']} |",
               f"| 实际 Linux 内核包及 ABI | `{report['kernel_package_version']}` |",
+              f"| 同次构建签名 APK / 离线依赖检查 | {packages['package_count']} 个 / 通过；见 matching-packages 附件 |",
               '| Mihomo / 默认代理 / 小闪存模式 | 未预装 / 停用 / 关闭 |',
               '| 当前系统预检查 / U-Boot兼容性 / 真机测试 | 待验证 |',
               '',
@@ -127,6 +140,7 @@ jobs:
               'image', 'sha256', 'image_size_bytes', 'build_image_limit_bytes', 'package_count',
               'openclash_version', 'kernel_package_version', 'candidate_firmware', 'safe_to_flash_confirmed')}
           record['commits'] = {name: sources[name]['commit'] for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash')}
+          record['signed_matching_packages'] = packages['package_count']
           notice = json.dumps(record, ensure_ascii=False).replace('%', '%25').replace('\n', '%0A').replace('\r', '%0D')
           print('::notice title=Verified candidate record::' + notice, flush=True)
           PY
