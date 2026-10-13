@@ -5,11 +5,15 @@
 匹配用户上传商家固件的真实设备身份及独立 kernel/rootfs 升级路径。
 最小设备补丁保留官方共用 DTS、统一 profile 和正式 NAND/eMMC overlays，不伪造设备身份。
 **构建通过的产物仍是候选固件；在当前系统、GPT 和第三方 U-Boot 核对前，尚未确认可刷写。**
+本次运行 38336069750 已编译及镜像检查通过，上传 BIN 的 SHA256 与构建记录一致。
+实际大小、SHA256、包清单、来源及与商家参考的比较见 [FINAL-IMAGE.md](FINAL-IMAGE.md)。
+用户选择 U-Boot 恢复页重刷；旧系统 sysupgrade 的待采集项不参与这条首次写入路线，
+需确认的是该恢复页接受格式与写入对象，详见 UPGRADE.md。
 
 用户目前提供的信息：当前系统为 Kwrt，U-Boot 据卖家称来自 yuzhuii，软件分区已调整为约 2GB。
 上传的商家镜像已确认 Kwrt 25.12-SNAPSHOT / Linux 6.12.112 / `cmcc,rax3000m-emmc` /
 `root=PARTLABEL=rootfs rootwait`，详见 [VENDOR-FIRMWARE.md](VENDOR-FIRMWARE.md)。
-路由器尚未到手；实际当前版本、U-Boot 版本、GPT 分区边界及引导配置仍待读取。
+实际当前版本、U-Boot 版本、GPT 分区边界及引导配置仍待读取；用户暂时无法查看恢复页。
 本流程保留现有布局，不因 2GB 容量要求重新分区，也不执行路由器操作。
 
 ## 来源与选择
@@ -26,7 +30,9 @@
 
 25.12.5 是准备时官方仓库可见的最新 25.12 稳定标签，使用发行版自带的 feeds 固定值。
 Linux 内核及 ABI 使用真实构建结果；不把内核兼容值改成常量，不强装架构或版本不匹配的包。
-镜像显示 Kwrt 25.12.5，源码 revision 显示实际 OpenWrt 提交前缀 `f0a60eee2fe0`。
+镜像显示 Kwrt 25.12.5，DISTRIB_DESCRIPTION 含实际 OpenWrt 提交前缀 `f0a60eee2fe0`。
+原生 DISTRIB_REVISION / 元数据 revision 为发行版 version 文件的 `r33051-f5dae5ece4`，
+完整源码提交以 sources.json 为准，不将原生 release revision 误当成实际 HEAD。
 完整实际来源、补丁 SHA256、最终配置及清单均随产物交付。
 
 原仓库通用流程中存在 `CONFIG_SIGNATURE_CHECK=n`、下载失败/校验处理修改、
