@@ -1,4 +1,106 @@
-# 上一版已验证镜像与正确商家参考对照
+# 新版候选固件交付记录
+
+**运行 38419054903 完整编译、自动镜像检查及同次签名包仓库验证通过；真机未测试。**
+这是补齐 USB 存储及签名软件包的新版。下文历史中的旧大小、旧 ABI 和旧 SHA256
+不适用于这次新版；两次运行的 BIN 文件名相同，下载时按运行号和哈希区分。
+
+## 本次实际结果
+
+- 运行：[38419054903](https://github.com/jcaifly/Kwrt/actions/runs/38419054903)，
+  北京时间 **2026-10-14 02:28** 完成，耗时约 3 小时 23 分钟。
+- 实际构建入口：`3df480802ab87cf999c6508d8f462b10c3cbe146`，
+  审核分支 `codex/rax3000m-emmc-openclash`；未合入或推送默认分支。
+- 镜像：`kwrt-25.12.5-mediatek-filogic-cmcc_rax3000m-emmc-squashfs-sysupgrade.bin`。
+- 大小：**21,514,513 字节，约 20.52 MiB**；比上一版增加 81,920 字节（80 KiB）。
+- 整个 BIN 的 SHA256：
+  `b7dcad99e9481b42477adc3e4eabf2e748f8687c24cfd95bd287eb9fc087bb8b`。
+- 实际安装 **233 包**，OpenClash **0.48.002-r9**；配套仓库为 **233 个签名 APK**。
+- 实际 Linux 内核包及 ABI：
+  `6.12.94~be9e1284de3f4381ab48ad821ca31119-r1`。
+- Mihomo 未下载、编译或预装；OpenClash 默认停用，小闪存模式关闭。
+
+## 下载及检查记录
+
+登录 GitHub 后打开同次运行的 Artifacts；附件保留 30 天，建议同时保存三份：
+
+| 附件 | 内容 |
+| --- | --- |
+| [rax3000m-emmc-openclash-candidate-38419054903](https://github.com/jcaifly/Kwrt/actions/runs/38419054903/artifacts/11839460358) | 本次 BIN、SHA256SUMS、final.config、kernel.config、diff.config、packages.manifest、profiles.json、sources.json、检查 JSON 和使用/备份说明 |
+| [rax3000m-emmc-matching-packages-38419054903](https://github.com/jcaifly/Kwrt/actions/runs/38419054903/artifacts/11839425371) | 与该镜像匹配的 233 个签名 APK、签名索引、公开密钥、SHA256SUMS 和仓库验收记录 |
+| [rax3000m-emmc-openclash-diagnostics-38419054903](https://github.com/jcaifly/Kwrt/actions/runs/38419054903/artifacts/11838576557) | 编译及前置检查日志、原生仓库测试日志、来源/配置/镜像/仓库报告及阶段诊断 |
+
+公开页面显示的 ZIP digest 为：
+
+- candidate：`7b8d296b2ebcb7fee10e019dd04fe860c4369593e883dd06dd818e7fb48e8e22`
+- matching-packages：`bbfdba276a0dc93d6ffe87092706acfbf7dd029851d2a92733340e207bcc73fd`
+- diagnostics：`d092ce6e288cb0ae9d793032117e3334f55c9952621d6bcded0b219ad2bd46fb`
+
+ZIP digest 与 BIN 的 SHA256 对应不同文件。解压后用 SHA256SUMS 核对 BIN；
+Windows 可用 `Get-FileHash -Algorithm SHA256`，Linux 可用 `sha256sum`，
+macOS 可用 `shasum -a 256`。
+软件包仓库只与本次镜像及其原生信任密钥配套，不能因为发行版标签相同而混用其他运行。
+不把全量 `apk upgrade` 当作系统升级，不强装不同内核 ABI 的模块；使用方式见 PACKAGES.md。
+
+## 已检查与待验证
+
+证据为公开运行、[job 步骤](https://github.com/jcaifly/Kwrt/actions/runs/38419054903/job/115371186559)
+及 `Verified candidate record` 注释，已核对它们指向上面的实际入口提交。
+编译、最终设备配置/来源、自动镜像验收、原生包仓库检查、三份上传和汇总均为 success。
+
+| 项目 | 本次证据与状态 |
+| --- | --- |
+| 最终配置及依赖 | 本地真实 defconfig/prereq 通过；CI 在编译前后再次核对单设备、驱动、依赖及冲突 |
+| 完整编译 | GitHub Actions 成功，实际镜像大小与哈希来自该次检查结果 |
+| 自动镜像检查 | TAR/FIT/型号元数据、SquashFS 信息、manifest 与最终 APK 数据库、用户空间架构、真实 ABI、中文及安全默认值通过 |
+| 同次软件包仓库 | 233 包；原生工具核对单包及索引签名、安装内容身份、架构、ABI、离线依赖闭包通过；不导出私钥 |
+| 回归检查 | 本地 39 项通过；CI 回归步骤通过，并在构建后使用当次 host 工具完成 10 项仓库测试 |
+| 新 BIN 的独立云端解包 | 尚未执行；未登录的附件及构建日志下载返回 HTTP 404，不声称已阅读附件全部内容 |
+| 当前系统预检查 | 未执行；用户选择 U-Boot 首次重刷，旧系统 sysupgrade 不参与该次写入 |
+| 实际 GPT、U-Boot 恢复页及写入逻辑 | 尚未核对本机页面；已有正确商家镜像和源码的静态适配依据 |
+| 双频 Wi-Fi、WAN/LAN、USB、重启、配置保留、联网及 24～48 小时观察 | 待真机验证 |
+| 手动安装 ARM64 核心、导入配置后的 OpenClash 和停用恢复 | 待真机验证，本次未安装核心 |
+
+本独立 eMMC profile **无固定 IMAGE_SIZE**。允许上限取自实际 kernel/rootfs 分区，
+不按“2GB 软件分区”或整个 eMMC 总容量估算。新 kernel/root payload 长度和最低写入范围
+在本次 `artifact-check.json` / Summary 中；本云端尚未读取附件中的这两个具体数值，
+不得套用历史中的旧长度。缺少本机 GPT，无法可靠估算剩余可写空间。
+
+## 使用与兼容性边界
+
+普通系统刷写对象仅为上述 `.bin`，不刷 GPT、BL2、FIP/U-Boot 或 factory，
+不修改现有布局，也没有自动扩容脚本。正确 7 月 15 日商家参考已实际下载核对；
+使用相同 eMMC 身份、kernel/rootfs TAR 和 rootfs 启动路径的设备补丁未在此次重制中改变。
+这些是具体适配依据，不因没有真机而把已完成构建判为失败，也不把约 2GB 容量当作重分区理由。
+
+用户选择 yuzhuii U-Boot 普通固件恢复入口。首次写入使用该 U-Boot 的逻辑，
+不会执行新系统中的 Linux 容量 guard。使用与商家镜像相同的普通固件更新栏目，
+如页面提示格式、型号或容量不符，应停止，不改后缀、不绕过检查，也不切换 GPT/引导更新栏目。
+当前页面及本机实际布局未核对，交付标为 **候选固件，尚未确认可刷写**。
+旧配置和 overlay 数据是否保留取决于实际写入/初始化过程，不默认承诺可直接沿用；
+从商家多应用/opkg 系统转到本 APK 系统，建议备份后重新配置，勿直接恢复整套旧系统文件。
+
+默认管理地址 `192.168.1.1`、用户名 `root`；全新配置无预设密码，首次登录立即设置。
+WAN 默认 DHCP，PPPoE/VLAN 按运营商要求设置；双频无线初始关闭，设置合规地区、SSID、
+加密及强密码后开启。先检查 OpenClash 停用时的基础联网，再手动校验并安装
+Mihomo `linux-arm64`，导入自己的配置后启用，小闪存模式保持关闭。
+备份与恢复清单、U-Boot 写入边界见 UPGRADE.md；首次设置与两阶段真机检查见 README.md。
+
+## 实际源码
+
+| 组件 | 本次提交 |
+| --- | --- |
+| Kwrt 构建入口 | 3df480802ab87cf999c6508d8f462b10c3cbe146 |
+| OpenWrt v25.12.5 | f0a60eee2fe051741c643ea6118718aae1ef17fb |
+| packages | 5caa62e0bc9f7fb9b0c12a23267bceb7724214dd |
+| LuCI | 128a7812f4be233c5dd7f7466f534fd888785caf |
+| OpenClash 0.48.002-r9 | 426eda7eae561e63b6dc78f4c6bcaa4105ca4b16（kiddin9/op-packages 的插件目录） |
+
+实际补丁 SHA256、配置和完整软件包清单随本次附件交付。以下历史是上一版证据，
+不作为新版 BIN 已独立下载解包或真机验证的结论。
+
+---
+
+## 历史：上一版已验证镜像与正确商家参考对照
 
 本记录对应运行 38336069750 已编译的镜像。USB 存储及同次签名 APK 仓库的重制版
 使用新的运行记录和实际 SHA256；不能把下列上一版大小、包数或哈希当成新版结果。
@@ -10,7 +112,7 @@
 两份镜像的升级格式及启动参数一致；实际 U-Boot 版本、网页支持格式与写入范围
 尚未确认，不能据此宣称已确认可从该恢复页刷写。无需因约 2GB 分区而重新分区。
 
-## 成功构建与下载
+### 成功构建与下载
 
 - 运行：[38336069750](https://github.com/jcaifly/Kwrt/actions/runs/38336069750)，
   北京时间 2026-10-13 12:49 完成，编译、镜像检查、固件和诊断上传均成功。
@@ -26,7 +128,7 @@
   附件保存 30 天。登录仓库账号后从该运行的 Artifacts 下载。
   固件附件的 ZIP digest 与上述镜像 SHA256 是不同对象的校验值。
 
-## 已验证的实际镜像
+### 已验证的实际镜像
 
 | 项目 | 证据 / 结果 |
 | --- | --- |
@@ -47,7 +149,7 @@
 不执行任何目标架构程序或固件内脚本，镜像未修改。
 远端官方 kmod ABI 仍不能仅凭发行版号判定一致，新增模块应使用同一实际内核 ABI。
 
-## 参考固件已实际用于适配
+### 参考固件已实际用于适配
 
 | 项目 | 商家固件 | 本次固件 |
 | --- | --- | --- |
@@ -67,7 +169,7 @@
 原生 Linux 升级需至少 16,977,920 字节容纳初始化标记，保留配置时还要计入备份。
 这不是实机分区测量，也不代表足够可写空间；没有实际 GPT，不能可靠估算剩余空间。
 
-## “未采集”哪些会影响重刷
+### “未采集”哪些会影响重刷
 
 Wi-Fi、网口、联网、24～48 小时运行和手动安装核心后的代理测试属于真机验收，
 不能在刷机前完成，不代表固件编译或制作不完整。
@@ -90,7 +192,7 @@ Linux 原生不保留配置路径会重置并初始化 rootfs 分区内的 overl
 配置备份与本机 factory/引导/GPT 备份是不同内容，清单见 UPGRADE.md。
 不以另一台机器的 factory 替代本机校准数据，不虚构一键恢复。
 
-## 实际来源
+### 实际来源
 
 | 组件 | 提交 |
 | --- | --- |

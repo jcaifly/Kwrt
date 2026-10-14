@@ -11,7 +11,11 @@
 | 构建包 / 运行依赖 | 239 个 / 603 条；无独立 m 包、额外应用、核心、SDK/ImageBuilder |
 | 回归测试 | 39 项通过，含 5 项原生签名仓库端到端测试 |
 | 工作流 / shell / Python | actionlint、ShellCheck、Python AST、git diff --check 通过 |
-| 新版完整编译 / 镜像 / 最终包数 / ABI | 待新的实际 Actions 运行结果 |
+| 新版完整编译 / 自动镜像检查 | 38419054903 通过；北京时间 2026-10-14 02:28 完成 |
+| 新版镜像 / 最终安装包 | 21,514,513 字节 / 233 包；OpenClash 0.48.002-r9 |
+| 实际 Linux 内核包 / ABI | 6.12.94~be9e1284de3f4381ab48ad821ca31119-r1 |
+| 同次签名仓库 | 233 个 APK；签名、包身份、架构、ABI 和原生离线依赖求解通过 |
+| 新版文件的云端独立解包 | 尚未执行；附件下载仍要求登录，不能沿用旧版的独立检查结论 |
 | 当前恢复页面 / 实际 GPT / 真机 / 代理 | 待验证；候选固件、尚未确认可刷写 |
 
 前置配置 SHA256：`3258743932aaab75926cf889d9054ec03097a9e123fb9f6160232ca141b1b7fa`。
@@ -32,7 +36,11 @@ OPENWRT_APK=PATH_TO_NATIVE_APK OPENWRT_OPENSSL=PATH_TO_NATIVE_OPENSSL \
 错误架构、内核 ABI 和依赖改变。不使用强装、覆盖或关闭校验。
 构建后使用该次原生 host 工具再次执行新包仓库的 10 项检查。
 已核对固定 fstools 的 block detect 会生成 global 节，late defaults 关闭自动挂载和交换区。
-新版本的最终大小、SHA256 和包数必须来自新的镜像检查。
+新版镜像 SHA256：`b7dcad99e9481b42477adc3e4eabf2e748f8687c24cfd95bd287eb9fc087bb8b`。
+实际构建入口为 `3df480802ab87cf999c6508d8f462b10c3cbe146`。
+公开运行及 job 页面已核对，所有配置、构建、镜像/仓库验证和上传步骤均为 success，
+公开 Verified candidate record 与该提交、大小、SHA256、包数及 ABI 相符。
+附件详情和证据边界见 [FINAL-IMAGE.md](FINAL-IMAGE.md)，不以旧版哈希或包数代替新版结果。
 
 ## 上一版历史记录
 
