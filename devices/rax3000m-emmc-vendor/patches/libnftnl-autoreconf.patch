@@ -1,0 +1,6 @@
+diff --git a/package/libs/libnftnl/Makefile b/package/libs/libnftnl/Makefile
+index dd0de5c..720b0d8 100644
+--- a/package/libs/libnftnl/Makefile
++++ b/package/libs/libnftnl/Makefile
+@@ -22,0 +23 @@ PKG_LICENSE_FILES:=COPYING
++PKG_FIXUP:=autoreconf

@@ -276,6 +276,20 @@ def artifact_check(tree):
             "hardware_validation": "pending", "proxy_runtime_validation": "pending", **root}
 
 
+def check_openwrt_changes(tree):
+    base = REPO / common.PROFILE_DIR / "patches"
+    patches = [base / "apk-package-signing.patch", base / "kwrt-emmc-layout.patch",
+               PROFILE / "patches/libnftnl-autoreconf.patch"]
+    # git diff orders files by path. Compare every changed line, including the
+    # one explicit build-recipe fix, without relaxing the base device review.
+    blocks = []
+    for file in patches:
+        blocks.extend(part for part in re.split(r"(?=^diff --git )", file.read_text().strip(), flags=re.M) if part)
+    reviewed = "\n".join(part.strip() for part in sorted(blocks))
+    actual = common.command("git", "-C", str(tree), "diff", "HEAD", "--no-ext-diff", "--binary", "--unified=0")
+    require(actual == reviewed, "OpenWrt changes differ from the reviewed device, APK-signing and libnftnl build patches")
+
+
 def provenance(build, adaptation):
     lock = pins()
     # Additional source changes are explicit. No clean-tree requirement is
@@ -288,7 +302,7 @@ def provenance(build, adaptation):
         commit = common.command("git", "-C", str(build / folder), "rev-parse", "HEAD")
         require(commit == lock[key + "_COMMIT"], f"Actual {key} differs from source pins")
         result[{"OPENWRT": "openwrt", "PACKAGES": "packages", "LUCI": "luci", "OPENCLASH": "openclash", "VENDOR_FEED": "vendor_feed"}[key]] = {"url": lock[key + "_URL"], "commit": commit}
-    common.check_device_patch(build / "openwrt")
+    check_openwrt_changes(build / "openwrt")
     require(not common.command("git", "-C", str(build / "openwrt/feeds/luci"), "status", "--porcelain", "--untracked-files=no"),
             "Unreviewed LuCI source changes")
     clash = build / "openclash-feed"

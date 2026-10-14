@@ -12,6 +12,9 @@
 - actionlint、ShellCheck、Python 语法及 git diff --check 通过。
 - 首次严格 defconfig 检出 Passwall 自依赖选项和 sing-box-tiny 的递归依赖；已按完整客户集合/full 包修复，未关闭检查，原始日志保留。
 - 完整新目录 prepare 复现同一 375 项映射和全部 446 个选中包。旧检查树多出未启用的 v2ray/xray 注释行，原始配置哈希因此不同；未把旧哈希当成最终配置哈希。
+- 运行 38588639240 在 libnftnl 编译阶段失败；已补齐固定 FullCone 上游的 autoreconf 配套设置，原始错误及验证范围见 [BUILD-FAILURES.md](BUILD-FAILURES.md)。
+- 修复后再次从全新目录运行完整 prepare，退出码 0，375 项映射/446 个构建包/1190 条依赖及配置原始字节均不变；源码逐行审核检查通过，额外或被篡改的变更会被拒绝。
+- 使用 OpenWrt SDK 构建工具重生成并在云主机原生编译实际带补丁的 libnftnl 成功，上游 32 项测试通过。这是局部主机验证，未冒充 ARM64 整份固件编译。
 
 尚未完成：完整交叉编译、FullCone 支持补丁在全部目标源码上的编译、最终镜像/软件包签名验收、实际镜像大小和 SHA256、真机及代理/游戏测试。
 构建成功才发布新版 BIN 和实际结果；本记录不代替最终 manifest 或完整编译。

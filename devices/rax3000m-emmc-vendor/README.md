@@ -41,6 +41,8 @@ syscontrol、ttyd、upnp、wifihistory、wizard，以及它们对应的客户端
   加入固定 ImmortalWrt 25.12 来源的 conntrack 多监听者及 nftables/libnftnl/firewall4
   支持补丁，使模块及配置路径配套。FullCone 和软件/硬件 flow offloading **均默认关闭**；
   不把这些功能的存在当成游戏延迟修复证明，不增加发射功率、超频或其他加速补丁。
+  libnftnl 同时应用该固定上游的 `PKG_FIXUP:=autoreconf` 配套设置，在 configure 前
+  使用 OpenWrt 构建工具重生成修改过的 Makefile；原始失败及局部验证见 [BUILD-FAILURES.md](BUILD-FAILURES.md)。
 - **源码校验**：vendor 配方存在 `PKG_HASH:=skip` / `PKG_MIRROR_HASH:=skip`。
   本设备构建固定下载 SHA256；Git 源码按固定提交归档并验证，记录于 source-hashes.json。
 - **预构建程序**：Mihomo 使用官方、校验过的 ARM64 发布文件；quickstart 和 chinadns-ng

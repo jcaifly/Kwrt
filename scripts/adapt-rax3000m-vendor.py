@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import sys
 
 spec = importlib.util.spec_from_file_location("vendor", Path(__file__).with_name("rax3000m-vendor.py"))
@@ -105,6 +106,13 @@ def adapt(build):
         if text.encode() != before:
             file.write_text(text)
             changes[str(file.relative_to(build))] = {"before_sha256": hashlib.sha256(before).hexdigest(), "after_sha256": vendor.digest(file)}
+    # FullCone changes src/Makefile.am. Regenerate it with the explicit OpenWrt
+    # autotools environment before configure, as in the pinned support upstream.
+    file = tree / "package/libs/libnftnl/Makefile"
+    before = file.read_bytes()
+    subprocess.run(["git", "-C", str(tree), "apply", "--index", "--unidiff-zero",
+                    str(profile / "patches/libnftnl-autoreconf.patch")], check=True)
+    changes[str(file.relative_to(build))] = {"before_sha256": hashlib.sha256(before).hexdigest(), "after_sha256": vendor.digest(file)}
     locations = {
         "fullcone-libnftnl.patch": "package/libs/libnftnl/patches/001-rax-fullcone-expression.patch",
         "fullcone-nftables.patch": "package/network/utils/nftables/patches/002-rax-fullcone-expression.patch",
