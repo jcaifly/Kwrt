@@ -15,7 +15,7 @@
 | 新版镜像 / 最终安装包 | 21,514,513 字节 / 233 包；OpenClash 0.48.002-r9 |
 | 实际 Linux 内核包 / ABI | 6.12.94~be9e1284de3f4381ab48ad821ca31119-r1 |
 | 同次签名仓库 | 233 个 APK；签名、包身份、架构、ABI 和原生离线依赖求解通过 |
-| 新版文件的云端独立解包 | 尚未执行；附件下载仍要求登录，不能沿用旧版的独立检查结论 |
+| 新版文件的云端独立解包 | 用户上传该次 ZIP 后通过；ZIP/BIN 哈希与 Actions 一致，233 包、248 个 AArch64 ELF、75 条内核 ABI 依赖与实际记录相符 |
 | 当前恢复页面 / 实际 GPT / 真机 / 代理 | 待验证；候选固件、尚未确认可刷写 |
 
 前置配置 SHA256：`3258743932aaab75926cf889d9054ec03097a9e123fb9f6160232ca141b1b7fa`。
@@ -41,6 +41,15 @@ OPENWRT_APK=PATH_TO_NATIVE_APK OPENWRT_OPENSSL=PATH_TO_NATIVE_OPENSSL \
 公开运行及 job 页面已核对，所有配置、构建、镜像/仓库验证和上传步骤均为 success，
 公开 Verified candidate record 与该提交、大小、SHA256、包数及 ABI 相符。
 附件详情和证据边界见 [FINAL-IMAGE.md](FINAL-IMAGE.md)，不以旧版哈希或包数代替新版结果。
+
+用户上传 `rax3000m-emmc-openclash-candidate-38419054903.zip` 后，云端实际检查了 ZIP CRC、
+完整 ZIP/BIN SHA256、唯一 BIN、TAR/FIT 哈希、fwtool 元数据和 SquashFS 解包文件。
+使用仓库校验器读取实际文件系统及 APK 数据库，核对 manifest、软件源、中文资源、
+必要驱动/模块、安全默认值及无预装核心，不执行固件程序或附件脚本。
+非 root 解包仅无法创建 `/dev/console` 字符设备而返回 2，普通文件解出并通过检查。
+kernel 为 4,501,716 字节，root payload 为 17,001,472 字节；
+64 KiB 对齐末尾 17,039,360 字节，Linux 原生初始化标记最低需 17,043,456 字节。
+这是写入范围，实际容量、可写空间及 U-Boot 行为仍以本机为准。
 
 ## 上一版历史记录
 
