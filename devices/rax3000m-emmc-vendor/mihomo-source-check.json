@@ -1,0 +1,10 @@
+{
+  "version": "1.19.32",
+  "asset_sha256": "9dd862e28b46ff7d775f169cceebc28deccaa0a9e804237d421cd2571e0caba0",
+  "binary_sha256": "c80df2ca5159567804da883401e0118908fc1155e05df2baf3dbd4d3ecfc3754",
+  "binary_bytes": 57409662,
+  "url": "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.32/mihomo-linux-arm64-v1.19.32.gz",
+  "checksum_source": "GitHub official MetaCubeX/mihomo release asset digest",
+  "elf_architecture": 183,
+  "executed": false
+}

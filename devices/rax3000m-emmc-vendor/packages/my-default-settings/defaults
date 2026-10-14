@@ -1,0 +1,40 @@
+#!/bin/sh
+# Package selection is copied; weak credentials and performance tweaks are not.
+uci -q batch <<'EOF'
+set openclash.config.enable='0'
+set openclash.config.auto_update='0'
+set openclash.config.small_flash_memory='0'
+set luci.main.lang='zh_cn'
+set firewall.@defaults[0].flow_offloading='0'
+set firewall.@defaults[0].flow_offloading_hw='0'
+set dhcp.@dnsmasq[0].rebind_protection='1'
+set dhcp.@dnsmasq[0].localservice='1'
+set uhttpd.main.redirect_https='1'
+set fstab.@global[0].anon_mount='0'
+set fstab.@global[0].anon_swap='0'
+set fstab.@global[0].auto_mount='0'
+set fstab.@global[0].auto_swap='0'
+set upnpd.config.enabled='0'
+commit openclash
+commit luci
+commit firewall
+commit dhcp
+commit uhttpd
+commit fstab
+commit upnpd
+EOF
+
+# The second proxy is installed for parity, never activated beside OpenClash.
+for section in $(uci -q show passwall | sed -n 's/^passwall\.\([^.=]*\)=global$/\1/p'); do
+    uci -q set "passwall.$section.enabled=0"
+done
+uci -q commit passwall
+for service in openclash passwall sing-box autocore coremark miniupnpd ttyd smartd startdhns; do
+    [ ! -x "/etc/init.d/$service" ] || "/etc/init.d/$service" disable
+done
+
+for radio in $(uci -q show wireless | sed -n 's/^wireless\.\([^.=]*\)=wifi-device$/\1/p'); do
+    uci -q set "wireless.$radio.disabled=1"
+done
+uci -q commit wireless
+exit 0

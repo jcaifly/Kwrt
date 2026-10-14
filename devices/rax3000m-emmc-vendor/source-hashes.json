@@ -1,0 +1,47 @@
+{
+  "chinadns-ng": {
+    "url": "https://github.com/zfl9/chinadns-ng/releases/download/2025.08.09/chinadns-ng%2Bwolfssl_noasm%40aarch64-linux-musl%40generic%2Bv8a%40fast%2Blto",
+    "sha256": "42ddd494200ec6d88b35902927688d316bc23e06e6c08d9e01eb2412196ab845",
+    "local_filename": "chinadns-ng-arm64"
+  },
+  "dns2socks": {
+    "url": "https://github.com/Openwrt-Passwall/openwrt-passwall-packages/releases/download/dns2socks/SourceCode.zip",
+    "sha256": "406b5003523577d39da66767adfe54f7af9b701374363729386f32f6a3a995f4",
+    "local_filename": "dns2socks-SourceCode.zip"
+  },
+  "ipt2socks": {
+    "url": "https://codeload.github.com/zfl9/ipt2socks/tar.gz/v1.1.4",
+    "sha256": "68dc76e63951d655c2fd9b420e175b5a75a50014d6db6e729398b41f2c988356",
+    "local_filename": "ipt2socks-1.1.4.tar.gz"
+  },
+  "geoview": {
+    "url": "https://codeload.github.com/snowie2000/geoview/tar.gz/0.2.6",
+    "sha256": "1b46d4255ab22ec433a14f804e9487885cc2693323579c1385d51919838db132",
+    "local_filename": "geoview-0.2.6.tar.gz"
+  },
+  "quickstart": {
+    "url": "https://github.com/linkease/istore-packages/releases/download/prebuilt/quickstart-binary-0.13.0.tar.gz",
+    "sha256": "40eeaba1fbb4cfb732cb5c4759103d9307cb46b83f98b4514934d3e13e8c945b",
+    "local_filename": "quickstart-binary-0.13.0.tar.gz"
+  },
+  "luci-app-store": {
+    "url": "https://github.com/linkease/istore-ui/archive/refs/tags/v0.2.0-2.tar.gz",
+    "sha256": "9aec741aa5675347bc5a818acb285901bddf309af8ae402dd898336751de38be",
+    "local_filename": "istore-ui-v0.2.0-2.tar.gz"
+  },
+  "fullconenat-nft": {
+    "url": "https://codeload.github.com/fullcone-nat-nftables/nft-fullcone/tar.gz/07d93b626ce5ea885cd16f9ab07fac3213c355d9",
+    "sha256": "1d1c5d1d6fe32e38057ddf8127df7bba5269a1dcf982b109dfa21a23d57b03a5",
+    "local_filename": "nft-fullcone-07d93b626ce5ea885cd16f9ab07fac3213c355d9.tar.gz"
+  },
+  "simple-obfs": {
+    "url": "https://codeload.github.com/shadowsocks/simple-obfs/tar.gz/486bebd9208539058e57e23a12f23103016e09b4",
+    "sha256": "d717dc3389955633a2155b53a280c3982e30f7f890df9b4a32961040282fbf26",
+    "local_filename": "simple-obfs-486bebd9208539058e57e23a12f23103016e09b4.tar.gz"
+  },
+  "tcping": {
+    "url": "https://codeload.github.com/Lienol/tcping/tar.gz/db9101834732dac9aaa59dbb7fb9c74612dbf723",
+    "sha256": "7f7307fb8aba6d7b9811f6cc48fec878a077d777d4e4fcb2e72bdc8d3c1ffb6e",
+    "local_filename": "tcping-db9101834732dac9aaa59dbb7fb9c74612dbf723.tar.gz"
+  }
+}

@@ -1,0 +1,3375 @@
+[
+  {
+    "vendor": "autocore",
+    "vendor_version": "2",
+    "symbol": "autocore",
+    "runtime": "autocore",
+    "source_version": "2",
+    "source": "package/feeds/vendor/autocore/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "automount",
+    "vendor_version": "1",
+    "symbol": "automount",
+    "runtime": "automount",
+    "source_version": "1",
+    "source": "package/feeds/vendor/automount/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "base-files",
+    "vendor_version": "1712~07.15.2026",
+    "symbol": "base-files",
+    "runtime": "base-files",
+    "source_version": "0~f5dae5ece4",
+    "source": "package/base-files/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "bash",
+    "vendor_version": "5.3-r4",
+    "symbol": "bash",
+    "runtime": "bash",
+    "source_version": "5.3-r4",
+    "source": "package/feeds/packages/bash/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "bc",
+    "vendor_version": "1.08.2-r1",
+    "symbol": "bc",
+    "runtime": "bc",
+    "source_version": "1.08.2-r1",
+    "source": "package/feeds/packages/bc/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "blkid",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "blkid",
+    "runtime": "blkid",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "block-mount",
+    "vendor_version": "2026.05.23~16718b6e-r1",
+    "symbol": "block-mount",
+    "runtime": "block-mount",
+    "source_version": "2026.05.23~16718b6e3c0fc7db7be6ae5848db0eae88ac8a8b-r1",
+    "source": "package/system/fstools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "btrfs-progs",
+    "vendor_version": "6.11-r3",
+    "symbol": "btrfs-progs",
+    "runtime": "btrfs-progs",
+    "source_version": "6.11-r3",
+    "source": "package/feeds/packages/btrfs-progs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "busybox",
+    "vendor_version": "1.37.0-r6",
+    "symbol": "busybox",
+    "runtime": "busybox",
+    "source_version": "1.37.0-r6",
+    "source": "package/utils/busybox/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "bzip2",
+    "vendor_version": "1.0.8-r1",
+    "symbol": "bzip2",
+    "runtime": "bzip2",
+    "source_version": "1.0.8-r1",
+    "source": "package/utils/bzip2/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ca-bundle",
+    "vendor_version": "20260601-r1",
+    "symbol": "ca-bundle",
+    "runtime": "ca-bundle",
+    "source_version": "20260601-r1",
+    "source": "package/system/ca-certificates/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "cgi-io",
+    "vendor_version": "2026.06.28~7314451c-r1",
+    "symbol": "cgi-io",
+    "runtime": "cgi-io",
+    "source_version": "2026.06.28~7314451cb99692c0862a70c3307ee08bd2fbd9c0-r1",
+    "source": "package/feeds/packages/cgi-io/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "chinadns-ng",
+    "vendor_version": "2025.08.09-r1",
+    "symbol": "chinadns-ng",
+    "runtime": "chinadns-ng",
+    "source_version": "2025.08.09-r1",
+    "source": "package/feeds/vendor/chinadns-ng/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coremark",
+    "vendor_version": "2025.05.01~1f483d5b-r2",
+    "symbol": "coremark",
+    "runtime": "coremark",
+    "source_version": "2025.05.01~1f483d5b8316753a742cbf5590caf5bd0a4e4777-r1",
+    "source": "package/feeds/packages/coremark/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coreutils",
+    "vendor_version": "9.9-r2",
+    "symbol": "coreutils",
+    "runtime": "coreutils",
+    "source_version": "9.9-r2",
+    "source": "package/feeds/packages/coreutils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coreutils-base64",
+    "vendor_version": "9.9-r2",
+    "symbol": "coreutils-base64",
+    "runtime": "coreutils-base64",
+    "source_version": "9.9-r2",
+    "source": "package/feeds/packages/coreutils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coreutils-nohup",
+    "vendor_version": "9.9-r2",
+    "symbol": "coreutils-nohup",
+    "runtime": "coreutils-nohup",
+    "source_version": "9.9-r2",
+    "source": "package/feeds/packages/coreutils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coreutils-stat",
+    "vendor_version": "9.9-r2",
+    "symbol": "coreutils-stat",
+    "runtime": "coreutils-stat",
+    "source_version": "9.9-r2",
+    "source": "package/feeds/packages/coreutils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coreutils-stty",
+    "vendor_version": "9.9-r2",
+    "symbol": "coreutils-stty",
+    "runtime": "coreutils-stty",
+    "source_version": "9.9-r2",
+    "source": "package/feeds/packages/coreutils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "coreutils-timeout",
+    "vendor_version": "9.9-r2",
+    "symbol": "coreutils-timeout",
+    "runtime": "coreutils-timeout",
+    "source_version": "9.9-r2",
+    "source": "package/feeds/packages/coreutils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "curl",
+    "vendor_version": "8.19.0-r2",
+    "symbol": "curl",
+    "runtime": "curl",
+    "source_version": "8.19.0-r2",
+    "source": "package/feeds/packages/curl/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "dns2socks",
+    "vendor_version": "2.1-r1",
+    "symbol": "dns2socks",
+    "runtime": "dns2socks",
+    "source_version": "2.1-r1",
+    "source": "package/feeds/vendor/dns2socks/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "dnsmasq-full",
+    "vendor_version": "2.93-r1",
+    "symbol": "dnsmasq-full",
+    "runtime": "dnsmasq-full",
+    "source_version": "2.93-r1",
+    "source": "package/network/services/dnsmasq/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "dosfstools",
+    "vendor_version": "4.2-r4",
+    "symbol": "dosfstools",
+    "runtime": "dosfstools",
+    "source_version": "4.2-r4",
+    "source": "package/feeds/packages/dosfstools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "dropbear",
+    "vendor_version": "2025.89-r3",
+    "symbol": "dropbear",
+    "runtime": "dropbear",
+    "source_version": "2025.89-r3",
+    "source": "package/network/services/dropbear/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ds-lite",
+    "vendor_version": "9",
+    "symbol": "ds-lite",
+    "runtime": "ds-lite",
+    "source_version": "9",
+    "source": "package/network/ipv6/ds-lite/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "e2fsprogs",
+    "vendor_version": "1.47.3-r1",
+    "symbol": "e2fsprogs",
+    "runtime": "e2fsprogs",
+    "source_version": "1.47.3-r1",
+    "source": "package/utils/e2fsprogs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "eip197-mini-firmware",
+    "vendor_version": "20260221-r1",
+    "symbol": "eip197-mini-firmware",
+    "runtime": "eip197-mini-firmware",
+    "source_version": "20260221-r1",
+    "source": "package/firmware/linux-firmware/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "exfat-fsck",
+    "vendor_version": "1.2.9-r1",
+    "symbol": "exfat-fsck",
+    "runtime": "exfat-fsck",
+    "source_version": "1.2.9-r1",
+    "source": "package/feeds/packages/exfatprogs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "exfat-mkfs",
+    "vendor_version": "1.2.9-r1",
+    "symbol": "exfat-mkfs",
+    "runtime": "exfat-mkfs",
+    "source_version": "1.2.9-r1",
+    "source": "package/feeds/packages/exfatprogs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "f2fs-tools",
+    "vendor_version": "1.16.0-r4",
+    "symbol": "f2fs-tools",
+    "runtime": "f2fs-tools",
+    "source_version": "1.16.0-r4",
+    "source": "package/utils/f2fs-tools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "f2fsck",
+    "vendor_version": "1.16.0-r4",
+    "symbol": "f2fsck",
+    "runtime": "f2fsck",
+    "source_version": "1.16.0-r4",
+    "source": "package/utils/f2fs-tools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "fdisk",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "fdisk",
+    "runtime": "fdisk",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "firewall4",
+    "vendor_version": "2025.03.17~b6e51575-r2",
+    "symbol": "firewall4",
+    "runtime": "firewall4",
+    "source_version": "2025.03.17~b6e5157527d361f99ad52eaa6da273cb0f2dfd59-r2",
+    "source": "package/network/config/firewall4/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "fit-check-sign",
+    "vendor_version": "2025.10-r2",
+    "symbol": "fit-check-sign",
+    "runtime": "fit-check-sign",
+    "source_version": "2025.10-r2",
+    "source": "package/boot/uboot-tools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "fitblk",
+    "vendor_version": "2",
+    "symbol": "fitblk",
+    "runtime": "fitblk",
+    "source_version": "2",
+    "source": "package/utils/fitblk/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "fstools",
+    "vendor_version": "2026.05.23~16718b6e-r1",
+    "symbol": "fstools",
+    "runtime": "fstools",
+    "source_version": "2026.05.23~16718b6e3c0fc7db7be6ae5848db0eae88ac8a8b-r1",
+    "source": "package/system/fstools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "fwtool",
+    "vendor_version": "2025.10.03~04cd252e-r1",
+    "symbol": "fwtool",
+    "runtime": "fwtool",
+    "source_version": "2025.10.03~04cd252e4e9394ffacd51f56f1f124abc534f715-r1",
+    "source": "package/system/fwtool/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "geoview",
+    "vendor_version": "0.2.6-r5",
+    "symbol": "geoview",
+    "runtime": "geoview",
+    "source_version": "0.2.6-r7",
+    "source": "package/feeds/vendor/geoview/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "getrandom",
+    "vendor_version": "2025.10.30~6f78fa49-r1",
+    "symbol": "getrandom",
+    "runtime": "getrandom",
+    "source_version": "2025.10.30~6f78fa496bf36c55864a41e353df7d13f04b1077-r1",
+    "source": "package/system/ubox/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "haproxy",
+    "vendor_version": "3.2.19-r1",
+    "symbol": "haproxy",
+    "runtime": "haproxy",
+    "source_version": "3.2.15-r1",
+    "source": "package/feeds/packages/haproxy/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "hostapd-common",
+    "vendor_version": "2025.08.26~ca266cc2-r2",
+    "symbol": "hostapd-common",
+    "runtime": "hostapd-common",
+    "source_version": "2025.08.26~ca266cc24d8705eb1a2a0857ad326e48b1408b20-r1",
+    "source": "package/network/services/hostapd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "htop",
+    "vendor_version": "3.5.1-r1",
+    "symbol": "htop",
+    "runtime": "htop",
+    "source_version": "3.5.1-r1",
+    "source": "package/feeds/packages/htop/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ip-full",
+    "vendor_version": "6.18.0-r2",
+    "symbol": "ip-full",
+    "runtime": "ip-full",
+    "source_version": "6.18.0-r2",
+    "source": "package/network/utils/iproute2/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ip6tables-zz-legacy",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "ip6tables-zz-legacy",
+    "runtime": "ip6tables-zz-legacy",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ipt2socks",
+    "vendor_version": "1.1.4-r1",
+    "symbol": "ipt2socks",
+    "runtime": "ipt2socks",
+    "source_version": "1.1.4-r1",
+    "source": "package/feeds/vendor/ipt2socks/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "iptables-nft",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "iptables-nft",
+    "runtime": "iptables-nft",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "iw",
+    "vendor_version": "6.17-r1",
+    "symbol": "iw",
+    "runtime": "iw",
+    "source_version": "6.17-r1",
+    "source": "package/network/utils/iw/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "jansson4",
+    "vendor_version": "2.14.1-r1",
+    "symbol": "jansson",
+    "runtime": "jansson4",
+    "source_version": "2.14.1-r1",
+    "source": "package/libs/jansson/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "jshn",
+    "vendor_version": "2026.06.19~7dd12784-r1",
+    "symbol": "jshn",
+    "runtime": "jshn",
+    "source_version": "2026.06.19~7dd127841e82eb1cfb61185da37dde7b9bd9ba6d-r1",
+    "source": "package/libs/libubox/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "jsonfilter",
+    "vendor_version": "2026.03.16~b9034210-r1",
+    "symbol": "jsonfilter",
+    "runtime": "jsonfilter",
+    "source_version": "2026.03.16~b9034210bd331749673416c6bf389cccd4e23610-r1",
+    "source": "package/utils/jsonfilter/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kernel",
+    "vendor_version": "6.12.94~1-r1",
+    "symbol": null,
+    "runtime": "kernel",
+    "kind": "automatic Linux build; true ABI, never vendor ~1"
+  },
+  {
+    "vendor": "kmod-cfg80211",
+    "vendor_version": "6.12.94.6.18.26-r1",
+    "symbol": "kmod-cfg80211",
+    "runtime": "kmod-cfg80211-6.18.26-1",
+    "source_version": "<LINUX_VERSION>.6.18.26-r1",
+    "source": "package/kernel/mac80211/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-acompress",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-acompress",
+    "runtime": "kmod-crypto-acompress",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-aead",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-aead",
+    "runtime": "kmod-crypto-aead",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-arc4",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-arc4",
+    "runtime": "kmod-crypto-arc4",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-authenc",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-authenc",
+    "runtime": "kmod-crypto-authenc",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-blake2b",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-blake2b",
+    "runtime": "kmod-crypto-blake2b",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-ccm",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-ccm",
+    "runtime": "kmod-crypto-ccm",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-cmac",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-cmac",
+    "runtime": "kmod-crypto-cmac",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-crc32",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-crc32",
+    "runtime": "kmod-crypto-crc32",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-crc32c",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-crc32c",
+    "runtime": "kmod-crypto-crc32c",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-ctr",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-ctr",
+    "runtime": "kmod-crypto-ctr",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-des",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-des",
+    "runtime": "kmod-crypto-des",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-ecb",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-ecb",
+    "runtime": "kmod-crypto-ecb",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-gcm",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-gcm",
+    "runtime": "kmod-crypto-gcm",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-geniv",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-geniv",
+    "runtime": "kmod-crypto-geniv",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-gf128",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-gf128",
+    "runtime": "kmod-crypto-gf128",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-ghash",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-ghash",
+    "runtime": "kmod-crypto-ghash",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-hash",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-hash",
+    "runtime": "kmod-crypto-hash",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-hmac",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-hmac",
+    "runtime": "kmod-crypto-hmac",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-hw-safexcel",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-hw-safexcel",
+    "runtime": "kmod-crypto-hw-safexcel",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-manager",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-manager",
+    "runtime": "kmod-crypto-manager",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-md5",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-md5",
+    "runtime": "kmod-crypto-md5",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-null",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-null",
+    "runtime": "kmod-crypto-null",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-rng",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-rng",
+    "runtime": "kmod-crypto-rng",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-seqiv",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-seqiv",
+    "runtime": "kmod-crypto-seqiv",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-sha1",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-sha1",
+    "runtime": "kmod-crypto-sha1",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-sha256",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-sha256",
+    "runtime": "kmod-crypto-sha256",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-sha3",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-sha3",
+    "runtime": "kmod-crypto-sha3",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-sha512",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-sha512",
+    "runtime": "kmod-crypto-sha512",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-user",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-user",
+    "runtime": "kmod-crypto-user",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-crypto-xxhash",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-crypto-xxhash",
+    "runtime": "kmod-crypto-xxhash",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-btrfs",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-btrfs",
+    "runtime": "kmod-fs-btrfs",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-exfat",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-exfat",
+    "runtime": "kmod-fs-exfat",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-ext4",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-ext4",
+    "runtime": "kmod-fs-ext4",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-f2fs",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-f2fs",
+    "runtime": "kmod-fs-f2fs",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-msdos",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-msdos",
+    "runtime": "kmod-fs-msdos",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-ntfs3",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-ntfs3",
+    "runtime": "kmod-fs-ntfs3",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-fs-vfat",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-fs-vfat",
+    "runtime": "kmod-fs-vfat",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-gpio-button-hotplug",
+    "vendor_version": "6.12.94-r5",
+    "symbol": "kmod-gpio-button-hotplug",
+    "runtime": "kmod-gpio-button-hotplug",
+    "source_version": "<LINUX_VERSION>-r5",
+    "source": "package/kernel/gpio-button-hotplug/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-hwmon-core",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-hwmon-core",
+    "runtime": "kmod-hwmon-core",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-hwmon-pwmfan",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-hwmon-pwmfan",
+    "runtime": "kmod-hwmon-pwmfan",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-i2c-core",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-i2c-core",
+    "runtime": "kmod-i2c-core",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-inet-diag",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-inet-diag",
+    "runtime": "kmod-inet-diag",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-ip6-tunnel",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-ip6-tunnel",
+    "runtime": "kmod-ip6-tunnel",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-ip6tables",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-ip6tables",
+    "runtime": "kmod-ip6tables",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-ipt-core",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-ipt-core",
+    "runtime": "kmod-ipt-core",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-ipt-ipset",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-ipt-ipset",
+    "runtime": "kmod-ipt-ipset",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-iptunnel6",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-iptunnel6",
+    "runtime": "kmod-iptunnel6",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-leds-gpio",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-leds-gpio",
+    "runtime": "kmod-leds-gpio",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-crc-ccitt",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-crc-ccitt",
+    "runtime": "kmod-lib-crc-ccitt",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-crc16",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-crc16",
+    "runtime": "kmod-lib-crc16",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-crc32c",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-crc32c",
+    "runtime": "kmod-lib-crc32c",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-lzo",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-lzo",
+    "runtime": "kmod-lib-lzo",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-raid6",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-raid6",
+    "runtime": "kmod-lib-raid6",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-xor",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-xor",
+    "runtime": "kmod-lib-xor",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-xxhash",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-xxhash",
+    "runtime": "kmod-lib-xxhash",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-zlib-deflate",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-zlib-deflate",
+    "runtime": "kmod-lib-zlib-deflate",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-zlib-inflate",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-zlib-inflate",
+    "runtime": "kmod-lib-zlib-inflate",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-lib-zstd",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-lib-zstd",
+    "runtime": "kmod-lib-zstd",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-loop",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-loop",
+    "runtime": "kmod-loop",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mac80211",
+    "vendor_version": "6.12.94.6.18.26-r1",
+    "symbol": "kmod-mac80211",
+    "runtime": "kmod-mac80211-6.18.26-1",
+    "source_version": "<LINUX_VERSION>.6.18.26-r1",
+    "source": "package/kernel/mac80211/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-macvlan",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-macvlan",
+    "runtime": "kmod-macvlan",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-md-mod",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-md-mod",
+    "runtime": "kmod-md-mod",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-md-raid0",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-md-raid0",
+    "runtime": "kmod-md-raid0",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-md-raid1",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-md-raid1",
+    "runtime": "kmod-md-raid1",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-md-raid10",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-md-raid10",
+    "runtime": "kmod-md-raid10",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mmc",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-mmc",
+    "runtime": "kmod-mmc",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mppe",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-mppe",
+    "runtime": "kmod-mppe",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mt76-connac",
+    "vendor_version": "6.12.94.2026.03.19~39c960c3-r2",
+    "symbol": "kmod-mt76-connac",
+    "runtime": "kmod-mt76-connac",
+    "source_version": "<LINUX_VERSION>.2026.03.19~39c960c3ada558b4c2e7915772483d3731573d09-r2",
+    "source": "package/kernel/mt76/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mt76-core",
+    "vendor_version": "6.12.94.2026.03.19~39c960c3-r2",
+    "symbol": "kmod-mt76-core",
+    "runtime": "kmod-mt76-core",
+    "source_version": "<LINUX_VERSION>.2026.03.19~39c960c3ada558b4c2e7915772483d3731573d09-r2",
+    "source": "package/kernel/mt76/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mt7915e",
+    "vendor_version": "6.12.94.2026.03.19~39c960c3-r2",
+    "symbol": "kmod-mt7915e",
+    "runtime": "kmod-mt7915e",
+    "source_version": "<LINUX_VERSION>.2026.03.19~39c960c3ada558b4c2e7915772483d3731573d09-r2",
+    "source": "package/kernel/mt76/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-mt7981-firmware",
+    "vendor_version": "6.12.94.2026.03.19~39c960c3-r2",
+    "symbol": "kmod-mt7981-firmware",
+    "runtime": "kmod-mt7981-firmware",
+    "source_version": "<LINUX_VERSION>.2026.03.19~39c960c3ada558b4c2e7915772483d3731573d09-r2",
+    "source": "package/kernel/mt76/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-netlink-diag",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-netlink-diag",
+    "runtime": "kmod-netlink-diag",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-conntrack",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-conntrack",
+    "runtime": "kmod-nf-conntrack",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-conntrack-netlink",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-conntrack-netlink",
+    "runtime": "kmod-nf-conntrack-netlink",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-conntrack6",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-conntrack6",
+    "runtime": "kmod-nf-conntrack6",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-flow",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-flow",
+    "runtime": "kmod-nf-flow",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-ipt",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-ipt",
+    "runtime": "kmod-nf-ipt",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-ipt6",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-ipt6",
+    "runtime": "kmod-nf-ipt6",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-log",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-log",
+    "runtime": "kmod-nf-log",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-log6",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-log6",
+    "runtime": "kmod-nf-log6",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-nat",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-nat",
+    "runtime": "kmod-nf-nat",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-reject",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-reject",
+    "runtime": "kmod-nf-reject",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-reject6",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-reject6",
+    "runtime": "kmod-nf-reject6",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-socket",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-socket",
+    "runtime": "kmod-nf-socket",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nf-tproxy",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nf-tproxy",
+    "runtime": "kmod-nf-tproxy",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nfnetlink",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nfnetlink",
+    "runtime": "kmod-nfnetlink",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-compat",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-compat",
+    "runtime": "kmod-nft-compat",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-core",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-core",
+    "runtime": "kmod-nft-core",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-fib",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-fib",
+    "runtime": "kmod-nft-fib",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-fullcone",
+    "vendor_version": "6.12.94.2023.05.17~07d93b62-r1",
+    "symbol": "kmod-nft-fullcone",
+    "runtime": "kmod-nft-fullcone",
+    "source_version": "<LINUX_VERSION>.2023-05-17~07d93b62-r1",
+    "source": "package/feeds/vendor/fullconenat-nft/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-nat",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-nat",
+    "runtime": "kmod-nft-nat",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-offload",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-offload",
+    "runtime": "kmod-nft-offload",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-socket",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-socket",
+    "runtime": "kmod-nft-socket",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nft-tproxy",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nft-tproxy",
+    "runtime": "kmod-nft-tproxy",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-base",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-base",
+    "runtime": "kmod-nls-base",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-cp437",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-cp437",
+    "runtime": "kmod-nls-cp437",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-cp932",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-cp932",
+    "runtime": "kmod-nls-cp932",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-cp936",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-cp936",
+    "runtime": "kmod-nls-cp936",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-cp950",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-cp950",
+    "runtime": "kmod-nls-cp950",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-iso8859-1",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-iso8859-1",
+    "runtime": "kmod-nls-iso8859-1",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-nls-utf8",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-nls-utf8",
+    "runtime": "kmod-nls-utf8",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-ppp",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-ppp",
+    "runtime": "kmod-ppp",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-pppoe",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-pppoe",
+    "runtime": "kmod-pppoe",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-pppox",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-pppox",
+    "runtime": "kmod-pppox",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-scsi-core",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-scsi-core",
+    "runtime": "kmod-scsi-core",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-slhc",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-slhc",
+    "runtime": "kmod-slhc",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-tcp-bbr",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-tcp-bbr",
+    "runtime": "kmod-tcp-bbr",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-thermal",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-thermal",
+    "runtime": "kmod-thermal",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-tun",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-tun",
+    "runtime": "kmod-tun",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-common",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-common",
+    "runtime": "kmod-usb-common",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-core",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-core",
+    "runtime": "kmod-usb-core",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-storage",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-storage",
+    "runtime": "kmod-usb-storage",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-storage-extras",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-storage-extras",
+    "runtime": "kmod-usb-storage-extras",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-storage-uas",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-storage-uas",
+    "runtime": "kmod-usb-storage-uas",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-xhci-hcd",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-xhci-hcd",
+    "runtime": "kmod-usb-xhci-hcd",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb-xhci-mtk",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb-xhci-mtk",
+    "runtime": "kmod-usb-xhci-mtk",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-usb3",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-usb3",
+    "runtime": "kmod-usb3",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "kmod-zram",
+    "vendor_version": "6.12.94-r1",
+    "symbol": "kmod-zram",
+    "runtime": "kmod-zram",
+    "source_version": "<LINUX_VERSION>-r",
+    "source": "package/kernel/linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libacl",
+    "vendor_version": "2.3.2-r2",
+    "symbol": "libacl",
+    "runtime": "libacl",
+    "source_version": "2.3.2-r2",
+    "source": "package/feeds/packages/acl/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libatomic1",
+    "vendor_version": "14.3.0-r5",
+    "symbol": "libatomic",
+    "runtime": "libatomic1",
+    "source_version": "<LIBGCC_VERSION>-r5",
+    "source": "package/libs/toolchain/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libattr",
+    "vendor_version": "2.5.2-r3",
+    "symbol": "libattr",
+    "runtime": "libattr",
+    "source_version": "2.5.2-r3",
+    "source": "package/feeds/packages/attr/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libblkid1",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "libblkid",
+    "runtime": "libblkid1",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libblobmsg-json20260213",
+    "vendor_version": "2026.06.19~7dd12784-r1",
+    "symbol": "libblobmsg-json",
+    "runtime": "libblobmsg-json20260213",
+    "source_version": "2026.06.19~7dd127841e82eb1cfb61185da37dde7b9bd9ba6d-r1",
+    "source": "package/libs/libubox/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libbpf1",
+    "vendor_version": "1.6.2-r1",
+    "symbol": "libbpf",
+    "runtime": "libbpf1",
+    "source_version": "1.6.2-r1",
+    "source": "package/libs/libbpf/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libbz2-1.0",
+    "vendor_version": "1.0.8-r1",
+    "symbol": "libbz2",
+    "runtime": "libbz2-1.0",
+    "source_version": "1.0.8-r1",
+    "source": "package/utils/bzip2/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libc",
+    "vendor_version": "1.2.5-r5",
+    "symbol": "libc",
+    "runtime": "libc",
+    "source_version": "<LIBC_VERSION>-r5",
+    "source": "package/libs/toolchain/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libcap",
+    "vendor_version": "2.69-r1",
+    "symbol": "libcap",
+    "runtime": "libcap",
+    "source_version": "2.69-r1",
+    "source": "package/libs/libcap/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libcap-ng",
+    "vendor_version": "0.8.4-r2",
+    "symbol": "libcap-ng",
+    "runtime": "libcap-ng",
+    "source_version": "0.8.4-r2",
+    "source": "package/feeds/packages/libcap-ng/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libcomerr0",
+    "vendor_version": "1.47.3-r1",
+    "symbol": "libcomerr",
+    "runtime": "libcomerr0",
+    "source_version": "1.47.3-r1",
+    "source": "package/utils/e2fsprogs/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libcurl4",
+    "vendor_version": "8.19.0-r2",
+    "symbol": "libcurl",
+    "runtime": "libcurl4",
+    "source_version": "8.19.0-r2",
+    "source": "package/feeds/packages/curl/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libe2p2",
+    "vendor_version": "1.47.3-r1",
+    "symbol": "libe2p",
+    "runtime": "libe2p2",
+    "source_version": "1.47.3-r1",
+    "source": "package/utils/e2fsprogs/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libelf1",
+    "vendor_version": "0.192-r1",
+    "symbol": "libelf",
+    "runtime": "libelf1",
+    "source_version": "0.192-r1",
+    "source": "package/libs/elfutils/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libev",
+    "vendor_version": "4.33-r3",
+    "symbol": "libev",
+    "runtime": "libev",
+    "source_version": "4.33-r3",
+    "source": "package/feeds/packages/libev/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libext2fs2",
+    "vendor_version": "1.47.3-r1",
+    "symbol": "libext2fs",
+    "runtime": "libext2fs2",
+    "source_version": "1.47.3-r1",
+    "source": "package/utils/e2fsprogs/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libf2fs6",
+    "vendor_version": "1.16.0-r4",
+    "symbol": "libf2fs",
+    "runtime": "libf2fs6",
+    "source_version": "1.16.0-r4",
+    "source": "package/utils/f2fs-tools/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libfdisk1",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "libfdisk",
+    "runtime": "libfdisk1",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libgcc1",
+    "vendor_version": "14.3.0-r5",
+    "symbol": "libgcc",
+    "runtime": "libgcc1",
+    "source_version": "<LIBGCC_VERSION>-r5",
+    "source": "package/libs/toolchain/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libgmp10",
+    "vendor_version": "6.3.0-r2",
+    "symbol": "libgmp",
+    "runtime": "libgmp10",
+    "source_version": "6.3.0-r2",
+    "source": "package/libs/gmp/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libip4tc2",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "libip4tc",
+    "runtime": "libip4tc2",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libip6tc2",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "libip6tc",
+    "runtime": "libip6tc2",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libiptext-nft0",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "libiptext-nft",
+    "runtime": "libiptext-nft0",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libiptext0",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "libiptext",
+    "runtime": "libiptext0",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libiptext6-0",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "libiptext6",
+    "runtime": "libiptext6-0",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libiwinfo-data",
+    "vendor_version": "2026.01.14~f5dd57a8-r1",
+    "symbol": "libiwinfo-data",
+    "runtime": "libiwinfo-data",
+    "source_version": "2026.01.14~f5dd57a84cc31a403a1383dd14944fa2e2b5824a-r1",
+    "source": "package/network/utils/iwinfo/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libiwinfo20230701",
+    "vendor_version": "2026.01.14~f5dd57a8-r1",
+    "symbol": "libiwinfo",
+    "runtime": "libiwinfo20230701",
+    "source_version": "2026.01.14~f5dd57a84cc31a403a1383dd14944fa2e2b5824a-r1",
+    "source": "package/network/utils/iwinfo/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libjson-c5",
+    "vendor_version": "0.18-r1",
+    "symbol": "libjson-c",
+    "runtime": "libjson-c5",
+    "source_version": "0.18-r1",
+    "source": "package/libs/libjson-c/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libjson-script20260213",
+    "vendor_version": "2026.06.19~7dd12784-r1",
+    "symbol": "libjson-script",
+    "runtime": "libjson-script20260213",
+    "source_version": "2026.06.19~7dd127841e82eb1cfb61185da37dde7b9bd9ba6d-r1",
+    "source": "package/libs/libubox/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libltdl7",
+    "vendor_version": "2.5.4-r1",
+    "symbol": "libltdl",
+    "runtime": "libltdl7",
+    "source_version": "2.5.4-r1",
+    "source": "package/libs/libtool/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "liblua5.1.5",
+    "vendor_version": "5.1.5-r11",
+    "symbol": "liblua",
+    "runtime": "liblua5.1.5",
+    "source_version": "5.1.5-r11",
+    "source": "package/utils/lua/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "liblua5.4-5.4",
+    "vendor_version": "5.4.7-r1",
+    "symbol": "liblua5.4",
+    "runtime": "liblua5.4-5.4",
+    "source_version": "5.4.7-r1",
+    "source": "package/feeds/packages/lua5.4/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "liblucihttp-lua",
+    "vendor_version": "2023.03.15~9b5b683f-r1",
+    "symbol": "liblucihttp-lua",
+    "runtime": "liblucihttp-lua",
+    "source_version": "2023.03.15~9b5b683fbb2bb0010aa031d620d0ab8105516757-r1",
+    "source": "package/feeds/luci/lucihttp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "liblucihttp-ucode",
+    "vendor_version": "2023.03.15~9b5b683f-r1",
+    "symbol": "liblucihttp-ucode",
+    "runtime": "liblucihttp-ucode",
+    "source_version": "2023.03.15~9b5b683fbb2bb0010aa031d620d0ab8105516757-r1",
+    "source": "package/feeds/luci/lucihttp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "liblucihttp0",
+    "vendor_version": "2023.03.15~9b5b683f-r1",
+    "symbol": "liblucihttp",
+    "runtime": "liblucihttp0",
+    "source_version": "2023.03.15~9b5b683fbb2bb0010aa031d620d0ab8105516757-r1",
+    "source": "package/feeds/luci/lucihttp/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "liblzma",
+    "vendor_version": "5.8.1-r1",
+    "symbol": "liblzma",
+    "runtime": "liblzma",
+    "source_version": "5.8.1-r1",
+    "source": "package/feeds/packages/xz/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "liblzo2",
+    "vendor_version": "2.10-r5",
+    "symbol": "liblzo",
+    "runtime": "liblzo2",
+    "source_version": "2.10-r5",
+    "source": "package/feeds/packages/lzo/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libmbedtls21",
+    "vendor_version": "3.6.6-r2",
+    "symbol": "libmbedtls",
+    "runtime": "libmbedtls21",
+    "source_version": "3.6.6-r2",
+    "source": "package/libs/mbedtls/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libmnl0",
+    "vendor_version": "1.0.5-r1",
+    "symbol": "libmnl",
+    "runtime": "libmnl0",
+    "source_version": "1.0.5-r1",
+    "source": "package/libs/libmnl/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libmount1",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "libmount",
+    "runtime": "libmount1",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libncurses6",
+    "vendor_version": "6.4-r3",
+    "symbol": "libncurses",
+    "runtime": "libncurses6",
+    "source_version": "6.4-r3",
+    "source": "package/libs/ncurses/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libnetfilter-conntrack3",
+    "vendor_version": "1.1.0-r1",
+    "symbol": "libnetfilter-conntrack",
+    "runtime": "libnetfilter-conntrack3",
+    "source_version": "1.1.0-r1",
+    "source": "package/libs/libnetfilter-conntrack/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libnettle8",
+    "vendor_version": "3.10.2-r1",
+    "symbol": "libnettle",
+    "runtime": "libnettle8",
+    "source_version": "3.10.2-r1",
+    "source": "package/libs/nettle/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libnfnetlink0",
+    "vendor_version": "1.0.2-r1",
+    "symbol": "libnfnetlink",
+    "runtime": "libnfnetlink0",
+    "source_version": "1.0.2-r1",
+    "source": "package/libs/libnfnetlink/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libnftnl11",
+    "vendor_version": "1.3.1-r1",
+    "symbol": "libnftnl",
+    "runtime": "libnftnl11",
+    "source_version": "1.3.1-r1",
+    "source": "package/libs/libnftnl/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libnghttp2-14",
+    "vendor_version": "1.66.0-r1",
+    "symbol": "libnghttp2",
+    "runtime": "libnghttp2-14",
+    "source_version": "1.66.0-r1",
+    "source": "package/feeds/packages/nghttp2/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libnl-tiny1",
+    "vendor_version": "2025.12.02~40493a65-r1",
+    "symbol": "libnl-tiny",
+    "runtime": "libnl-tiny1",
+    "source_version": "2025.12.02~40493a655d8caa2ccf5206dde1e733abe2920432-r1",
+    "source": "package/libs/libnl-tiny/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libopenssl3",
+    "vendor_version": "3.5.7-r1",
+    "symbol": "libopenssl",
+    "runtime": "libopenssl3",
+    "source_version": "3.5.7-r1",
+    "source": "package/libs/openssl/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libparted",
+    "vendor_version": "3.6-r2",
+    "symbol": "libparted",
+    "runtime": "libparted",
+    "source_version": "3.6-r2",
+    "source": "package/feeds/packages/parted/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libpcre2",
+    "vendor_version": "10.47-r1",
+    "symbol": "libpcre2",
+    "runtime": "libpcre2",
+    "source_version": "10.47-r1",
+    "source": "package/libs/pcre2/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libpthread",
+    "vendor_version": "1.2.5-r5",
+    "symbol": "libpthread",
+    "runtime": "libpthread",
+    "source_version": "<LIBC_VERSION>-r5",
+    "source": "package/libs/toolchain/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libreadline8",
+    "vendor_version": "8.3-r1",
+    "symbol": "libreadline",
+    "runtime": "libreadline8",
+    "source_version": "8.3-r1",
+    "source": "package/libs/readline/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "librt",
+    "vendor_version": "1.2.5-r5",
+    "symbol": "librt",
+    "runtime": "librt",
+    "source_version": "<LIBC_VERSION>-r5",
+    "source": "package/libs/toolchain/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libsmartcols1",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "libsmartcols",
+    "runtime": "libsmartcols1",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libsodium",
+    "vendor_version": "1.0.20-r1",
+    "symbol": "libsodium",
+    "runtime": "libsodium",
+    "source_version": "1.0.20-r1",
+    "source": "package/feeds/packages/libsodium/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libss2",
+    "vendor_version": "1.47.3-r1",
+    "symbol": "libss",
+    "runtime": "libss2",
+    "source_version": "1.47.3-r1",
+    "source": "package/utils/e2fsprogs/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libstdcpp6",
+    "vendor_version": "14.3.0-r5",
+    "symbol": "libstdcpp",
+    "runtime": "libstdcpp6",
+    "source_version": "<LIBGCC_VERSION>-r5",
+    "source": "package/libs/toolchain/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libubox20260213",
+    "vendor_version": "2026.06.19~7dd12784-r1",
+    "symbol": "libubox",
+    "runtime": "libubox20260213",
+    "source_version": "2026.06.19~7dd127841e82eb1cfb61185da37dde7b9bd9ba6d-r1",
+    "source": "package/libs/libubox/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libubus-lua",
+    "vendor_version": "2026.06.28~24864e78-r2",
+    "symbol": "libubus-lua",
+    "runtime": "libubus-lua",
+    "source_version": "2026.06.28~24864e7840b3a02a9ef76284a373f6b2f00b8a9b-r2",
+    "source": "package/system/ubus/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libubus20251202",
+    "vendor_version": "2026.06.28~24864e78-r2",
+    "symbol": "libubus",
+    "runtime": "libubus20251202",
+    "source_version": "2026.06.28~24864e7840b3a02a9ef76284a373f6b2f00b8a9b-r2",
+    "source": "package/system/ubus/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libuci-lua",
+    "vendor_version": "2025.12.02~66127cd7-r1",
+    "symbol": "libuci-lua",
+    "runtime": "libuci-lua",
+    "source_version": "2025.12.02~66127cd76c5d0bd46d5a90302cc6110f53a4e2f8-r1",
+    "source": "package/system/uci/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libuci20250120",
+    "vendor_version": "2025.12.02~66127cd7-r1",
+    "symbol": "libuci",
+    "runtime": "libuci20250120",
+    "source_version": "2025.12.02~66127cd76c5d0bd46d5a90302cc6110f53a4e2f8-r1",
+    "source": "package/system/uci/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libuclient20201210",
+    "vendor_version": "2026.06.07~daad21fa-r1",
+    "symbol": "libuclient",
+    "runtime": "libuclient20201210",
+    "source_version": "2026.06.07~daad21fa2c17cae54d37149bf27bb3dd78e50a3f-r1",
+    "source": "package/libs/uclient/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libucode20230711",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "libucode",
+    "runtime": "libucode20230711",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libudebug",
+    "vendor_version": "2026.01.16~875e1a7a",
+    "symbol": "libudebug",
+    "runtime": "libudebug",
+    "source_version": "2026.01.16~875e1a7af6ca9d86524d18169c3a79f4a1920053",
+    "source": "package/libs/udebug/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libudns",
+    "vendor_version": "0.4-r1",
+    "symbol": "libudns",
+    "runtime": "libudns",
+    "source_version": "0.4-r1",
+    "source": "package/feeds/packages/udns/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libustream-mbedtls20201210",
+    "vendor_version": "2026.03.01~99f1c0db-r1",
+    "symbol": "libustream-mbedtls",
+    "runtime": "libustream-mbedtls20201210",
+    "source_version": "2026.03.01~99f1c0db5a729f615bc5114b3b52fd8ac8083f34-r1",
+    "source": "package/libs/ustream-ssl/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libuuid1",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "libuuid",
+    "runtime": "libuuid1",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libuv1",
+    "vendor_version": "1.48.0-r1",
+    "symbol": "libuv",
+    "runtime": "libuv1",
+    "source_version": "1.48.0-r1",
+    "source": "package/feeds/packages/libuv/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libwebsockets-full",
+    "vendor_version": "4.4.1-r1",
+    "symbol": "libwebsockets-full",
+    "runtime": "libwebsockets-full",
+    "source_version": "4.4.1-r1",
+    "source": "package/feeds/packages/libwebsockets/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libxml2-16",
+    "vendor_version": "2.15.1-r1",
+    "symbol": "libxml2",
+    "runtime": "libxml2-16",
+    "source_version": "2.15.1-r1",
+    "source": "package/libs/libxml2/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libxtables12",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "libxtables",
+    "runtime": "libxtables12",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "ABI-name mapping"
+  },
+  {
+    "vendor": "libyaml",
+    "vendor_version": "0.2.5-r2",
+    "symbol": "libyaml",
+    "runtime": "libyaml",
+    "source_version": "0.2.5-r2",
+    "source": "package/feeds/packages/yaml/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "libzstd",
+    "vendor_version": "1.5.7-r1",
+    "symbol": "libzstd",
+    "runtime": "libzstd",
+    "source_version": "1.5.7-r1",
+    "source": "package/feeds/packages/zstd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "logd",
+    "vendor_version": "2025.10.30~6f78fa49-r1",
+    "symbol": "logd",
+    "runtime": "logd",
+    "source_version": "2025.10.30~6f78fa496bf36c55864a41e353df7d13f04b1077-r1",
+    "source": "package/system/ubox/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "losetup",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "losetup",
+    "runtime": "losetup",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "lsblk",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "lsblk",
+    "runtime": "lsblk",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "lua",
+    "vendor_version": "5.1.5-r11",
+    "symbol": "lua",
+    "runtime": "lua",
+    "source_version": "5.1.5-r11",
+    "source": "package/utils/lua/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-advancedplus",
+    "vendor_version": "1.8.9-r2",
+    "symbol": "luci-app-advancedplus",
+    "runtime": "luci-app-advancedplus",
+    "source_version": "1.8.9-r3",
+    "source": "package/feeds/vendor/luci-app-advancedplus/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-diskman",
+    "vendor_version": "0.2.13-r1",
+    "symbol": "luci-app-diskman",
+    "runtime": "luci-app-diskman",
+    "source_version": "0.2.13-r3",
+    "source": "package/feeds/vendor/luci-app-diskman/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-fan",
+    "vendor_version": "1.0.0-r3-r1",
+    "symbol": "luci-app-fan",
+    "runtime": "luci-app-fan",
+    "source_version": "1.0.0-r3-r1",
+    "source": "package/feeds/vendor/luci-app-fan/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-filemanager",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-app-filemanager",
+    "runtime": "luci-app-filemanager",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-app-filemanager/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-firewall",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-app-firewall",
+    "runtime": "luci-app-firewall",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-app-firewall/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-gpsysupgrade",
+    "vendor_version": "27.115.44158~8a2eefa",
+    "symbol": "luci-app-gpsysupgrade",
+    "runtime": "luci-app-gpsysupgrade",
+    "source_version": "x",
+    "source": "package/feeds/vendor/luci-app-gpsysupgrade/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-istorex",
+    "vendor_version": "0.6.6-r1",
+    "symbol": "luci-app-istorex",
+    "runtime": "luci-app-istorex",
+    "source_version": "0.6.6-r1",
+    "source": "package/feeds/vendor/luci-app-istorex/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-package-manager",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-app-package-manager",
+    "runtime": "luci-app-package-manager",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-app-package-manager/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-partexp",
+    "vendor_version": "2.0.5-r4",
+    "symbol": "luci-app-partexp",
+    "runtime": "luci-app-partexp",
+    "source_version": "2.0.5-r4",
+    "source": "package/feeds/vendor/luci-app-partexp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-passwall",
+    "vendor_version": "26.7.1-r179",
+    "symbol": "luci-app-passwall",
+    "runtime": "luci-app-passwall",
+    "source_version": "26.10.4-r333",
+    "source": "package/feeds/vendor/luci-app-passwall/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-quickstart",
+    "vendor_version": "0.12.8-r1",
+    "symbol": "luci-app-quickstart",
+    "runtime": "luci-app-quickstart",
+    "source_version": "0.12.10-r1",
+    "source": "package/feeds/vendor/luci-app-quickstart/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-store",
+    "vendor_version": "0.2.0-r3",
+    "symbol": "luci-app-store",
+    "runtime": "luci-app-store",
+    "source_version": "0.2.1-r1",
+    "source": "package/feeds/vendor/luci-app-store/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-syscontrol",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-app-syscontrol",
+    "runtime": "luci-app-syscontrol",
+    "source_version": "x",
+    "source": "package/feeds/vendor/luci-app-syscontrol/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-ttyd",
+    "vendor_version": "26.180.75667~128a781",
+    "symbol": "luci-app-ttyd",
+    "runtime": "luci-app-ttyd",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-app-ttyd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-upnp",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-app-upnp",
+    "runtime": "luci-app-upnp",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-app-upnp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-wifihistory",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-app-wifihistory",
+    "runtime": "luci-app-wifihistory",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-app-wifihistory/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-app-wizard",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-app-wizard",
+    "runtime": "luci-app-wizard",
+    "source_version": "x",
+    "source": "package/feeds/vendor/luci-app-wizard/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-base",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-base",
+    "runtime": "luci-base",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-base/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-compat",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-compat",
+    "runtime": "luci-compat",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-compat/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-base",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lib-base",
+    "runtime": "luci-lib-base",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lib-base/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-fs",
+    "vendor_version": "1.0-r2",
+    "symbol": "luci-lib-fs",
+    "runtime": "luci-lib-fs",
+    "source_version": "1.0-r3",
+    "source": "package/feeds/local/luci-lib-fs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-ip",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lib-ip",
+    "runtime": "luci-lib-ip",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lib-ip/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-ipkg",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lib-ipkg",
+    "runtime": "luci-lib-ipkg",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lib-ipkg/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-jsonc",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lib-jsonc",
+    "runtime": "luci-lib-jsonc",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lib-jsonc/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-nixio",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lib-nixio",
+    "runtime": "luci-lib-nixio",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lib-nixio/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-taskd",
+    "vendor_version": "1.0.25-r1",
+    "symbol": "luci-lib-taskd",
+    "runtime": "luci-lib-taskd",
+    "source_version": "1.0.26-r2",
+    "source": "package/feeds/vendor/luci-lib-taskd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-uqr",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lib-uqr",
+    "runtime": "luci-lib-uqr",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lib-uqr/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lib-xterm",
+    "vendor_version": "4.18.0-r1",
+    "symbol": "luci-lib-xterm",
+    "runtime": "luci-lib-xterm",
+    "source_version": "4.18.0-r1",
+    "source": "package/feeds/vendor/luci-lib-xterm/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-lua-runtime",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-lua-runtime",
+    "runtime": "luci-lua-runtime",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-lua-runtime/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-mod-admin-full",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-mod-admin-full",
+    "runtime": "luci-mod-admin-full",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-mod-admin-full/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-mod-network",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-mod-network",
+    "runtime": "luci-mod-network",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-mod-network/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-mod-status",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-mod-status",
+    "runtime": "luci-mod-status",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-mod-status/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-mod-system",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-mod-system",
+    "runtime": "luci-mod-system",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-mod-system/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-nginx",
+    "vendor_version": "27.195.57574~ce598ef",
+    "symbol": "luci-nginx",
+    "runtime": "luci-nginx",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-nginx/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-proto-ipv6",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-proto-ipv6",
+    "runtime": "luci-proto-ipv6",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-proto-ipv6/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-proto-ppp",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-proto-ppp",
+    "runtime": "luci-proto-ppp",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-proto-ppp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-theme-argon",
+    "vendor_version": "2.4.3-r3",
+    "symbol": "luci-theme-argon",
+    "runtime": "luci-theme-argon",
+    "source_version": "2.4.8-r29",
+    "source": "package/feeds/vendor/luci-theme-argon/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "luci-theme-bootstrap",
+    "vendor_version": "27.187.49110~99464ec",
+    "symbol": "luci-theme-bootstrap",
+    "runtime": "luci-theme-bootstrap",
+    "source_version": "x",
+    "source": "package/feeds/luci/luci-theme-bootstrap/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "lyaml",
+    "vendor_version": "6.2.7-r2",
+    "symbol": "lyaml",
+    "runtime": "lyaml",
+    "source_version": "6.2.7-r2",
+    "source": "package/feeds/packages/lyaml/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "mdadm",
+    "vendor_version": "4.3-r2",
+    "symbol": "mdadm",
+    "runtime": "mdadm",
+    "source_version": "4.3-r2",
+    "source": "package/utils/mdadm/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "microsocks",
+    "vendor_version": "1.0.5-r2",
+    "symbol": "microsocks",
+    "runtime": "microsocks",
+    "source_version": "1.0.5-r2",
+    "source": "package/feeds/packages/microsocks/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "miniupnpd-nftables",
+    "vendor_version": "2.3.9-r5",
+    "symbol": "miniupnpd-nftables",
+    "runtime": "miniupnpd-nftables",
+    "source_version": "2.3.9-r1",
+    "source": "package/feeds/packages/miniupnpd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "mkf2fs",
+    "vendor_version": "1.16.0-r4",
+    "symbol": "mkf2fs",
+    "runtime": "mkf2fs",
+    "source_version": "1.16.0-r4",
+    "source": "package/utils/f2fs-tools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "mount-utils",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "mount-utils",
+    "runtime": "mount-utils",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "mt7981-wo-firmware",
+    "vendor_version": "20260221-r1",
+    "symbol": "mt7981-wo-firmware",
+    "runtime": "mt7981-wo-firmware",
+    "source_version": "20260221-r1",
+    "source": "package/firmware/linux-firmware/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "mtd",
+    "vendor_version": "27",
+    "symbol": "mtd",
+    "runtime": "mtd",
+    "source_version": "27",
+    "source": "package/system/mtd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "my-default-settings",
+    "vendor_version": "2-r6",
+    "symbol": "my-default-settings",
+    "runtime": "my-default-settings",
+    "source_version": "2-r1",
+    "source": "package/feeds/local/my-default-settings/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "nano",
+    "vendor_version": "9.1-r1",
+    "symbol": "nano",
+    "runtime": "nano",
+    "source_version": "9.0-r1",
+    "source": "package/feeds/packages/nano/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "netifd",
+    "vendor_version": "2026.02.26~cbb83a18-r1",
+    "symbol": "netifd",
+    "runtime": "netifd",
+    "source_version": "2026.02.26~cbb83a1857407a28a63dc09412a1f209195914ef-r1",
+    "source": "package/network/config/netifd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "nftables-json",
+    "vendor_version": "1.1.6-r2",
+    "symbol": "nftables-json",
+    "runtime": "nftables-json",
+    "source_version": "1.1.6-r2",
+    "source": "package/network/utils/nftables/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "nginx-mod-luci",
+    "vendor_version": "1.26.3-r4",
+    "symbol": "nginx-mod-luci",
+    "runtime": "nginx-mod-luci",
+    "source_version": "1.26.3-r4",
+    "source": "package/feeds/packages/nginx/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "nginx-mod-ubus",
+    "vendor_version": "1.26.3-r4",
+    "symbol": "nginx-mod-ubus",
+    "runtime": "nginx-mod-ubus",
+    "source_version": "1.26.3-r4",
+    "source": "package/feeds/packages/nginx/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "nginx-ssl",
+    "vendor_version": "1.26.3-r4",
+    "symbol": "nginx-ssl",
+    "runtime": "nginx-ssl",
+    "source_version": "1.26.3-r4",
+    "source": "package/feeds/packages/nginx/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "nginx-ssl-util",
+    "vendor_version": "1.7-r2",
+    "symbol": "nginx-ssl-util",
+    "runtime": "nginx-ssl-util",
+    "source_version": "1.7-r2",
+    "source": "package/feeds/packages/nginx-util/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ntfs3-mount",
+    "vendor_version": "1",
+    "symbol": "ntfs3-mount",
+    "runtime": "ntfs3-mount",
+    "source_version": "1",
+    "source": "package/feeds/vendor/automount/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "odhcp6c",
+    "vendor_version": "2026.06.20~07d324ee-r2",
+    "symbol": "odhcp6c",
+    "runtime": "odhcp6c",
+    "source_version": "2026.06.20~07d324ee7222c0e15b9975281f18236fdccc11bd-r1",
+    "source": "package/network/ipv6/odhcp6c/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "odhcpd-ipv6only",
+    "vendor_version": "2026.06.29~5d7be43f-r1",
+    "symbol": "odhcpd-ipv6only",
+    "runtime": "odhcpd-ipv6only",
+    "source_version": "2026.06.29~5d7be43f8b9dec0eb47e245cfab81108bb131273-r1",
+    "source": "package/network/services/odhcpd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "openssh-sftp-server",
+    "vendor_version": "10.3_p1-r1",
+    "symbol": "openssh-sftp-server",
+    "runtime": "openssh-sftp-server",
+    "source_version": "10.3_p1-r1",
+    "source": "package/feeds/packages/openssh/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "opkg",
+    "vendor_version": "2025.11.05~80503d94-r1",
+    "symbol": "apk-mbedtls",
+    "runtime": "apk-mbedtls",
+    "source_version": "3.0.5-r3",
+    "source": "package/system/apk/Makefile",
+    "kind": "native 25.12 APK replacement"
+  },
+  {
+    "vendor": "parted",
+    "vendor_version": "3.6-r2",
+    "symbol": "parted",
+    "runtime": "parted",
+    "source_version": "3.6-r2",
+    "source": "package/feeds/packages/parted/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ppp",
+    "vendor_version": "2.5.2-r3",
+    "symbol": "ppp",
+    "runtime": "ppp",
+    "source_version": "2.5.2-r3",
+    "source": "package/network/services/ppp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ppp-mod-pppoe",
+    "vendor_version": "2.5.2-r3",
+    "symbol": "ppp-mod-pppoe",
+    "runtime": "ppp-mod-pppoe",
+    "source_version": "2.5.2-r3",
+    "source": "package/network/services/ppp/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "procd",
+    "vendor_version": "2026.03.13~58eb263d-r1",
+    "symbol": "procd",
+    "runtime": "procd",
+    "source_version": "2026.03.13~58eb263d5abe03f8c1280bdfa65a3b052614215d-r1",
+    "source": "package/system/procd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "procd-seccomp",
+    "vendor_version": "2026.03.13~58eb263d-r1",
+    "symbol": "procd-seccomp",
+    "runtime": "procd-seccomp",
+    "source_version": "2026.03.13~58eb263d5abe03f8c1280bdfa65a3b052614215d-r1",
+    "source": "package/system/procd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "quickstart",
+    "vendor_version": "0.13.0-r5",
+    "symbol": "quickstart",
+    "runtime": "quickstart",
+    "source_version": "0.13.0-r5",
+    "source": "package/feeds/vendor/quickstart/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "resize2fs",
+    "vendor_version": "1.47.3-r1",
+    "symbol": "resize2fs",
+    "runtime": "resize2fs",
+    "source_version": "1.47.3-r1",
+    "source": "package/utils/e2fsprogs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "resolveip",
+    "vendor_version": "2",
+    "symbol": "resolveip",
+    "runtime": "resolveip",
+    "source_version": "2",
+    "source": "package/network/utils/resolveip/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "rpcd",
+    "vendor_version": "2026.06.04~28faf640-r1",
+    "symbol": "rpcd",
+    "runtime": "rpcd",
+    "source_version": "2026.06.04~28faf6403792d25b9826043aaf37880624c19568-r1",
+    "source": "package/system/rpcd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "rpcd-mod-file",
+    "vendor_version": "2026.06.04~28faf640-r1",
+    "symbol": "rpcd-mod-file",
+    "runtime": "rpcd-mod-file",
+    "source_version": "2026.06.04~28faf6403792d25b9826043aaf37880624c19568-r1",
+    "source": "package/system/rpcd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "rpcd-mod-iwinfo",
+    "vendor_version": "2026.06.04~28faf640-r1",
+    "symbol": "rpcd-mod-iwinfo",
+    "runtime": "rpcd-mod-iwinfo",
+    "source_version": "2026.06.04~28faf6403792d25b9826043aaf37880624c19568-r1",
+    "source": "package/system/rpcd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "rpcd-mod-luci",
+    "vendor_version": "20240305-r1",
+    "symbol": "rpcd-mod-luci",
+    "runtime": "rpcd-mod-luci",
+    "source_version": "20240305-r1",
+    "source": "package/feeds/luci/rpcd-mod-luci/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "rpcd-mod-rrdns",
+    "vendor_version": "20170710",
+    "symbol": "rpcd-mod-rrdns",
+    "runtime": "rpcd-mod-rrdns",
+    "source_version": "20170710",
+    "source": "package/feeds/luci/rpcd-mod-rrdns/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "rpcd-mod-ucode",
+    "vendor_version": "2026.06.04~28faf640-r1",
+    "symbol": "rpcd-mod-ucode",
+    "runtime": "rpcd-mod-ucode",
+    "source_version": "2026.06.04~28faf6403792d25b9826043aaf37880624c19568-r1",
+    "source": "package/system/rpcd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "script-utils",
+    "vendor_version": "2.41.5-r1",
+    "symbol": "script-utils",
+    "runtime": "script-utils",
+    "source_version": "2.41.5-r1",
+    "source": "package/utils/util-linux/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "shadow-common",
+    "vendor_version": "4.19.4-r2",
+    "symbol": "shadow-common",
+    "runtime": "shadow-common",
+    "source_version": "4.19.4-r2",
+    "source": "package/feeds/packages/shadow/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "shadow-useradd",
+    "vendor_version": "4.19.4-r2",
+    "symbol": "shadow-useradd",
+    "runtime": "shadow-useradd",
+    "source_version": "4.19.4-r2",
+    "source": "package/feeds/packages/shadow/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "shadow-utils",
+    "vendor_version": "4.19.4-r2",
+    "symbol": "shadow-utils",
+    "runtime": "shadow-utils",
+    "source_version": "4.19.4-r2",
+    "source": "package/feeds/packages/shadow/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "shadowsocksr-libev-ssr-local",
+    "vendor_version": "2.5.6-r3",
+    "symbol": "shadowsocksr-libev-ssr-local",
+    "runtime": "shadowsocksr-libev-ssr-local",
+    "source_version": "2.5.6-r5",
+    "source": "package/feeds/vendor/shadowsocksr-libev/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "shadowsocksr-libev-ssr-redir",
+    "vendor_version": "2.5.6-r3",
+    "symbol": "shadowsocksr-libev-ssr-redir",
+    "runtime": "shadowsocksr-libev-ssr-redir",
+    "source_version": "2.5.6-r5",
+    "source": "package/feeds/vendor/shadowsocksr-libev/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "shellsync",
+    "vendor_version": "0.2-r1",
+    "symbol": "shellsync",
+    "runtime": "shellsync",
+    "source_version": "0.2-r1",
+    "source": "package/feeds/vendor/shellsync/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "simple-obfs-client",
+    "vendor_version": "0.0.5-r1",
+    "symbol": "simple-obfs-client",
+    "runtime": "simple-obfs-client",
+    "source_version": "0.0.5-r1",
+    "source": "package/feeds/vendor/simple-obfs/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "sing-box",
+    "vendor_version": "1.13.14-r22",
+    "symbol": "sing-box",
+    "runtime": "sing-box",
+    "source_version": "1.12.17-r1",
+    "source": "package/feeds/packages/sing-box/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "smartd",
+    "vendor_version": "7.5-r1",
+    "symbol": "smartd",
+    "runtime": "smartd",
+    "source_version": "7.5-r1",
+    "source": "package/feeds/packages/smartmontools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "smartmontools",
+    "vendor_version": "7.5-r1",
+    "symbol": "smartmontools",
+    "runtime": "smartmontools",
+    "source_version": "7.5-r1",
+    "source": "package/feeds/packages/smartmontools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "smartmontools-drivedb",
+    "vendor_version": "7.5-r1",
+    "symbol": "smartmontools-drivedb",
+    "runtime": "smartmontools-drivedb",
+    "source_version": "7.5-r1",
+    "source": "package/feeds/packages/smartmontools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "swconfig",
+    "vendor_version": "12",
+    "symbol": "swconfig",
+    "runtime": "swconfig",
+    "source_version": "12",
+    "source": "package/network/config/swconfig/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "tar",
+    "vendor_version": "1.35-r1",
+    "symbol": "tar",
+    "runtime": "tar",
+    "source_version": "1.35-r1",
+    "source": "package/feeds/packages/tar/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "taskd",
+    "vendor_version": "1.0.3-r1",
+    "symbol": "taskd",
+    "runtime": "taskd",
+    "source_version": "1.0.3-r1",
+    "source": "package/feeds/vendor/taskd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "tcping",
+    "vendor_version": "0.3-r1",
+    "symbol": "tcping",
+    "runtime": "tcping",
+    "source_version": "0.3-r1",
+    "source": "package/feeds/vendor/tcping/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "terminfo",
+    "vendor_version": "6.4-r3",
+    "symbol": "terminfo",
+    "runtime": "terminfo",
+    "source_version": "6.4-r3",
+    "source": "package/libs/ncurses/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ttyd",
+    "vendor_version": "1.7.7-r1",
+    "symbol": "ttyd",
+    "runtime": "ttyd",
+    "source_version": "1.7.7-r1",
+    "source": "package/feeds/packages/ttyd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ubi-utils",
+    "vendor_version": "2.3.0-r1",
+    "symbol": "ubi-utils",
+    "runtime": "ubi-utils",
+    "source_version": "2.3.0-r1",
+    "source": "package/utils/mtd-utils/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uboot-envtools",
+    "vendor_version": "2025.10-r2",
+    "symbol": "uboot-envtools",
+    "runtime": "uboot-envtools",
+    "source_version": "2025.10-r2",
+    "source": "package/boot/uboot-tools/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ubox",
+    "vendor_version": "2025.10.30~6f78fa49-r1",
+    "symbol": "ubox",
+    "runtime": "ubox",
+    "source_version": "2025.10.30~6f78fa496bf36c55864a41e353df7d13f04b1077-r1",
+    "source": "package/system/ubox/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ubus",
+    "vendor_version": "2026.06.28~24864e78-r2",
+    "symbol": "ubus",
+    "runtime": "ubus",
+    "source_version": "2026.06.28~24864e7840b3a02a9ef76284a373f6b2f00b8a9b-r2",
+    "source": "package/system/ubus/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ubusd",
+    "vendor_version": "2026.06.28~24864e78-r2",
+    "symbol": "ubusd",
+    "runtime": "ubusd",
+    "source_version": "2026.06.28~24864e7840b3a02a9ef76284a373f6b2f00b8a9b-r2",
+    "source": "package/system/ubus/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uci",
+    "vendor_version": "2025.12.02~66127cd7-r1",
+    "symbol": "uci",
+    "runtime": "uci",
+    "source_version": "2025.12.02~66127cd76c5d0bd46d5a90302cc6110f53a4e2f8-r1",
+    "source": "package/system/uci/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uclient-fetch",
+    "vendor_version": "2026.06.07~daad21fa-r1",
+    "symbol": "uclient-fetch",
+    "runtime": "uclient-fetch",
+    "source_version": "2026.06.07~daad21fa2c17cae54d37149bf27bb3dd78e50a3f-r1",
+    "source": "package/libs/uclient/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode",
+    "runtime": "ucode",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-digest",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-digest",
+    "runtime": "ucode-mod-digest",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-fs",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-fs",
+    "runtime": "ucode-mod-fs",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-html",
+    "vendor_version": "1",
+    "symbol": "ucode-mod-html",
+    "runtime": "ucode-mod-html",
+    "source_version": "1",
+    "source": "package/feeds/luci/ucode-mod-html/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-log",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-log",
+    "runtime": "ucode-mod-log",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-lua",
+    "vendor_version": "1",
+    "symbol": "ucode-mod-lua",
+    "runtime": "ucode-mod-lua",
+    "source_version": "1",
+    "source": "package/feeds/luci/ucode-mod-lua/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-math",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-math",
+    "runtime": "ucode-mod-math",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-nl80211",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-nl80211",
+    "runtime": "ucode-mod-nl80211",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-rtnl",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-rtnl",
+    "runtime": "ucode-mod-rtnl",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-ubus",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-ubus",
+    "runtime": "ucode-mod-ubus",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-uci",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-uci",
+    "runtime": "ucode-mod-uci",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "ucode-mod-uloop",
+    "vendor_version": "2026.01.16~85922056-r1",
+    "symbol": "ucode-mod-uloop",
+    "runtime": "ucode-mod-uloop",
+    "source_version": "2026.01.16~85922056ef7abeace3cca3ab28bc1ac2d88e31b1-r1",
+    "source": "package/utils/ucode/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "urandom-seed",
+    "vendor_version": "3",
+    "symbol": "urandom-seed",
+    "runtime": "urandom-seed",
+    "source_version": "3",
+    "source": "package/system/urandom-seed/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "urngd",
+    "vendor_version": "2025.10.03~f17e33d9-r1",
+    "symbol": "urngd",
+    "runtime": "urngd",
+    "source_version": "2025.10.03~f17e33d9942750edbd73124e6f03118a98abb402-r1",
+    "source": "package/system/urngd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uwsgi",
+    "vendor_version": "2.0.30-r1",
+    "symbol": "uwsgi",
+    "runtime": "uwsgi",
+    "source_version": "2.0.30-r1",
+    "source": "package/feeds/packages/uwsgi/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uwsgi-cgi-plugin",
+    "vendor_version": "2.0.30-r1",
+    "symbol": "uwsgi-cgi-plugin",
+    "runtime": "uwsgi-cgi-plugin",
+    "source_version": "2.0.30-r1",
+    "source": "package/feeds/packages/uwsgi/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uwsgi-luci-support",
+    "vendor_version": "2.0.30-r1",
+    "symbol": "uwsgi-luci-support",
+    "runtime": "uwsgi-luci-support",
+    "source_version": "2.0.30-r1",
+    "source": "package/feeds/packages/uwsgi/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "uwsgi-syslog-plugin",
+    "vendor_version": "2.0.30-r1",
+    "symbol": "uwsgi-syslog-plugin",
+    "runtime": "uwsgi-syslog-plugin",
+    "source_version": "2.0.30-r1",
+    "source": "package/feeds/packages/uwsgi/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "wget-ssl",
+    "vendor_version": "1.25.0-r2",
+    "symbol": "wget-ssl",
+    "runtime": "wget-ssl",
+    "source_version": "1.25.0-r2",
+    "source": "package/feeds/packages/wget/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "wifi-scripts",
+    "vendor_version": "1.0-r1",
+    "symbol": "wifi-scripts",
+    "runtime": "wifi-scripts",
+    "source_version": "1.0-r1",
+    "source": "package/network/config/wifi-scripts/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "wireless-regdb",
+    "vendor_version": "2026.05.30-r1",
+    "symbol": "wireless-regdb",
+    "runtime": "wireless-regdb",
+    "source_version": "2026.05.30-r1",
+    "source": "package/firmware/wireless-regdb/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "wpad-basic-mbedtls",
+    "vendor_version": "2025.08.26~ca266cc2-r2",
+    "symbol": "wpad-basic-mbedtls",
+    "runtime": "wpad-basic-mbedtls",
+    "source_version": "2025.08.26~ca266cc24d8705eb1a2a0857ad326e48b1408b20-r1",
+    "source": "package/network/services/hostapd/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "xtables-legacy",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "xtables-legacy",
+    "runtime": "xtables-legacy",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "xtables-nft",
+    "vendor_version": "1.8.10-r3",
+    "symbol": "xtables-nft",
+    "runtime": "xtables-nft",
+    "source_version": "1.8.10-r3",
+    "source": "package/network/utils/iptables/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "xz",
+    "vendor_version": "5.8.1-r1",
+    "symbol": "xz",
+    "runtime": "xz",
+    "source_version": "5.8.1-r1",
+    "source": "package/feeds/packages/xz/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "xz-utils",
+    "vendor_version": "5.8.1-r1",
+    "symbol": "xz-utils",
+    "runtime": "xz-utils",
+    "source_version": "5.8.1-r1",
+    "source": "package/feeds/packages/xz/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "zlib",
+    "vendor_version": "1.3.1-r1",
+    "symbol": "zlib",
+    "runtime": "zlib",
+    "source_version": "1.3.1-r1",
+    "source": "package/libs/zlib/Makefile",
+    "kind": "same package name"
+  },
+  {
+    "vendor": "zram-swap",
+    "vendor_version": "32",
+    "symbol": "zram-swap",
+    "runtime": "zram-swap",
+    "source_version": "32",
+    "source": "package/system/zram-swap/Makefile",
+    "kind": "same package name"
+  }
+]
