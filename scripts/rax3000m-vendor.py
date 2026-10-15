@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import struct
 import subprocess
+import tarfile
 
 REPO = Path(__file__).resolve().parents[1]
 PROFILE = REPO / "devices/rax3000m-emmc-vendor"
@@ -163,6 +164,73 @@ def package_version_check(tree):
             "deferred_luci_version_count": len(deferred), "native_version_commands": len(checked),
             "actual_kernel_abi_verified": False, "final_version_validation_pending": bool(templates or deferred),
             "literal_packages": literal, "template_checks": templates, "deferred_luci_versions": deferred}
+
+
+def check_source_archive(file, source, downloads):
+    require(file.is_file() and digest(file) == source["sha256"], f"Source archive missing or hash mismatch: {file.name}")
+    with tarfile.open(file) as archive:
+        names = archive.getnames()
+        roots = {name.split("/", 1)[0] for name in names}
+        require(len(roots) == 1, f"Ambiguous source archive root: {file.name}")
+        prefix = next(iter(roots)) + "/"
+        for required in source.get("required_files", []):
+            require(prefix + required in names, f"Missing required source file {required}: {file.name}")
+        declared = {}
+        if prefix + ".gitmodules" in names:
+            # .gitmodules uses Git config syntax. Its tab/space indentation is
+            # not INI continuation syntax; parse it with Git itself.
+            result = subprocess.run(["git", "config", "--file", "-", "--null", "--get-regexp",
+                                     r"^submodule\..*\.(path|url)$"],
+                                    input=archive.extractfile(prefix + ".gitmodules").read(), capture_output=True)
+            require(result.returncode in (0, 1), f"Invalid Git submodule metadata: {file.name}")
+            sections = {}
+            for entry in result.stdout.decode().split("\0"):
+                if not entry:
+                    continue
+                key, value = entry.split("\n", 1)
+                section, field = key.rsplit(".", 1)
+                record = sections.setdefault(section, {})
+                require(field not in record, f"Duplicate Git submodule field: {key}")
+                record[field] = value
+            for record in sections.values():
+                require(set(record) == {"path", "url"}, f"Incomplete Git submodule metadata: {file.name}")
+                path = record["path"]
+                require(path not in declared, f"Duplicate source submodule path: {path}")
+                declared[path] = record["url"]
+    locked = source.get("submodules", {})
+    require(set(declared) == set(locked), f"Unpinned or missing submodule in {file.name}: {sorted(set(declared) ^ set(locked))}")
+    children = {}
+    for path, child in locked.items():
+        require(declared[path] == child["git_url"], f"Submodule URL differs from source lock: {path}")
+        children[path] = {"commit": child["commit"], "url": child["url"],
+                          **check_source_archive(downloads / child["local_filename"], child, downloads)}
+    return {"archive": file.name, "sha256": digest(file), "submodules": children}
+
+
+def source_archive_check(build):
+    locks = json.loads((PROFILE / "source-hashes.json").read_text())
+    downloads = build / "openwrt/dl"
+    result = {}
+    for name in ("fullconenat-nft", "simple-obfs", "tcping"):
+        recipe = (build / "vendor-feed" / name / "Makefile").read_text()
+        match = re.search(r"^PKG_SOURCE:=([^\n$]+)$", recipe, re.M)
+        require(match is not None, f"Cannot locate pinned Git source archive: {name}")
+        result[name] = check_source_archive(downloads / match[1], locks[name], downloads)
+    return {"status": "passed", "scope": "all three Git-to-archive substitutions and their recursive submodules", "archives": result}
+
+
+def failure_excerpt(text):
+    # FAILED_SLOTS_DIR is a normal compiler definition, not a failed command.
+    pattern = r"\berror:|\bFAILED\b|Error [0-9]|^ERROR:|No rule to make"
+    errors = [line for line in text.splitlines() if re.search(pattern, line)]
+    lines = [line if len(line) <= 400 else line[:180] + " ... " + line[-210:] for line in errors[-14:]]
+    while len("\n".join(lines).encode()) > 3000 and len(lines) > 4:
+        del lines[3]
+    result = "\n".join(lines)
+    if len(result.encode()) > 3000:
+        raw = result.encode()
+        result = raw[:1450].decode(errors="ignore") + "\n...\n" + raw[-1450:].decode(errors="ignore")
+    return result
 
 
 def config_check(tree):
@@ -372,6 +440,8 @@ def provenance(build, adaptation):
     result["openclash"].update(version=lock["OPENCLASH_VERSION"] + "-" + lock["OPENCLASH_RELEASE"], core_included_in_plugin_source=False)
     result["openwrt"].update(version=lock["OPENWRT_VERSION"], tag=lock["OPENWRT_TAG"])
     result["source_adaptations"] = source_report
+    result["vendor_submodules"] = {name: value["submodules"] for name, value in
+                                   json.loads((PROFILE / "source-hashes.json").read_text()).items() if value.get("submodules")}
     result["fullcone_support"] = {"url": lock["FULLCONE_SUPPORT_URL"], "commit": lock["FULLCONE_SUPPORT_COMMIT"],
                                   "patch_sha256": {file.name: digest(file) for file in sorted((PROFILE / "patches").glob("*.patch"))},
                                   "default_fullcone_rules_added": False}
@@ -381,7 +451,7 @@ def provenance(build, adaptation):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("map", "config", "artifact", "core", "provenance", "versions"))
+    parser.add_argument("mode", choices=("map", "config", "artifact", "core", "provenance", "versions", "archives"))
     parser.add_argument("path", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
@@ -392,11 +462,11 @@ def main():
             result = provenance(args.path, args.output.parent / "source-adaptation.json")
         else:
             result = {"config": config_check, "artifact": artifact_check, "core": core_check,
-                      "versions": package_version_check}[args.mode](args.path)
+                      "versions": package_version_check, "archives": source_archive_check}[args.mode](args.path)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
         print(f"vendor {args.mode}: passed; report: {args.output}", flush=True)
-    except (ValueError, OSError, KeyError, IndexError, subprocess.CalledProcessError) as error:
+    except (ValueError, OSError, KeyError, IndexError, subprocess.CalledProcessError, tarfile.TarError) as error:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps({"status": "failed", "error": str(error)}, ensure_ascii=False, indent=2) + "\n")
         if os.getenv("GITHUB_ACTIONS") == "true":

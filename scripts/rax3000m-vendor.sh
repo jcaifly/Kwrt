@@ -30,18 +30,19 @@ preserve() {
     [[ ! -f "$tree/.config" ]] || cp "$tree/.config" "$diagnostics/final.config"
     [[ ! -d "$tree/logs" ]] || tar -czf "$diagnostics/openwrt-logs.tar.gz" -C "$tree" logs
     if [[ "$result" != 0 && "${GITHUB_ACTIONS:-false}" == true ]]; then
-        python3 - "$diagnostics" <<'PY'
+        python3 -B - "$diagnostics" "$repo_dir" <<'PY'
 from pathlib import Path
-import re
+import importlib.util
 import sys
 root = Path(sys.argv[1])
-logs = [root / n for n in ('build-serial.log', 'build-parallel.log', 'package-version-check.log', 'native-version-tests.log', 'native-apk.log', 'host-tools.log', 'prepare.log', 'build.log')]
+spec = importlib.util.spec_from_file_location('vendor', Path(sys.argv[2]) / 'scripts/rax3000m-vendor.py')
+vendor = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(vendor)
+logs = [root / n for n in ('build-serial.log', 'build-parallel.log', 'source-archive-check.log', 'package-version-check.log', 'native-version-tests.log', 'native-apk.log', 'host-tools.log', 'prepare.log', 'build.log')]
 for path in logs:
     if path.is_file():
-        lines = path.read_text(errors='replace').splitlines()
-        errors = [s for s in lines if re.search(r'error:|FAILED|Error [0-9]|^ERROR:|No rule to make', s)]
-        if errors:
-            text = '\n'.join(errors[-10:] + lines[-5:])[-10000:]
+        text = vendor.failure_excerpt(path.read_text(errors='replace'))
+        if text:
             print('::error title=Vendor rebuild diagnostics::' + text.replace('%', '%25').replace('\n', '%0A').replace('\r', '%0D'))
             break
 PY
@@ -83,7 +84,7 @@ collect() {
     cp "$tree/bin/targets/mediatek/filogic/"*cmcc_rax3000m-emmc-squashfs-sysupgrade.bin "$artifact_root/firmware/"
     cp "$tree/bin/targets/mediatek/filogic/"*.manifest "$artifact_root/firmware/packages.manifest"
     cp "$tree/bin/targets/mediatek/filogic/profiles.json" "$artifact_root/firmware/"
-    cp "$diagnostics/"{final.config,diff.config,config-check.json,sources.json,artifact-check.json,package-repository-check.json,package-map.json,source-adaptation.json,package-version-check.json} "$artifact_root/firmware/"
+    cp "$diagnostics/"{final.config,diff.config,config-check.json,sources.json,artifact-check.json,package-repository-check.json,package-map.json,source-adaptation.json,package-version-check.json,source-archive-check.json} "$artifact_root/firmware/"
     cp "$tree"/build_dir/target-*/linux-mediatek_filogic/linux-*/.config "$artifact_root/firmware/kernel.config"
     cp "$profile/"{README.md,PACKAGE-MAP.md,vendor-packages.manifest,sources.env,source-hashes.json} "$artifact_root/firmware/"
     cp "$repo_dir/devices/rax3000m-emmc-openclash/UPGRADE.md" "$artifact_root/firmware/"
@@ -143,6 +144,8 @@ PY
         jobs=${BUILD_JOBS:-2}
         [[ "$jobs" =~ ^[1-4]$ ]] || { printf 'BUILD_JOBS must be 1..4.\n' >&2; exit 1; }
         run_make -j"$jobs" download 2>&1 | tee "$diagnostics/download.log"
+        python3 -B "$repo_dir/scripts/rax3000m-vendor.py" archives "$build_root" "$diagnostics/source-archive-check.json" \
+            2>&1 | tee "$diagnostics/source-archive-check.log"
         # These host tools are also required by world. Check package metadata
         # with the real packager before spending time on the cross compilation.
         run_make -j"$jobs" tools/install 2>&1 | tee "$diagnostics/host-tools.log"

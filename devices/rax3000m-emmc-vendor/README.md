@@ -45,6 +45,9 @@ syscontrol、ttyd、upnp、wifihistory、wizard，以及它们对应的客户端
   使用 OpenWrt 构建工具重生成修改过的 Makefile；原始失败及局部验证见 [BUILD-FAILURES.md](BUILD-FAILURES.md)。
 - **源码校验**：vendor 配方存在 `PKG_HASH:=skip` / `PKG_MIRROR_HASH:=skip`。
   本设备构建固定下载 SHA256；Git 源码按固定提交归档并验证，记录于 source-hashes.json。
+  simple-obfs 的 libcork 子模块按父项目 Git 树的确切提交单独下载、校验并还原；
+  三个经过 Git→归档替换的源码及其递归子模块在完整编译前检查，缺少或未固定的子模块会立即失败。
+  子模块来源、提交和 SHA256 同时写入 sources.json；原有九个顶级下载的 SHA256 保留。
 - **APK 版本格式**：Git 快照日期按 OpenWrt 的 `include/download.mk` 使用点分日期，
   FullCone 为 `2023.05.17~07d93b62`；风扇控制配方的重复修订号 `1.0.0-r3-r1`
   整理为 `PKG_VERSION=1.0.0`、`PKG_RELEASE=3`，生成 `1.0.0-r3`，其程序源码保留。

@@ -37,7 +37,17 @@
   "simple-obfs": {
     "url": "https://codeload.github.com/shadowsocks/simple-obfs/tar.gz/486bebd9208539058e57e23a12f23103016e09b4",
     "sha256": "d717dc3389955633a2155b53a280c3982e30f7f890df9b4a32961040282fbf26",
-    "local_filename": "simple-obfs-486bebd9208539058e57e23a12f23103016e09b4.tar.gz"
+    "local_filename": "simple-obfs-486bebd9208539058e57e23a12f23103016e09b4.tar.gz",
+    "submodules": {
+      "libcork": {
+        "git_url": "https://github.com/shadowsocks/libcork.git",
+        "commit": "f02984545061c924808e4b9ea7cc6749a41f1979",
+        "url": "https://codeload.github.com/shadowsocks/libcork/tar.gz/f02984545061c924808e4b9ea7cc6749a41f1979",
+        "sha256": "0f1ede7bd23672718d1d10adbe9e4028515d029585b93092d7199e51a40b3fe4",
+        "local_filename": "libcork-f02984545061c924808e4b9ea7cc6749a41f1979.tar.gz",
+        "required_files": ["Makefile.am", "include/libcork/core.h"]
+      }
+    }
   },
   "tcping": {
     "url": "https://codeload.github.com/Lienol/tcping/tar.gz/db9101834732dac9aaa59dbb7fb9c74612dbf723",

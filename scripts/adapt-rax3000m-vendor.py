@@ -36,6 +36,21 @@ def archive_recipe(text, source, url, sha, version=None):
     return text.replace("include $(INCLUDE_DIR)/package.mk", insertion + "\ninclude $(INCLUDE_DIR)/package.mk", 1)
 
 
+def submodule_recipe(text, package, modules):
+    downloads, prepare = [], ["define Build/Prepare", "\t$(call Build/Prepare/Default)"]
+    for path, source in sorted(modules.items()):
+        vendor.require(re.fullmatch(r"[\w-]+", path) is not None, "Unexpected submodule build path")
+        name = package + "-" + path
+        downloads.append(f"define Download/{name}\n  FILE:={source['local_filename']}\n"
+                         f"  URL:={source['url']}?\n  HASH:={source['sha256']}\nendef\n"
+                         f"$(eval $(call Download,{name}))\n")
+        prepare.extend([f"\t$(INSTALL_DIR) $(PKG_BUILD_DIR)/{path}",
+                        f"\t$(TAR) -xzf $(DL_DIR)/{source['local_filename']} -C $(PKG_BUILD_DIR)/{path} --strip-components=1"])
+    prepare.append("endef\n")
+    insertion = "\n" + "\n".join(downloads + ["\n".join(prepare)])
+    return text.replace("include $(INCLUDE_DIR)/package.mk\n", "include $(INCLUDE_DIR)/package.mk\n" + insertion, 1)
+
+
 def adapt(build):
     tree, feed = build / "openwrt", build / "vendor-feed"
     profile = vendor.PROFILE
@@ -52,6 +67,8 @@ def adapt(build):
         elif name in ("fullconenat-nft", "simple-obfs", "tcping"):
             commit = re.search(r"^PKG_SOURCE_VERSION:=(\w+)$", text, re.M)[1]
             text = archive_recipe(text, f"{name}-{commit}.tar.gz", source["url"], source["sha256"], git_package_version(text))
+            if source.get("submodules"):
+                text = submodule_recipe(text, name, source["submodules"])
         else:
             text, count = re.subn(r"^PKG_HASH:=skip$", "PKG_HASH:=" + source["sha256"], text, flags=re.M)
             vendor.require(count == 1, f"Unexpected hash declaration for {name}")
