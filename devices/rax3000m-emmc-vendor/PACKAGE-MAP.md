@@ -153,7 +153,7 @@ Mihomo v1.19.32 为新增例外；quickstart 和 chinadns-ng 的上游配方使�
 | kmod-nft-compat | 6.12.94-r1 | kmod-nft-compat | <LINUX_VERSION>-r | same package name |
 | kmod-nft-core | 6.12.94-r1 | kmod-nft-core | <LINUX_VERSION>-r | same package name |
 | kmod-nft-fib | 6.12.94-r1 | kmod-nft-fib | <LINUX_VERSION>-r | same package name |
-| kmod-nft-fullcone | 6.12.94.2023.05.17~07d93b62-r1 | kmod-nft-fullcone | <LINUX_VERSION>.2023-05-17~07d93b62-r1 | same package name |
+| kmod-nft-fullcone | 6.12.94.2023.05.17~07d93b62-r1 | kmod-nft-fullcone | <LINUX_VERSION>.2023.05.17~07d93b62-r1 | same package name |
 | kmod-nft-nat | 6.12.94-r1 | kmod-nft-nat | <LINUX_VERSION>-r | same package name |
 | kmod-nft-offload | 6.12.94-r1 | kmod-nft-offload | <LINUX_VERSION>-r | same package name |
 | kmod-nft-socket | 6.12.94-r1 | kmod-nft-socket | <LINUX_VERSION>-r | same package name |
@@ -262,7 +262,7 @@ Mihomo v1.19.32 为新增例外；quickstart 和 chinadns-ng 的上游配方使�
 | lua | 5.1.5-r11 | lua | 5.1.5-r11 | same package name |
 | luci-app-advancedplus | 1.8.9-r2 | luci-app-advancedplus | 1.8.9-r3 | same package name |
 | luci-app-diskman | 0.2.13-r1 | luci-app-diskman | 0.2.13-r3 | same package name |
-| luci-app-fan | 1.0.0-r3-r1 | luci-app-fan | 1.0.0-r3-r1 | same package name |
+| luci-app-fan | 1.0.0-r3-r1 | luci-app-fan | 1.0.0-r3 | same package name |
 | luci-app-filemanager | 27.187.49110~99464ec | luci-app-filemanager | x | same package name |
 | luci-app-firewall | 27.195.57574~ce598ef | luci-app-firewall | x | same package name |
 | luci-app-gpsysupgrade | 27.115.44158~8a2eefa | luci-app-gpsysupgrade | x | same package name |

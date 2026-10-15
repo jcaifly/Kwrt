@@ -35,7 +35,7 @@ from pathlib import Path
 import re
 import sys
 root = Path(sys.argv[1])
-logs = [root / n for n in ('build-serial.log', 'build-parallel.log', 'prepare.log', 'build.log')]
+logs = [root / n for n in ('build-serial.log', 'build-parallel.log', 'package-version-check.log', 'native-version-tests.log', 'native-apk.log', 'host-tools.log', 'prepare.log', 'build.log')]
 for path in logs:
     if path.is_file():
         lines = path.read_text(errors='replace').splitlines()
@@ -83,7 +83,7 @@ collect() {
     cp "$tree/bin/targets/mediatek/filogic/"*cmcc_rax3000m-emmc-squashfs-sysupgrade.bin "$artifact_root/firmware/"
     cp "$tree/bin/targets/mediatek/filogic/"*.manifest "$artifact_root/firmware/packages.manifest"
     cp "$tree/bin/targets/mediatek/filogic/profiles.json" "$artifact_root/firmware/"
-    cp "$diagnostics/"{final.config,diff.config,config-check.json,sources.json,artifact-check.json,package-repository-check.json,package-map.json,source-adaptation.json} "$artifact_root/firmware/"
+    cp "$diagnostics/"{final.config,diff.config,config-check.json,sources.json,artifact-check.json,package-repository-check.json,package-map.json,source-adaptation.json,package-version-check.json} "$artifact_root/firmware/"
     cp "$tree"/build_dir/target-*/linux-mediatek_filogic/linux-*/.config "$artifact_root/firmware/kernel.config"
     cp "$profile/"{README.md,PACKAGE-MAP.md,vendor-packages.manifest,sources.env,source-hashes.json} "$artifact_root/firmware/"
     cp "$repo_dir/devices/rax3000m-emmc-openclash/UPGRADE.md" "$artifact_root/firmware/"
@@ -143,6 +143,15 @@ PY
         jobs=${BUILD_JOBS:-2}
         [[ "$jobs" =~ ^[1-4]$ ]] || { printf 'BUILD_JOBS must be 1..4.\n' >&2; exit 1; }
         run_make -j"$jobs" download 2>&1 | tee "$diagnostics/download.log"
+        # These host tools are also required by world. Check package metadata
+        # with the real packager before spending time on the cross compilation.
+        run_make -j"$jobs" tools/install 2>&1 | tee "$diagnostics/host-tools.log"
+        run_make -j"$jobs" package/system/apk/host/compile 2>&1 | tee "$diagnostics/native-apk.log"
+        OPENWRT_APK="$tree/staging_dir/host/bin/apk" \
+            python3 -B -m unittest discover -s "$repo_dir/scripts/tests" -p test_rax3000m_versions.py -v \
+            2>&1 | tee "$diagnostics/native-version-tests.log"
+        python3 -B "$repo_dir/scripts/rax3000m-vendor.py" versions "$tree" "$diagnostics/package-version-check.json" \
+            2>&1 | tee "$diagnostics/package-version-check.log"
         if ! run_make -j"$jobs" 2>&1 | tee "$diagnostics/build-parallel.log"; then
             run_make -j1 V=s 2>&1 | tee "$diagnostics/build-serial.log"
         fi

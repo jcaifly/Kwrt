@@ -12,6 +12,7 @@ on:
       - scripts/rax3000m-vendor.py
       - scripts/adapt-rax3000m-vendor.py
       - scripts/tests/test_rax3000m_vendor.py
+      - scripts/tests/test_rax3000m_versions.py
 
 permissions:
   contents: read

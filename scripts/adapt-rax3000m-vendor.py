@@ -15,6 +15,16 @@ vendor = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(vendor)
 
 
+def git_package_version(text):
+    original = re.search(r"^PKG_VERSION:=([^\n]+)$", text, re.M)
+    if original:
+        return original[1]
+    date = re.search(r"^PKG_SOURCE_DATE:=([^\n]+)$", text, re.M)[1]
+    commit = re.search(r"^PKG_SOURCE_VERSION:=(\w+)$", text, re.M)[1]
+    # Match include/download.mk: Git snapshot dates use dots, not hyphens.
+    return date.replace("-", ".") + "~" + commit[:8]
+
+
 def archive_recipe(text, source, url, sha, version=None):
     text = re.sub(r"^PKG_(?:SOURCE_PROTO|SOURCE_URL|SOURCE_DATE|SOURCE_VERSION|MIRROR_HASH|SOURCE|HASH|BUILD_DIR):=.*\n", "", text, flags=re.M)
     if version:
@@ -41,16 +51,22 @@ def adapt(build):
             text = text.replace("include $(INCLUDE_DIR)/package.mk", f"PKG_HASH:={source['sha256']}\n\ninclude $(INCLUDE_DIR)/package.mk", 1)
         elif name in ("fullconenat-nft", "simple-obfs", "tcping"):
             commit = re.search(r"^PKG_SOURCE_VERSION:=(\w+)$", text, re.M)[1]
-            date = re.search(r"^PKG_SOURCE_DATE:=([^\n]+)$", text, re.M)[1]
-            original = re.search(r"^PKG_VERSION:=([^\n]+)$", text, re.M)
-            version = original[1] if original else date + "~" + commit[:8]
-            text = archive_recipe(text, f"{name}-{commit}.tar.gz", source["url"], source["sha256"], version)
+            text = archive_recipe(text, f"{name}-{commit}.tar.gz", source["url"], source["sha256"], git_package_version(text))
         else:
             text, count = re.subn(r"^PKG_HASH:=skip$", "PKG_HASH:=" + source["sha256"], text, flags=re.M)
             vendor.require(count == 1, f"Unexpected hash declaration for {name}")
         vendor.require("PKG_HASH:=skip" not in text and "PKG_MIRROR_HASH:=skip" not in text, f"Unchecked download remains for {name}")
         file.write_text(text)
         changes[str(file.relative_to(build))] = {"before_sha256": hashlib.sha256(before).hexdigest(), "after_sha256": vendor.digest(file)}
+    # The IPK-era recipe repeats the release in PKG_VERSION and PKG_RELEASE.
+    # Keep the same fan code with a single native APK revision, 1.0.0-r3.
+    file = feed / "luci-app-fan/Makefile"
+    before = file.read_bytes()
+    text, count = re.subn(r"^PKG_VERSION:=1\.0\.0-r3\nPKG_RELEASE:=1$",
+                         "PKG_VERSION:=1.0.0\nPKG_RELEASE:=3", before.decode(), count=1, flags=re.M)
+    vendor.require(count == 1, "Unexpected fan package version declaration")
+    file.write_text(text)
+    changes[str(file.relative_to(build))] = {"before_sha256": hashlib.sha256(before).hexdigest(), "after_sha256": vendor.digest(file)}
     # The profile has a fixed client set. Self-dependent package options create
     # Kconfig cycles on 25.12; express their actual required dependencies directly.
     file = feed / "luci-app-passwall/Makefile"

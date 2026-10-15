@@ -45,6 +45,12 @@ syscontrol、ttyd、upnp、wifihistory、wizard，以及它们对应的客户端
   使用 OpenWrt 构建工具重生成修改过的 Makefile；原始失败及局部验证见 [BUILD-FAILURES.md](BUILD-FAILURES.md)。
 - **源码校验**：vendor 配方存在 `PKG_HASH:=skip` / `PKG_MIRROR_HASH:=skip`。
   本设备构建固定下载 SHA256；Git 源码按固定提交归档并验证，记录于 source-hashes.json。
+- **APK 版本格式**：Git 快照日期按 OpenWrt 的 `include/download.mk` 使用点分日期，
+  FullCone 为 `2023.05.17~07d93b62`；风扇控制配方的重复修订号 `1.0.0-r3-r1`
+  整理为 `PKG_VERSION=1.0.0`、`PKG_RELEASE=3`，生成 `1.0.0-r3`，其程序源码保留。
+  工作流先构建本次所需的原生 host 工具和 APK，用真实 APK 校验全部选中包的版本元数据，
+  再进行完整交叉编译。已知内核/库占位符仅做后缀语法探测，LuCI 的 `x` 动态版本单独列为待生成；
+  探测值不会写回任何配方、包或 ABI。真实版本及内核 ABI 仍以最终包和镜像验收为准。
 - **预构建程序**：Mihomo 使用官方、校验过的 ARM64 发布文件；quickstart 和 chinadns-ng
   的上游配方同样使用发布者 ARM64 文件，已固定 SHA256，不能称为本次重新编译其源码。
   不执行这些目标程序来伪造运行验证。

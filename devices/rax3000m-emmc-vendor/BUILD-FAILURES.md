@@ -37,3 +37,44 @@ ImmortalWrt 提交 `ce35a9e4ef1b87fbbc2146036ce6693e4242861a` 中的配套设置
 
 以上是主机上的构建环节验证，不等于 ARM64 完整固件编译、镜像验收或真机测试。
 修复后的完整交叉编译仍交给 GitHub Actions；只有新运行全部完成才报告固件构建成功。
+
+## 运行 38656087494
+
+- [失败运行](https://github.com/jcaifly/Kwrt/actions/runs/38656087494)，源码提交 `d5941a5765ddee6d46da4fe4d7eb2e09fe73950d`。
+- GitHub 公开步骤状态：配置和来源检查成功，固件编译步骤失败，固件与软件包上传跳过，诊断上传成功。
+- 原始日志保存在 `rax3000m-vendor-diagnostics-38656087494`，本次定位依据公开错误注释。
+
+```text
+ERROR: info field 'version' has invalid value: package version is invalid
+ERROR: failed to create package: package version is invalid
+make[3]: *** [.../kmod-nft-fullcone-6.12.94.2023-05-17~07d93b62-r1.apk] Error 99
+make[2]: *** [package/Makefile:188: package/feeds/vendor/fullconenat-nft/compile] Error 1
+```
+
+根因：本任务把固定 Git 源码改为带 SHA256 的归档下载时，自行拼接了含连字符的快照日期。
+OpenWrt `include/download.mk` 的原规则会把日期中的 `-` 转成 `.`；APK 不接受日期中的这些连字符。
+修复为 `6.12.94.2023.05.17~07d93b62-r1`；固定提交、源码 URL/归档 SHA256、驱动源码和真实内核 ABI 机制均保留。
+
+同时检查全部选中版本元数据时，发现 `luci-app-fan` 的旧配方声明
+`PKG_VERSION=1.0.0-r3`、`PKG_RELEASE=1`，最终拼出 `1.0.0-r3-r1`。
+本设备配方分离为版本 `1.0.0` 和修订 `3`，生成可被 APK 接受的 `1.0.0-r3`；不删除风扇控制功能。
+商家清单仍保留原始 `1.0.0-r3-r1` 作为历史记录，对应表明确显示新版本。
+
+使用已验证的 OpenWrt SDK 原生 APK 3.0.2 的 `mkpkg` 实际复现：
+
+| 版本 | 实际打包退出码 |
+| --- | --- |
+| `6.12.94.2023-05-17~07d93b62-r1` | 99，版本无效 |
+| `6.12.94.2023.05.17~07d93b62-r1` | 0 |
+| `1.0.0-r3-r1` | 99，版本无效 |
+| `1.0.0-r3` | 0 |
+
+打包测试仅使用无害文本夹具，不生成伪装为可用驱动的包，不安装任何夹具。
+新增 7 项真实 APK 回归测试，覆盖上述打包、显式上游版本保留、无效内核模板后缀、
+未知占位符拒绝和延迟生成的 LuCI 版本报告；全部通过。原有 7 项映射/核心完整性测试也通过。
+
+CI 在完整交叉编译前先执行正常所需的 `tools/install` 和 `package/system/apk/host/compile`，
+再使用固定 25.12.5 源码的 APK 3.0.5 做版本预检及这些回归测试；原生工具仍复用于后续 world 构建。
+`package-version-check.json` 明确区分可核对的完整版本、只检查语法的模板和待生成版本。
+模板探测中的数字占位仅存在于检查器内存和诊断记录，不修改真实内核版本/ABI或软件包版本。
+最终包仍须通过原生 APK 创建、签名、架构和真实内核 ABI 验收；本次局部检查不代替完整编译。

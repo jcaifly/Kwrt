@@ -123,6 +123,48 @@ def core_check(path):
             "architecture": "AArch64", "executed_in_cloud": False}
 
 
+def package_version_check(tree):
+    apk = Path(os.environ.get("OPENWRT_APK", tree / "staging_dir/host/bin/apk"))
+    require(apk.is_file() and os.access(apk, os.X_OK), "Build the native APK host tool before version validation")
+    config = common.read_config(tree / ".config")
+    records = metadata(tree)
+    literal, templates, deferred = [], [], []
+    for name, record in sorted(records.items()):
+        if config.get("PACKAGE_" + name) != "y":
+            continue
+        version = record.get("Version", "")
+        require(bool(version), f"Missing package version for {name}")
+        if version == "x":
+            # LuCI deliberately omits its computed Git/translation version in DUMP.
+            deferred.append({"package": name, "source": record.get("Source-Makefile"), "metadata": version})
+        elif "<" in version:
+            # Validate the literal suffix, including snapshot dates, using a
+            # syntax probe. Never write this probe into package metadata or ABI.
+            probe = re.sub(r"<(?:LINUX|LIBGCC|LIBC)_VERSION>", "0", version)
+            require("<" not in probe and ">" not in probe, f"Unknown package version placeholder: {name}={version}")
+            if probe.endswith("-r"):
+                probe += "0"  # DUMP also defers built-in kernel-module revisions.
+            templates.append({"package": name, "metadata": version, "syntax_probe": probe})
+        else:
+            literal.append({"package": name, "version": version})
+    checked = {entry["version"] for entry in literal} | {entry["syntax_probe"] for entry in templates}
+    require(bool(checked), "No selected package versions were checked")
+    invalid = set()
+    for version in sorted(checked):
+        result = subprocess.run([str(apk), "version", "--check", version], capture_output=True, text=True)
+        if result.returncode:
+            invalid.add(version)
+    bad = [f"{r['package']}={r['version']}" for r in literal if r["version"] in invalid]
+    bad += [f"{r['package']}={r['metadata']}" for r in templates if r["syntax_probe"] in invalid]
+    require(not invalid, "Native APK rejected package version metadata: " + "; ".join(bad))
+    return {"status": "passed", "scope": "metadata syntax preflight; not final versions or kernel ABI",
+            "apk_tool": str(apk), "selected_package_count": len(literal) + len(templates) + len(deferred),
+            "literal_versions_checked": len(literal), "template_syntax_checked": len(templates),
+            "deferred_luci_version_count": len(deferred), "native_version_commands": len(checked),
+            "actual_kernel_abi_verified": False, "final_version_validation_pending": bool(templates or deferred),
+            "literal_packages": literal, "template_checks": templates, "deferred_luci_versions": deferred}
+
+
 def config_check(tree):
     config = common.read_config(tree / ".config")
     selected = [name for name, value in config.items() if name.startswith("TARGET_mediatek_filogic_DEVICE_") and value == "y"]
@@ -339,7 +381,7 @@ def provenance(build, adaptation):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("map", "config", "artifact", "core", "provenance"))
+    parser.add_argument("mode", choices=("map", "config", "artifact", "core", "provenance", "versions"))
     parser.add_argument("path", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
@@ -349,7 +391,8 @@ def main():
         elif args.mode == "provenance":
             result = provenance(args.path, args.output.parent / "source-adaptation.json")
         else:
-            result = {"config": config_check, "artifact": artifact_check, "core": core_check}[args.mode](args.path)
+            result = {"config": config_check, "artifact": artifact_check, "core": core_check,
+                      "versions": package_version_check}[args.mode](args.path)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
         print(f"vendor {args.mode}: passed; report: {args.output}", flush=True)
