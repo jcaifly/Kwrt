@@ -4,6 +4,11 @@
 旧版成功刷入及恢复是用户反馈；新增 SQM 候选版的完整编译、镜像和真机结果须分别取得。
 选择理由、基线 SHA256 和游戏对照步骤见 [BUILD-REVIEW.md](BUILD-REVIEW.md)。
 
+**构建后更新：运行 [38780611091](https://github.com/jcaifly/Kwrt/actions/runs/38780611091)
+已成功，实际镜像及自动验收记录见 [SQM-BUILD-RESULT.md](SQM-BUILD-RESULT.md)。**
+下面保留的是提交前的云端验证记录；其中当时待编译的项目以构建后记录更新，
+真机测试仍未完成。
+
 | 项目 | 当前证据与状态 |
 | --- | --- |
 | 全新源码 prepare / defconfig / prereq | 已通过，未跳过编译依赖检查 |
