@@ -127,9 +127,9 @@ class FitChecks(unittest.TestCase):
 
 class PackageAndCoreChecks(unittest.TestCase):
     def test_excluded_apps_and_dependency_exceptions(self):
-        for name in ("mihomo", "luci-app-ttyd", "nlbwmon", "btop", "mosdns", "luci-app-turboacc"):
+        for name in ("mihomo", "luci-app-ttyd", "nlbwmon", "btop", "mosdns", "luci-app-turboacc", "luci-app-upnp"):
             self.assertTrue(check.unwanted(name), name)
-        for name in ("luci-app-openclash", "luci-app-firewall", "luci-app-package-manager", "kmod-mt7915e"):
+        for name in ("luci-app-openclash", "luci-app-firewall", "luci-app-package-manager", "luci-app-sqm", "kmod-mt7915e"):
             self.assertFalse(check.unwanted(name), name)
 
     def test_core_directory_payload(self):

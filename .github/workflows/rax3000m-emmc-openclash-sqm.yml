@@ -1,0 +1,166 @@
+name: RAX3000M eMMC OpenClash + optional SQM (no core)
+
+on:
+  workflow_dispatch:
+  # Validate the review branch without changing or merging the default branch.
+  push:
+    branches:
+      - codex/rax3000m-emmc-sqm
+    paths:
+      - .github/workflows/rax3000m-emmc-openclash-sqm.yml
+      - devices/rax3000m-emmc-openclash/config
+      - devices/rax3000m-emmc-openclash/sources.env
+      - devices/rax3000m-emmc-openclash/patches/**
+      - devices/rax3000m-emmc-openclash/files/**
+      - scripts/check-rax3000m.py
+      - scripts/rax3000m_startup.py
+      - scripts/rax3000m_image.py
+      - scripts/tests/test_rax3000m_startup.py
+      - scripts/tests/test_rax3000m_image.py
+      - scripts/collect-rax3000m-packages.py
+      - scripts/rax3000m-emmc-openclash.sh
+      - scripts/tests/test_check_rax3000m.py
+      - scripts/tests/test_collect_rax3000m_packages.py
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rax3000m-emmc-sqm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    # Standard public-repository runners; do not consume private paid minutes.
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    env:
+      TZ: Asia/Shanghai
+      BUILD_JOBS: '2'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Initialize build paths
+        run: |
+          echo "BUILD_ROOT=$RUNNER_TEMP/rax3000m-build" >> "$GITHUB_ENV"
+          echo "ARTIFACT_ROOT=$RUNNER_TEMP/rax3000m-artifacts" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/rax3000m-artifacts/diagnostics"
+
+      - name: Checkout Kwrt review commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install build prerequisites
+        run: |
+          exec > >(tee "$ARTIFACT_ROOT/diagnostics/prerequisites.log") 2>&1
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential clang flex bison gawk gcc-multilib g++-multilib \
+            gettext git libncurses-dev libssl-dev python3 python3-setuptools \
+            python3-pyelftools rsync swig unzip zlib1g-dev file wget curl \
+            cmake ninja-build pkgconf libelf-dev libgmp-dev libmpc-dev \
+            libmpfr-dev device-tree-compiler patch xz-utils zstd ripgrep
+          df -h
+
+      - name: Check validation regressions
+        run: |
+          set -euo pipefail
+          python3 -B -m unittest discover -s scripts/tests -p 'test_*rax3000m*.py' -v \
+            2>&1 | tee "$ARTIFACT_ROOT/diagnostics/regression-tests.log"
+
+      - name: Prepare fixed sources and check the final single-device config
+        run: bash scripts/rax3000m-emmc-openclash.sh prepare "$BUILD_ROOT" "$ARTIFACT_ROOT"
+
+      - name: Build and verify the RAX3000M candidate
+        timeout-minutes: 300
+        run: bash scripts/rax3000m-emmc-openclash.sh build "$BUILD_ROOT" "$ARTIFACT_ROOT"
+
+      - name: Upload candidate sysupgrade image and verification records
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: rax3000m-emmc-openclash-sqm-candidate-${{ github.run_id }}
+          path: ${{ env.ARTIFACT_ROOT }}/firmware/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload signed packages matching this exact image
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: rax3000m-emmc-sqm-matching-packages-${{ github.run_id }}
+          path: ${{ env.ARTIFACT_ROOT }}/matching-packages/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish candidate summary
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          firmware = Path(os.environ['ARTIFACT_ROOT']) / 'firmware'
+          report = json.loads((firmware / 'artifact-check.json').read_text())
+          sources = json.loads((firmware / 'sources.json').read_text())
+          packages = json.loads((firmware / 'package-repository-check.json').read_text())
+          lines = [
+              '## SQM候选固件构建及实际镜像检查通过；真机复测待完成',
+              '',
+              f"镜像：`{report['image']}`",
+              '',
+              f"SHA256：`{report['sha256']}`",
+              '',
+              '| 项目 | 结果 |',
+              '| --- | --- |',
+              '| 设备 / profile | CMCC RAX3000M eMMC / cmcc_rax3000m-emmc（Kwrt kernel/rootfs 布局） |',
+              f"| 最终镜像大小 | {report['image_size_bytes']:,} 字节 |",
+              '| 允许上限 | profile 无固定 IMAGE_SIZE；实际 kernel/rootfs 分区容量待采集 |',
+              f"| kernel / root 最低所需空间 | {report['tar']['kernel_bytes']} / {report['tar']['minimum_root_partition_bytes']} 字节；不代表足够可写空间 |",
+              '| 当前 GPT / 分区可用空间 | 待用户只读信息，不按 eMMC 总容量推算 |',
+              f"| 实际安装包数 / OpenClash | {report['package_count']} / {report['openclash_version']} |",
+              f"| 实际 Linux 内核包及 ABI | `{report['kernel_package_version']}` |",
+              f"| 同次构建签名 APK / 离线依赖检查 | {packages['package_count']} 个 / 通过；见 matching-packages 附件 |",
+              '| Mihomo / 默认代理 / 小闪存模式 | 未预装 / 停用 / 关闭 |',
+              '| SQM | 已安装、出厂关闭；上下行0，需实测后配置 |',
+              '| 管理方式 | HTTP/HTTPS保留、不强制跳转；HTTP明文仅限可信LAN |',
+              '| 最终镜像内容 | 对交付BIN中的SquashFS严格解包后核对，不执行目标程序 |',
+              '| 当前系统预检查 / U-Boot兼容性 / 真机测试 | 待验证 |',
+              '',
+              '普通升级对象仅为 cmcc_rax3000m-emmc 的 sysupgrade.bin；不使用统一 profile 的 .itb，不刷 GPT、BL2、FIP/U-Boot。',
+              '',
+              '| 来源 | 实际提交 |',
+              '| --- | --- |',
+          ]
+          for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash'):
+              lines.append(f"| {name} | `{sources[name]['commit']}` |")
+          lines.extend(['', '<details><summary>最终软件包清单</summary>', '', '```text',
+                        (firmware / 'packages.manifest').read_text().rstrip(), '```', '', '</details>', ''])
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as stream:
+              stream.write('\n'.join(lines))
+          # Also expose the non-secret result in the public job annotations.
+          record = {key: report[key] for key in (
+              'image', 'sha256', 'image_size_bytes', 'build_image_limit_bytes', 'package_count',
+              'openclash_version', 'kernel_package_version', 'candidate_firmware', 'safe_to_flash_confirmed')}
+          record['commits'] = {name: sources[name]['commit'] for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash')}
+          record['signed_matching_packages'] = packages['package_count']
+          record['sqm'] = report['sqm']
+          record['management'] = report['management']
+          record['strict_image_extraction'] = report['image_extraction']['strict_errors']
+          record['startup_elf_objects_checked'] = report['startup_files']['elf_files_checked']
+          notice = json.dumps(record, ensure_ascii=False).replace('%', '%25').replace('\n', '%0A').replace('\r', '%0D')
+          print('::notice title=Verified candidate record::' + notice, flush=True)
+          PY
+
+      - name: Preserve diagnostic logs on success or failure
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: rax3000m-emmc-openclash-sqm-diagnostics-${{ github.run_id }}
+          path: ${{ env.ARTIFACT_ROOT }}/diagnostics/
+          if-no-files-found: warn
+          retention-days: 30

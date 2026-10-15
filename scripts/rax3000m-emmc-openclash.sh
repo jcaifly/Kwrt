@@ -31,6 +31,13 @@ preserve_diagnostics() {
     cp "$profile_dir/patches/apk-package-signing.patch" "$diagnostics/"
     [[ ! -f "$tree/.config" ]] || cp "$tree/.config" "$diagnostics/final.config"
     [[ ! -d "$tree/logs" ]] || tar -czf "$diagnostics/openwrt-logs.tar.gz" -C "$tree" logs
+    # Keep strict final-image extraction logs, including on a failed check.
+    for image_check in "$tree"/tmp/rax3000m-image-*/unpack; do
+        [[ ! -d "$image_check" ]] || {
+            mkdir -p "$diagnostics/image-extraction/$(basename "$(dirname "$image_check")")"
+            cp "$image_check/"*.log "$diagnostics/image-extraction/$(basename "$(dirname "$image_check")")/" 2>/dev/null
+        }
+    done
     if [[ -d "$tree/target/linux/mediatek" ]]; then
         mkdir -p "$diagnostics/upstream-upgrade"
         cp "$tree/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh" \
@@ -113,6 +120,7 @@ collect() {
     cp "$profile_dir/README.md" "$profile_dir/UPGRADE.md" "$profile_dir/VALIDATION.md" \
         "$profile_dir/VENDOR-FIRMWARE.md" "$profile_dir/PACKAGES.md" \
         "$profile_dir/collect-device-info.sh" "$artifact_root/firmware/"
+    cp "$profile_dir/BUILD-REVIEW.md" "$artifact_root/firmware/"
     python3 - "$artifact_root/firmware" "$mode" <<'PY'
 import json
 from pathlib import Path
@@ -136,7 +144,10 @@ lines = [
     f"| 最终安装包数 / OpenClash | {report['package_count']} / {report['openclash_version']} |",
     f"| Linux 内核包 / ABI | `{report['kernel_package_version']}` |",
     '| 同次构建软件包仓库 | 每个 APK 及索引签名、镜像包身份、架构、内核 ABI、离线依赖求解均通过 |',
-    '| Mihomo / 默认代理 / 小闪存模式 | 未预装 / 停用 / 关闭 |', '',
+    '| Mihomo / 默认代理 / 小闪存模式 | 未预装 / 停用 / 关闭 |',
+    '| SQM | 已安装，出厂关闭；上下行均为0，需实测后配置 |',
+    '| 管理页面 | HTTP/HTTPS保留，不强制跳转；HTTP仅限可信LAN |',
+    '| 交付镜像内容 | 对BIN内SquashFS严格解包后验收，检查启动文件和ELF依赖 |', '',
     '| 来源 | 实际提交 |', '| --- | --- |',
 ]
 for name in ('kwrt', 'openwrt', 'packages', 'luci', 'openclash'):
@@ -184,7 +195,8 @@ EOF
         chmod 0755 "$tree/files/etc/uci-defaults/zz-rax3000m-openclash"
         (cd "$tree" && ./scripts/feeds update -a)
         (cd "$tree" && ./scripts/feeds install \
-            luci-light luci-ssl luci-compat luci-lib-ipkg luci-app-package-manager luci-app-openclash)
+            luci-light luci-ssl luci-compat luci-lib-ipkg luci-app-package-manager luci-app-openclash \
+            luci-app-sqm luci-i18n-sqm-zh-cn sqm-scripts)
         [[ $(git -C "$tree/feeds/packages" rev-parse HEAD) == "$PACKAGES_COMMIT" ]]
         [[ $(git -C "$tree/feeds/luci" rev-parse HEAD) == "$LUCI_COMMIT" ]]
         cp "$profile_dir/config" "$tree/.config"
@@ -200,6 +212,11 @@ EOF
         if ! run_make -j"$build_jobs" 2>&1 | tee "$diagnostics/build-parallel.log"; then
             run_make -j1 V=s 2>&1 | tee "$diagnostics/build-serial.log"
         fi
+        OPENWRT_MKSQUASHFS="$tree/staging_dir/host/bin/mksquashfs4" \
+            OPENWRT_UNSQUASHFS="$tree/staging_dir/host/bin/unsquashfs4" \
+            python3 -B -m unittest discover -s "$repo_dir/scripts/tests" \
+                -p test_rax3000m_image.py -v \
+                2>&1 | tee "$diagnostics/native-image-tests.log"
         OPENWRT_APK="$tree/staging_dir/host/bin/apk" \
             OPENWRT_OPENSSL="$tree/staging_dir/host/bin/openssl" \
             python3 -B -m unittest discover -s "$repo_dir/scripts/tests" \

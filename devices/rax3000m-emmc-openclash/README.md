@@ -4,18 +4,20 @@
 设备使用 `mediatek/filogic` / `cmcc_rax3000m-emmc` profile，
 匹配用户上传商家固件的真实设备身份及独立 kernel/rootfs 升级路径。
 最小设备补丁保留官方共用 DTS、统一 profile 和正式 NAND/eMMC overlays，不伪造设备身份。
-本次重制补齐 USB 存储/VFAT 与基础 block-mount 支持，并交付同次构建的签名 APK 仓库。
+本次 SQM 候选版以用户已刷入并恢复正常的 21.5 MB 版本为基础，
+保留其 USB 存储/VFAT、基础 block-mount 和同次构建签名 APK 仓库，
+仅增加默认关闭的 SQM 及必要依赖。选择理由及游戏测试步骤见 [BUILD-REVIEW.md](BUILD-REVIEW.md)。
 自动挂载和自动交换区默认关闭；不增加磁盘管理应用或常驻 blockd。
-**构建通过的产物仍是候选固件；在当前系统、GPT 和第三方 U-Boot 核对前，尚未确认可刷写。**
-本次运行 38336069750 已编译及镜像检查通过，上传 BIN 的 SHA256 与构建记录一致。
-实际大小、SHA256、包清单、来源及与商家参考的比较见 [FINAL-IMAGE.md](FINAL-IMAGE.md)。
-用户选择 U-Boot 恢复页重刷；旧系统 sysupgrade 的待采集项不参与这条首次写入路线，
-需确认的是该恢复页接受格式与写入对象，详见 UPGRADE.md。
+**旧版实际运行成功不等于新增 SQM 候选版已经通过真机验证。**
+历史基线运行 `38419054903` 为 21,514,513 字节、233 个安装包；
+其后整套复刻商家软件的版本未正常提供管理访问，用户已用旧版恢复。
+本版取消整套复刻，不包含 Mihomo；新镜像大小、SHA256 和包数须由本次构建产生。
+不因移除核心就宣称已定位或解决之前的启动故障。升级及备份说明见 UPGRADE.md。
 
 用户目前提供的信息：当前系统为 Kwrt，U-Boot 据卖家称来自 yuzhuii，软件分区已调整为约 2GB。
 用户更正后的 7 月 15 日商家镜像已确认 Kwrt 25.12-SNAPSHOT / Linux 6.12.94 / `cmcc,rax3000m-emmc` /
 `root=PARTLABEL=rootfs rootwait`，详见 [VENDOR-FIRMWARE.md](VENDOR-FIRMWARE.md)。
-实际当前版本、U-Boot 版本、GPT 分区边界及引导配置仍待读取；用户暂时无法查看恢复页。
+用户已确认可进入 yuzhuii 恢复页并成功刷回旧版，U-Boot 版本、实际 GPT 边界和引导信息未采集。
 本流程保留现有布局，不因 2GB 容量要求重新分区，也不执行路由器操作。
 
 ## 来源与选择
@@ -30,7 +32,7 @@
 | OpenClash 上游版本标记 | v0.48.002 / `e553e82e01c697aefbe1555261a503f425e00ccd` |
 | 必要本地补丁 | 保留 Kwrt eMMC kernel/rootfs 路径；为 APK 单包签名；增加 LuCI host 依赖；移除插件 APK 自更新绕过；补丁哈希写入 `sources.json` |
 
-25.12.5 是准备时官方仓库可见的最新 25.12 稳定标签，使用发行版自带的 feeds 固定值。
+本版保持已用基线的 25.12.5 与发行版 feeds 固定值，不为增加 SQM 同时更换内核或无线驱动。
 Linux 内核及 ABI 使用真实构建结果；不把内核兼容值改成常量，不强装架构或版本不匹配的包。
 镜像显示 Kwrt 25.12.5，DISTRIB_DESCRIPTION 含实际 OpenWrt 提交前缀 `f0a60eee2fe0`。
 原生 DISTRIB_REVISION / 元数据 revision 为发行版 version 文件的 `r33051-f5dae5ece4`，
@@ -54,11 +56,14 @@ USB 存储支持常规 USB Mass Storage、VFAT 和内核已有的 ext4，提供�
 不默认挂载外接盘、启用交换区或更改任何 eMMC 分区；用户按需配置外接盘挂载。
 LuCI 防火墙及软件包管理页面属于基础管理功能。
 
-额外应用只有 `luci-app-openclash`。其完整声明依赖 `dnsmasq-full`、bash、curl、
+额外应用为 `luci-app-openclash` 和默认关闭的 `luci-app-sqm`（含中文）。OpenClash 完整声明依赖 `dnsmasq-full`、bash、curl、
 ca-bundle、ip-full、ruby、ruby-yaml、TUN、unzip，以及原生 fw4 所需 nftables、
 nft TProxy/socket/inet-diag 和 Lua/LuCI 兼容组件均保留。
 采用 firewall4/nftables 与 dnsmasq-full 的 nftset 路径，普通 dnsmasq 不同时安装。
 不安装其他代理、nlbwmon、ttyd、btop、TurboACC、Docker、SmartDNS、MosDNS 或 AdGuard Home。
+不增加 UPnP。SQM 使用固定 packages feed 的 1.7.2-r1，保留 tc、CAKE、IFB、
+原生 nft 兼容 iptables 及 IPv6 对应依赖；不替换 firewall4 或启用 legacy iptables。
+出厂队列禁用、上下行均为 0，须实测速率并确认 WAN 设备后再启用。
 
 - OpenClash 默认 `enable=0`，禁用开机服务；不预置节点、订阅或代理 YAML。
 - 小闪存模式默认关闭；核心正常保存在 `/etc/openclash/core/clash_meta`。
@@ -74,25 +79,25 @@ nft TProxy/socket/inet-diag 和 Lua/LuCI 兼容组件均保留。
 
 ## 构建与下载
 
-工作流：`.github/workflows/rax3000m-emmc-openclash.yml`。
+本版工作流：`.github/workflows/rax3000m-emmc-openclash-sqm.yml`，旧工作流保持原样。
 使用 Ubuntu 24.04 普通公共仓库 runner、2 个编译线程，Actions 以提交 SHA 固定，
 权限为 `contents: read`，不使用作者私有服务器、个人 Token/密钥或通知服务。
 私有仓库会跳过任务，避免擅自消耗付费分钟。
 
-审核分支 `codex/rax3000m-emmc-openclash` 的相关代码推送可以触发一次验证构建，
+审核分支 `codex/rax3000m-emmc-sqm` 的相关代码推送可以触发一次验证构建，
 无需推送或合并默认分支。文档改动不触发该 push 构建。
 GitHub 的 `workflow_dispatch` 入口通常要求工作流已存在于默认分支：
 如界面尚无手动入口，先由仓库所有者审核变更并决定是否合入；本任务不自动合入或推送默认分支。
 
-手动运行：GitHub 仓库 → Actions → `RAX3000M eMMC OpenClash candidate (no core)` →
+手动运行：GitHub 仓库 → Actions → `RAX3000M eMMC OpenClash + optional SQM (no core)` →
 Run workflow → 选择包含本配置的分支 → Run workflow。
 完成后打开同次运行的 Artifacts：
 
-- `rax3000m-emmc-openclash-candidate-<run_id>`：候选 `sysupgrade.bin`、SHA256SUMS、
+- `rax3000m-emmc-openclash-sqm-candidate-<run_id>`：候选 `sysupgrade.bin`、SHA256SUMS、
   final.config、kernel.config、diff.config、packages.manifest、profiles.json、实际 sources.json、检查 JSON 和说明。
-- `rax3000m-emmc-openclash-diagnostics-<run_id>`：prepare/download/编译日志、串行失败诊断（如有）、
+- `rax3000m-emmc-openclash-sqm-diagnostics-<run_id>`：prepare/download/编译日志、串行失败诊断（如有）、
   OpenWrt 子任务日志、检查结果、实际上游升级脚本和阶段退出码。失败也保留，默认 30 天。
-- `rax3000m-emmc-matching-packages-<run_id>`：同次镜像的签名 APK、签名本地索引、
+- `rax3000m-emmc-sqm-matching-packages-<run_id>`：同次镜像的签名 APK、签名本地索引、
   公开验证密钥、SHA256SUMS 和验收记录，使用方式见 [PACKAGES.md](PACKAGES.md)。
 - Actions Summary 显示实际镜像大小、整包 SHA256、安装包数、内核 ABI 和来源提交。
 
@@ -112,6 +117,8 @@ OPENWRT_MAKE=kwrt-make bash scripts/rax3000m-emmc-openclash.sh prepare \
 普通 Linux 构建机安装工作流列出的依赖后使用原生 make，无需该云端路径。
 每次 prepare 使用新的目录，拒绝混入旧源码/产物。
 验证失败会终止固件发布，不忽略依赖、架构、内核版本或镜像错误。
+验收会严格解包交付 BIN 中的 SquashFS，检查真实镜像的启动链接、程序与动态库，
+而非仅核对构建目录。不会在云端执行固件程序；首次启动及服务运行仍需真机测试。
 
 ## 镜像大小与软件源
 
@@ -155,7 +162,9 @@ root 最低所需空间包含 4 KiB 初始化标记，仅证明最低写入范�
 当前旧配置不默认承诺可直接沿用，风险及升级前检查见 [UPGRADE.md](UPGRADE.md)。
 
 1. 经兼容性确认并完成备份后，用有线接入 LAN。默认管理地址为 `192.168.1.1`，
-   LuCI 使用 HTTPS（HTTP 重定向，首次为本机生成的证书）。用户名 `root`。
+   HTTP 和 HTTPS 均保留，不强制跳转。HTTPS 首次为本机生成的证书，
+   浏览器不自动信任，仍可能显示证书警告；HTTP 无该证书提示，但密码/会话明文传输，
+   仅在可信局域网使用。用户名 `root`。
    没有保留/预置凭据时无预设 root 密码，立即在系统 → 管理权设置强密码；
    SSH 登录后也可使用 `passwd`。不提供通用弱密码。
 2. LAN 为 `lan1 lan2 lan3` 的 bridge，WAN 为独立 `eth1`。
@@ -177,6 +186,9 @@ root 最低所需空间包含 4 KiB 初始化标记，仅证明最低写入范�
 6. 小闪存模式保持关闭。导入你自己的有效配置，先做配置检查，再启用 OpenClash。
    节点/订阅/密钥只保留在本机，不进入仓库或公开构建日志。停用后复测基础 DNS 和联网。
    100M 家庭用途先使用适度规则规模，再根据 CPU/内存、延迟和实际线路情况调整。
+7. SQM 先保持关闭。若其他设备上传/下载占满时游戏延迟明显上升，再按
+   BUILD-REVIEW.md 的步骤确认 WAN、测量上下行、配置 CAKE，比较开启前后结果。
+   SQM 不会修复代理节点绕路；QQ 飞车与 Steam 各游戏应按实际连接记录选择直连或合适代理。
 
 ## 真机验收
 

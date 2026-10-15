@@ -2,6 +2,7 @@
 """Validate this candidate without claiming compatibility with an unknown router."""
 
 import argparse
+import importlib.util
 import gzip
 import hashlib
 import io
@@ -13,6 +14,7 @@ import re
 import struct
 import subprocess
 import tarfile
+import tempfile
 import zlib
 
 
@@ -38,9 +40,10 @@ REQUIRED = {
     "uhttpd", "uhttpd-mod-ubus", "rpcd", "px5g-mbedtls", "ca-certificates",
     "luci-app-openclash", "bash", "curl", "ca-bundle", "ip-full", "ruby",
     "ruby-yaml", "kmod-tun", "unzip", "kmod-inet-diag", "kmod-nft-tproxy",
-    "kmod-nft-socket",
+    "kmod-nft-socket", "luci-app-sqm", "luci-i18n-sqm-zh-cn", "sqm-scripts", "tc-tiny",
+    "kmod-sched-cake", "kmod-ifb", "kmod-sched-core", "iptables-nft", "ip6tables-nft", "iptables-mod-ipopt",
 }
-CONFLICTING = {"dnsmasq", "dnsmasq-dhcpv6", "firewall", "nftables-nojson"}
+CONFLICTING = {"dnsmasq", "dnsmasq-dhcpv6", "firewall", "nftables-nojson", "iptables-zz-legacy", "ip6tables-zz-legacy"}
 DISABLED = {
     "TARGET_MULTI_PROFILE", "TARGET_ALL_PROFILES", "TARGET_PER_DEVICE_ROOTFS",
     "ALL", "ALL_NONSHARED", "ALL_KMODS", "BUILDBOT", "IB", "IB_STANDALONE",
@@ -150,7 +153,7 @@ def dependency_names(value, config):
 
 
 def unwanted(name):
-    if name in {"luci-app-openclash", "luci-app-firewall", "luci-app-package-manager"}:
+    if name in {"luci-app-openclash", "luci-app-firewall", "luci-app-package-manager", "luci-app-sqm"}:
         return False
     return name.startswith("luci-app-") or bool(re.search(
         r"mihomo|clash|sing-box|xray|v2ray|docker|^containerd$|^runc$|nlbwmon|"
@@ -237,6 +240,7 @@ def check_config(tree):
         "actual_router_partition_limit_bytes": None, "partition_compatibility": "pending router evidence",
         "firewall": "firewall4/nftables", "dns": "dnsmasq-full with DHCP/DHCPv6/DNSSEC/nftset",
         "dependency_edges_checked": checked, "openclash_dependencies": records["luci-app-openclash"],
+        "sqm_dependencies": records["sqm-scripts"],
         "selected_packages": sorted(names), "required_packages": sorted(REQUIRED),
         "builtin_drivers": sorted(BUILTIN_DRIVERS), "core_packages": [],
         "config_sha256": digest(tree / ".config"), "hardware_validation": "not performed",
@@ -339,6 +343,14 @@ def provenance(repo, build):
         "host_dependency_patch_sha256": digest(repo / PROFILE_DIR / "patches/openclash-host-build.patch"),
         "apk_verification_patch_sha256": digest(repo / PROFILE_DIR / "patches/openclash-apk-verification.patch"),
     })
+    sqm_recipe = (build / "openwrt/feeds/packages/net/sqm-scripts/Makefile").read_text()
+    result["sqm"] = {
+        "version": package_records(build / "openwrt/tmp/.packageinfo")["sqm-scripts"]["Version"],
+        "source_commit": re.search(r"^PKG_SOURCE_VERSION:=(\S+)$", sqm_recipe, re.M)[1],
+        "source_url": re.search(r"^PKG_SOURCE_URL:=(\S+)$", sqm_recipe, re.M)[1],
+        "source_archive_sha256": re.search(r"^PKG_MIRROR_HASH:=(\S+)$", sqm_recipe, re.M)[1],
+        "enabled_by_default": False,
+    }
     result["workflow"] = {"run_id": os.getenv("GITHUB_RUN_ID"), "ref": os.getenv("GITHUB_REF")}
     return result
 
@@ -571,14 +583,18 @@ def check_rootfs(root, versions):
     startup = (root / DEFAULTS).read_text()
     for value in ("/etc/init.d/openclash disable", "set openclash.config.enable='0'",
                   "set openclash.config.small_flash_memory='0'", "flow_offloading='0'", "flow_offloading_hw='0'",
-                  "anon_mount='0'", "anon_swap='0'", "auto_mount='0'", "auto_swap='0'"):
+                  "anon_mount='0'", "anon_swap='0'", "auto_mount='0'", "auto_swap='0'",
+                  "set uhttpd.main.redirect_https='0'", "/etc/init.d/sqm disable"):
         require(value in startup, f"Missing safe default: {value}")
     require(not re.search(r"\b(wget|curl|sgdisk|sfdisk|parted|fw_setenv)\b|openclash_core\.sh", startup),
             "Unexpected downloader, partition or bootloader operation in defaults")
     require(os.access(root / DEFAULTS, os.X_OK), "Defaults script is not executable")
-    for name in ("base.zh-cn.lmo", "firewall.zh-cn.lmo", "package-manager.zh-cn.lmo", "openclash.zh-cn.lmo"):
+    require((root / "etc/config/sqm").read_bytes() ==
+            (Path(__file__).resolve().parents[1] / PROFILE_DIR / "files/etc/config/sqm").read_bytes(),
+            "SQM factory defaults differ from the disabled, unconfigured queue")
+    for name in ("base.zh-cn.lmo", "firewall.zh-cn.lmo", "package-manager.zh-cn.lmo", "openclash.zh-cn.lmo", "sqm.zh-cn.lmo"):
         require((root / "usr/lib/lua/luci/i18n" / name).stat().st_size > 0, f"Missing Chinese translation: {name}")
-    for module in ("mt7915e.ko", "tun.ko", "nft_tproxy.ko", "nft_socket.ko", "usb-storage.ko", "vfat.ko"):
+    for module in ("mt7915e.ko", "tun.ko", "nft_tproxy.ko", "nft_socket.ko", "usb-storage.ko", "vfat.ko", "sch_cake.ko", "ifb.ko"):
         require(any((root / "lib/modules").rglob(module)), f"Missing kernel module: {module}")
     require((root / "sbin/block").is_file(), "Missing basic USB/block-device management tool")
     kernel = records["kernel"]["V"]
@@ -592,13 +608,25 @@ def check_rootfs(root, versions):
     repository_report = check_apk_sources(root)
     public_keys = [p for p in (root / "etc/apk/keys").glob("*") if p.is_file()]
     require(public_keys, "No trusted APK public keys installed")
+    spec = importlib.util.spec_from_file_location("rax_startup", Path(__file__).with_name("rax3000m_startup.py"))
+    startup_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(startup_module)
+    startup_report = startup_module.check_startup(root)
     return {"elf_files_checked": elf_count, "kernel_package_version": kernel,
             "kernel_abi_dependencies_checked": edges, **repository_report,
             "apk_trusted_public_keys_count": len(public_keys),
+            "startup_files": startup_report,
+            "sqm": {"included": True, "queue_enabled": False, "download_kbit": 0, "upload_kbit": 0,
+                    "first_boot_disable_command_checked": True,
+                    "runtime_validation": "not performed; pending hardware setup"},
+            "management": {"http_and_https": True, "force_https_redirect": False,
+                           **startup_report["management_config"],
+                           "http_transport": "unencrypted; trusted LAN only", "certificate_trust": "user-managed"},
             "official_remote_kmod_abi": "not established; use packages built for this exact kernel ABI"}
 
 
 def check_artifact(tree):
+    tree = tree.resolve()
     check_config(tree)
     target = tree / "bin/targets/mediatek/filogic"
     images = [p for p in tree.glob("bin/targets/**/*sysupgrade*") if p.is_file() and not p.name.endswith(".json")]
@@ -630,7 +658,14 @@ def check_artifact(tree):
             "OpenClash package version differs")
     roots = list(tree.glob("build_dir/target-*/root-mediatek"))
     require(len(roots) == 1, f"Expected one final rootfs in build_dir: {roots}")
-    root_report = check_rootfs(roots[0], versions)
+    require({name: record["V"] for name, record in installed_records(roots[0]).items()} == versions,
+            "Build root package database differs from final manifest")
+    spec = importlib.util.spec_from_file_location("rax_image", Path(__file__).with_name("rax3000m_image.py"))
+    image_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(image_module)
+    workdir = Path(tempfile.mkdtemp(prefix="rax3000m-image-", dir=tree / "tmp")) / "unpack"
+    root, extraction = image_module.unpack_rootfs(image, workdir, tree / "staging_dir/host/bin/unsquashfs4", DEVICE)
+    root_report = check_rootfs(root, versions)
     kernels = list(tree.glob("build_dir/target-*/linux-mediatek_filogic/linux-*/.config"))
     require(len(kernels) == 1, "Missing actual kernel configuration")
     kernel_config = read_config(kernels[0])
@@ -642,7 +677,8 @@ def check_artifact(tree):
         "actual_router_partition_limit_bytes": None, "writable_overlay_bytes": None,
         "size_note": "The existing eMMC profile has no fixed IMAGE_SIZE. Actual kernel/rootfs GPT capacities and usable overlay are pending; the image is not cleared for flashing.",
         "tar": tar, "embedded_metadata": metadata, "package_count": len(versions), **root_report,
-        "rootfs_path": str(roots[0].relative_to(tree)), "kernel_config_path": str(kernels[0].relative_to(tree)),
+        "rootfs_path": str(root.relative_to(tree)), "build_rootfs_path": str(roots[0].relative_to(tree)),
+        "kernel_config_path": str(kernels[0].relative_to(tree)), "image_extraction": extraction,
         "openclash_version": versions["luci-app-openclash"], "core_files": [],
         "default_service_enabled": False, "small_flash_memory": False,
         "candidate_firmware": True, "safe_to_flash_confirmed": False,
@@ -668,7 +704,7 @@ def main():
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
         print(f"{args.mode}: passed; report: {output}")
-    except (ValueError, OSError, KeyError, IndexError, UnicodeError, struct.error, zlib.error,
+    except (ValueError, OSError, KeyError, IndexError, UnicodeError, struct.error, zlib.error, RuntimeError,
             lzma.LZMAError, tarfile.TarError, subprocess.CalledProcessError) as error:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps({"status": "failed", "error": str(error)}, ensure_ascii=False, indent=2) + "\n")
