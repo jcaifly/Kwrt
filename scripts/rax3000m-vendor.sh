@@ -30,14 +30,27 @@ preserve() {
     [[ ! -f "$tree/.config" ]] || cp "$tree/.config" "$diagnostics/final.config"
     [[ ! -d "$tree/logs" ]] || tar -czf "$diagnostics/openwrt-logs.tar.gz" -C "$tree" logs
     if [[ "$result" != 0 && "${GITHUB_ACTIONS:-false}" == true ]]; then
-        python3 -B - "$diagnostics" "$repo_dir" <<'PY'
+        python3 -B - "$diagnostics" "$repo_dir" "$tree" <<'PY'
 from pathlib import Path
 import importlib.util
+import json
+import shutil
 import sys
 root = Path(sys.argv[1])
 spec = importlib.util.spec_from_file_location('vendor', Path(sys.argv[2]) / 'scripts/rax3000m-vendor.py')
 vendor = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(vendor)
+tree = Path(sys.argv[3])
+target = tree / 'bin/targets/mediatek/filogic'
+for file in [*target.glob('*.manifest'), target / 'profiles.json', target / 'sha256sums']:
+    if file.is_file():
+        shutil.copyfile(file, root / file.name)
+for image_root in tree.glob('build_dir/target-*/root-mediatek'):
+    if (image_root / 'lib/apk/db/installed').is_file():
+        records = vendor.common.installed_records(image_root)
+        summary = {name: {key: record[key] for key in ('P', 'V', 'A', 'D', 'p', 'C') if key in record}
+                   for name, record in records.items()}
+        (root / 'installed-package-summary.json').write_text(json.dumps(summary, indent=2) + '\n')
 logs = [root / n for n in ('build-serial.log', 'build-parallel.log', 'source-archive-check.log', 'package-version-check.log', 'native-version-tests.log', 'native-apk.log', 'host-tools.log', 'prepare.log', 'build.log')]
 for path in logs:
     if path.is_file():

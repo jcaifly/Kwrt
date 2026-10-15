@@ -38,6 +38,21 @@ class VendorMappingTests(unittest.TestCase):
     def test_numeric_package_abi_separator(self):
         self.assertEqual(vendor.runtime_name("liblua5.4", {"ABI-Version": "5.4"}), "liblua5.4-5.4")
 
+    def test_kernel_module_abi_is_not_appended_to_runtime_name(self):
+        for name in ("kmod-cfg80211", "kmod-mac80211"):
+            with self.subTest(name=name):
+                self.assertEqual(vendor.runtime_name(name, {"ABI-Version": "6.18.26-1"}), name)
+
+    def test_kernel_module_mapping_matches_the_native_unsuffixed_package(self):
+        records = {"kmod-cfg80211": {"ABI-Version": "6.18.26-1", "Version": "6.12.94.6.18.26-r1"}}
+        with patch.object(vendor, "metadata", return_value=records), \
+                patch.object(vendor, "inventory", return_value=[("kmod-cfg80211", "6.12.94.6.18.26-r1")]):
+            self.assertEqual(vendor.map_packages(Path("unused"))[0]["runtime"], "kmod-cfg80211")
+
+    def test_unresolved_non_kernel_library_abi_remains_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Cannot resolve the actual ABI suffix"):
+            vendor.runtime_name("libexample", {"ABI-Version": "$(UNKNOWN_ABI)"})
+
 
 class CoreIntegrityTests(unittest.TestCase):
     def setUp(self):

@@ -469,7 +469,7 @@
     "vendor": "kmod-cfg80211",
     "vendor_version": "6.12.94.6.18.26-r1",
     "symbol": "kmod-cfg80211",
-    "runtime": "kmod-cfg80211-6.18.26-1",
+    "runtime": "kmod-cfg80211",
     "source_version": "<LINUX_VERSION>.6.18.26-r1",
     "source": "package/kernel/mac80211/Makefile",
     "kind": "same package name"
@@ -1009,7 +1009,7 @@
     "vendor": "kmod-mac80211",
     "vendor_version": "6.12.94.6.18.26-r1",
     "symbol": "kmod-mac80211",
-    "runtime": "kmod-mac80211-6.18.26-1",
+    "runtime": "kmod-mac80211",
     "source_version": "<LINUX_VERSION>.6.18.26-r1",
     "source": "package/kernel/mac80211/Makefile",
     "kind": "same package name"
